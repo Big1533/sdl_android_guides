@@ -1,7 +1,7 @@
 # RegisterAppInterface
 Registers the application's interface with SDL, declaring properties of the registration, including the messaging interface version, the app name, etc. The mobile application must establish its interface registration with SDL before any other interaction with SDL can take place. The registration lasts until it is terminated either by the application calling the UnregisterAppInterface method, or by SDL sending an OnAppInterfaceUnregistered notification, or by loss of the underlying transport connection, or closing of the underlying message transmission protocol RPC session.
 
-Until the application receives its first OnHMIStatus Notification, its HMI Status is assumed to be: HMILevel=NONE, AudioStreamingState=NOT_AUDIBLE, SystemContext=MAIN.
+Until the application receives its first OnHMIStatus Notification, its HMI Status is assumed to be: `HMILevel=NONE`, `AudioStreamingState=NOT_AUDIBLE`, `SystemContext=MAIN`.
 
 All SDL resources which the application creates or uses (e.g. Choice Sets, Command Menu, etc.) are associated with the application's interface registration. Therefore, when the interface registration ends, the SDL resources associated with the application are disposed of. As a result, even though the application itself may continue to run on its host platform (e.g. mobile device) after the interface registration terminates, the application will not be able to use the SDL HMI without first establishing a new interface registration and re-creating its required SDL resources. That is, SDL resources created by (or on behalf of) an application do not persist beyond the life span of the interface registration.
 
@@ -140,21 +140,24 @@ The response message contains essential information about the SDL system that th
 The application could then use that information to make sure that the text written to the screen is readable for the given platform. If a resultCode other than SUCCESS is received, the application will have to send one or more RegisterAppInterface Requests until one has a result code of SUCCESS; otherwise, the application is not permitted to send any other Requests.
 
 ### Non-default Result Codes: ###
-	- SUCCESS
-	- INVALID_DATA
-	- OUT_OF_MEMORY
-	- TOO_MANY_PENDING_REQUESTS
-	- GENERIC_ERROR
-	- DUPLICATE_NAME
-	- TOO_MANY_APPLICATIONS
-	- APPLICATION_REGISTERED_ALREADY
-	- UNSUPPORTED_VERSION
-	- WRONG_LANGUAGE
-	- DISALLOWED
+```xml
+- SUCCESS
+- INVALID_DATA
+- OUT_OF_MEMORY
+- TOO_MANY_PENDING_REQUESTS
+- GENERIC_ERROR
+- DUPLICATE_NAME
+- TOO_MANY_APPLICATIONS
+- APPLICATION_REGISTERED_ALREADY
+- UNSUPPORTED_VERSION
+- WRONG_LANGUAGE
+- DISALLOWED
+```
 ### Related Operations ###
-UnregisterAppInterface
-
-OnAppInterfaceUnregistered
+```java
+- UnregisterAppInterface
+- OnAppInterfaceUnregistered
+```
 ### Example Function Call ###
 ```java
 

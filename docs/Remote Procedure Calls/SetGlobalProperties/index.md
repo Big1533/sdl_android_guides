@@ -4,7 +4,7 @@ Sets value(s) for the specified global property(ies).
 
 ### HMI Status Requirements ###
 
-HMILevel needs to be FULL, LIMITED, or BACKGROUND.
+HMILevel needs to be `FULL`, `LIMITED`, or `BACKGROUND`.
 
 ### Request ###
 
@@ -82,16 +82,16 @@ HMILevel needs to be FULL, LIMITED, or BACKGROUND.
  Indicates whether the requested Global Properties were successfully set.
 
 ### Non-default Result Codes: ###
-
-* SUCCESS
-*  INVALID_DATA
-* OUT_OF_MEMORY
-* TOO_MANY_PENDING_REQUESTS
-* APPLICATION_NOT_REGISTERED
-* GENERIC_ERROR
-* REJECTED  
-* DISALLOWED
-
+```xml
+- SUCCESS
+- INVALID_DATA
+- OUT_OF_MEMORY
+- TOO_MANY_PENDING_REQUESTS
+- APPLICATION_NOT_REGISTERED
+- GENERIC_ERROR
+- REJECTED  
+- DISALLOWED
+```
 ### Related Operations ###
 
 * ResetGlobalProperties

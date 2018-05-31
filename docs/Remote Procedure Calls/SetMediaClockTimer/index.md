@@ -1,11 +1,11 @@
 # SetMediaClockTimer
 
 Sets the media clock/timer value and the update method (e.g. count-up, countdown, etc.).
-### HMI Status Requirements ###
+### HMI Status Requirements
 
-HMILevel needs to be FULL, LIMITED, or BACKGROUND.
+HMILevel needs to be `FULL`, `LIMITED`, or `BACKGROUND`.
 
-### Request ###
+### Request
  <table border="1" rules="all">
   		<tr>
   			<th>Param Name</th>
@@ -45,20 +45,20 @@ HMILevel needs to be FULL, LIMITED, or BACKGROUND.
 
    </table>
 
-### Response ###
+### Response
 
-### Non-default Result Codes: ###
-
-* SUCCESS
-* INVALID_DATA
-*  OUT_OF_MEMORY
-* TOO_MANY_PENDING_REQUESTS
-*  APPLICATION_NOT_REGISTERED
-*  GENERIC_ERROR
-*  REJECTED
-*  IGNORED
-
-### Example Function Calls ###
+### Non-default Result Codes:
+```xml
+- SUCCESS
+- INVALID_DATA
+- OUT_OF_MEMORY
+- TOO_MANY_PENDING_REQUESTS
+- APPLICATION_NOT_REGISTERED
+- GENERIC_ERROR
+- REJECTED
+- IGNORED
+```
+### Example Function Calls
 ```java
 RPCMessage req;
 req = RPCRequestFactory.buildSetMediaClockTimer (0,15,30, updateMode, autoIncCorrID++);

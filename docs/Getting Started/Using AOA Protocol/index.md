@@ -1,4 +1,4 @@
-#Using Android Open Accessory Protocol
+# Using Android Open Accessory Protocol
 Incorporating AOA into an SDL-enabled app allows it to communicate to a module over USB. This guide will assume the SDL library is already integrated into the app. This guide also requires you to have implement a local `SdlBroadcastReceiver` as outlined in the Bluetooth Multiplexing documentation.
 
 Prerequisites:
@@ -12,10 +12,10 @@ We will add or make changes to:
 * Accessory Filter __(new)__
 * SdlService
 
-##Prerequisites
+## Prerequisites
 If you have already implemented the Multiplexing guidelines in your project, feel free to skip this section.
 
-###SdlReceiver
+### SdlReceiver
 Create your own `SdlReceiver` that extends `SdlBroadcastReceiver` and implement the following:
 
 ```java
@@ -55,7 +55,7 @@ and add the Receiver to your app's Android Manifest with the following intent fi
 </receiver>
 ```
 
-##Android Manifest
+## Android Manifest
 To use the AOA protocol, you must specify so in your app's Manifest with:
 
 ```xml
@@ -94,7 +94,7 @@ For AOA, your project's local SdlReceiver needs an intent filter for `com.smartd
 </receiver>
 ```
 
-##Accessory Filter (New)
+## Accessory Filter (New)
 For security purposes, an accessory filter will limit accessory connections to those included in the filter. Add the directory `/res/xml` to your project and create a new XML file `accessory_filter.xml` inside of it. Add in the following to `accessory_filter.xml`:
 
 ```xml
@@ -107,7 +107,7 @@ For security purposes, an accessory filter will limit accessory connections to t
 </resource>
 ```
 
-##SmartDeviceLink Service
+## SmartDeviceLink Service
 When using AOA, the USB Transport instantiation is dependent on an accessory device actually being connected. The following changes need to be made in the `onStartCommand()` function of your SdlService.
 
 AOA is only supported on devices with API level 12 or higher. You can check for this with:

@@ -6,7 +6,7 @@ A Choice Set is a list of commands (menu or voice) that can be used in certain o
 
 ### HMI Status Requirements ###
 
-HMILevel needs to be FULL, LIMITED, or BACKGROUND.
+HMILevel needs to be `FULL`, `LIMITED`, or `BACKGROUND`.
 
 ### Request ###
  <table border="1" rules="all">
@@ -36,8 +36,8 @@ HMILevel needs to be FULL, LIMITED, or BACKGROUND.
   		</tr>
    </table>
 
-   <b>Note:</b><br>Second Utterance issue with CreateInteractionChoiceSet RPC. <br> Before a perform interaction
-  is sent you MUST wait for the success from the CreateInteractionChoiceSet RPC.<br>
+   <b>Note:</b><br>Second Utterance issue with `CreateInteractionChoiceSet` RPC. <br> Before a perform interaction
+  is sent you MUST wait for the success from the `CreateInteractionChoiceSet` RPC.<br>
      If you do not wait the system may not recognize the first utterance from the user.
      </p>
     <b>Response</b><br>
@@ -58,8 +58,10 @@ HMILevel needs to be FULL, LIMITED, or BACKGROUND.
     - UNSUPPORTED_RESOURCE
 
 ### Related Operations ###
-DeleteInteractionChoiceSet
-PerformInteraction
+```
+- DeleteInteractionChoiceSet
+- PerformInteraction
+```
 ### Example Function Call ###
 
 ```java

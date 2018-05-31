@@ -30,6 +30,9 @@ securityManagers.add(OEMSecurityManager1.class);
 securityManagers.add(OEMSecurityManager1.class);
 builder.setSdlSecurity(securityManagers);
 
+BaseTransportConfig transport = new USBTransportConfig(getBaseContext(), (UsbAccessory) intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY), false, false);
+builder.setTransportType(transport);
+
 proxy = builder.build();
 ```
 
