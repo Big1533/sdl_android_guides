@@ -221,6 +221,15 @@
             ]
         },
 
+        {
+            "name": "Frequently Asked Questions",
+            "navigation" : [
+              {
+                  "name": "SDL Notifications"
+              }
+            ]
+        },
+
 	{
 	}
     ]
