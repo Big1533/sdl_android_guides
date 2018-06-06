@@ -97,6 +97,11 @@
         {
             "name": "Remote Control"
         },
+
+        {
+            "name": "Proguard Guidelines"
+        },
+
         {
             "name": "Migrating to Newer SDL Android Versions",
             "navigation" : [
