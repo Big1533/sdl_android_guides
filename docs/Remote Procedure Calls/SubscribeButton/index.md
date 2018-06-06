@@ -8,20 +8,22 @@ When the duration of a button depression (that is, time between depression and r
 The purpose of OnButtonPress notifications is to allow for programmatic detection of long button presses similar to those used to store presets while listening to the radio, for example.
 
 When a button is depressed and released, the sequence in which notifications will be sent to the application is as follows:
+
 For short presses:
 * OnButtonEvent (ButtonEventMode = BUTTONDOWN)
-*	OnButtonEvent (ButtonEventMode = BUTTONUP)
-*	OnButtonPress (ButtonPressMode = SHORT)
+* OnButtonEvent (ButtonEventMode = BUTTONUP)
+* OnButtonPress (ButtonPressMode = SHORT)
+
 For long presses:
-*	OnButtonEvent (ButtonEventMode = BUTTONDOWN)
-*	OnButtonPress (ButtonPressMode = LONG)
-*	OnButtonEvent (ButtonEventMode = BUTTONUP)
+* OnButtonEvent (ButtonEventMode = BUTTONDOWN)
+* OnButtonPress (ButtonPressMode = LONG)
+* OnButtonEvent (ButtonEventMode = BUTTONUP)
 
-### HMI Status Requirements ###
+### HMI Status Requirements
 
-HMILevel needs to be FULL, LIMITED, or BACKGROUND.
+HMILevel needs to be `FULL`, `LIMITED`, or `BACKGROUND`.
 
-### Request ###
+### Request
 
 <table border="1" rules="all">
   		<tr>
@@ -42,24 +44,26 @@ HMILevel needs to be FULL, LIMITED, or BACKGROUND.
   		</tr>
    </table>
 
-### Response ###
+### Response
 
-### Non-default Result Codes:###
-	- SUCCESS
-	- INVALID_DATA
-	- OUT_OF_MEMORY
-	- TOO_MANY_PENDING_REQUESTS
-	- APPLICATION_NOT_REGISTERED
-	- GENERIC_ERROR
-	- UNSUPPORTED_RESOURCE
-	- IGNORED
-	- REJECTED
+### Non-default Result Codes:
+```xml
+- SUCCESS
+- INVALID_DATA
+- OUT_OF_MEMORY
+- TOO_MANY_PENDING_REQUESTS
+- APPLICATION_NOT_REGISTERED
+- GENERIC_ERROR
+- UNSUPPORTED_RESOURCE
+- IGNORED
+- REJECTED
+```
 
-### Related Operations ###
+### Related Operations
 
 * UnsubscribeButton
 
-### Example Function Call ###
+### Example Function Call
 
 ```java
 SubscribeButton buttonReq;

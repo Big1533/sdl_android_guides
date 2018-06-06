@@ -3,7 +3,7 @@
 This RPC allows you to request diagnostic module trouble codes from a vehicle module.
 HMI Status Requirements
 
-HMILevel needs to be FULL, LIMITED, or BACKGROUND.
+HMILevel needs to be `FULL`, `LIMITED`, or `BACKGROUND`.
 
 ### Request ###
 <table border="1" rules="all">
@@ -36,14 +36,15 @@ HMILevel needs to be FULL, LIMITED, or BACKGROUND.
 ### Response ###
 
 ### Non-default Result Codes: ###
-
-* SUCCESS
-* INVALID_DATA
-* OUT_OF_MEMORY
-* TOO_MANY_PENDING_REQUESTS
-* APPLICATION_NOT_REGISTERED
-* GENERIC_ERROR
-* REJECTED  
-* DISALLOWED
-* USER_DISALLOWED
-* TRUNCATED_DATA
+```
+- SUCCESS
+- INVALID_DATA
+- OUT_OF_MEMORY
+- TOO_MANY_PENDING_REQUESTS
+- APPLICATION_NOT_REGISTERED
+- GENERIC_ERROR
+- REJECTED  
+- DISALLOWED
+- USER_DISALLOWED
+- TRUNCATED_DATA
+```

@@ -151,4 +151,15 @@ public void onOnLockScreenNotification(OnLockScreenStatus notification) {
 }
 ```
 
+We also need to close the lock screen when a disconnect happens. We do that by sending another broadcast in the `SdlService.onDestroy` callback:
+
+```java
+@Override
+public void onDestroy() {
+    ...
+    sendBroadcast(new Intent(LockScreenActivity.CLOSE_LOCK_SCREEN_ACTION));
+    ...
+}
+```
+
 Now when the HMI fully displays the application, the mobile device will display the lock screen with an image provided by the head-unit.

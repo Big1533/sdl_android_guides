@@ -305,6 +305,14 @@ If you created the service using the Android Studio template then the service sh
 The `SdlRouterService` must be placed in a separate process with the name `com.smartdevicelink.router`. If it is not in that process during it's start up it will stop itself.
 !!!
 
+!!! NOTE
+Setting `android:name` to `@string/sdl_router_service_version_name` for the router service metadata may cause issues with some app packaging and analyzing tools like aapt. You can avoid that by hardcoding the string value instead of using a string reference.
+!!!
+
+```xml
+<meta-data android:name="sdl_router_version"  android:value="@integer/sdl_router_service_version_value" />
+```
+
 ### Intent Filter
 
 ```xml

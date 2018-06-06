@@ -1,4 +1,4 @@
-### PutFile ###
+# PutFile
 
 Used to push a binary data onto the SDL module from a mobile device, such as icons and album art.
 
@@ -68,16 +68,17 @@ Used to push a binary data onto the SDL module from a mobile device, such as ico
 Response is sent, when the file data was copied (success case). Or when an error occurred.
 
 ### Non-default Result Codes: ###
-
-* SUCCESS
-* INVALID_DATA
-* OUT_OF_MEMORY
-* TOO_MANY_PENDING_REQUESTS
-* APPLICATION_NOT_REGISTERED
-* GENERIC_ERROR
-* REJECTED
-
+```
+- SUCCESS
+- INVALID_DATA
+- OUT_OF_MEMORY
+- TOO_MANY_PENDING_REQUESTS
+- APPLICATION_NOT_REGISTERED
+- GENERIC_ERROR
+- REJECTED
+```
 ### Related Operations ###
-
-* DeleteFile
-* ListFiles
+```
+- DeleteFile
+- ListFiles
+```
