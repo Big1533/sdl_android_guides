@@ -22,4 +22,4 @@ Security Flag   | Meaning
 `FLAG_MULTI_SECURITY_HIGH`	| Multiplexing security will be very strict. Only trusted router services installed from trusted app stores will be used. Trusted router list will be obtained from server. List will be refreshed every 7 days or during next connection session if an SDL enabled app has been installed or uninstalled.
 
 ##Applying  to the Trusted Router Service List
-To get your app onto the Trusted Router Service List, please contact the SDL Android channel on [Slack](http://slack.smartdevicelink.com) or email [sdladmin@livio.io](mailto:sdladmin@livio.io). We'll need to test and review your app before approving it for the trusted list.
+To get your app onto the Trusted Router Service List, please contact the SDL Android channel on [Slack](http://slack.smartdevicelink.com) or email [admin@smartdevicelink.com](mailto:admin@smartdevicelink.com). We'll need to test and review your app before approving it for the trusted list.
