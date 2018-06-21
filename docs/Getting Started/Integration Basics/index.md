@@ -1,46 +1,7 @@
 
-# Installation
+# Integration Basics
 
-#### Source
-
-Download the latest release from [GitHub](https://github.com/smartdevicelink/sdl_android/releases)
-
-Extract the source code from the archive
-
-Import the code in the top level `sdl_android` folder as a module in Android Studio:
-
-1. Click `File` -> `New` -> `Import Module...` -> Choose the location of `sdl_android` as your Source Directory
-2. The module name will automatically be set to `sdl_android`, change this as desired. Click `Next` and then `Finish`
-
-The `sdl_android` library is now a module in your Android Studio project, but it needs to be added as a dependency to your application. Add the following to the gradle dependencies of your project:
-
-```gradle
-dependencies {
-    implementation project(path: ':sdl_android')
-}
-
-```
-
-#### Gradle
-
-To compile with the a release of SDL Android, include the following in your app's `build.gradle` file,
-
-```
-repositories {
-    jcenter()
-}
-dependencies {
-    implementation 'com.smartdevicelink:sdl_android:4.+'
-}
-```
-
-The list of releases can be found [here](https://github.com/smartdevicelink/sdl_android/releases). 
-
-!!! NOTE
-For more information, see the _Compiling With Gradle_ guide.
-!!!
-
-# Getting Started on Android
+## Getting Started on Android
 
 In this guide, we exclusively use Android Studio. We are going to set-up a bare-bones application so you get started using SDL.
 

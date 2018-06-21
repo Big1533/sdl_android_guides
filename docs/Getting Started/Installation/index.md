@@ -1,4 +1,5 @@
-## Compiling with Gradle
+## Installation
+
 ### Introduction
 
 Each [SDL Android](https://github.com/smartdevicelink/sdl_android) library release is published to JCenter. By adding a few lines in their app's gradle script, developers can compile with the latest SDL Android release.
