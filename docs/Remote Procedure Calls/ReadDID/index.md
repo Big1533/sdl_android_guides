@@ -1,4 +1,4 @@
-#ReadDID
+# ReadDID
 
 Non-periodic vehicle data read request. This is an RPC to get diagnostics data from certain vehicle modules. DIDs of a certain module might differ from vehicle type to vehicle type.
 
@@ -47,13 +47,15 @@ HMILevel needs to be FULL, LIMITED, or BACKGROUND.
 ### Response ###
 
 ### Non-default Result Codes: ###
-	- SUCCESS
-	- INVALID_DATA
-	- OUT_OF_MEMORY
-	- TOO_MANY_PENDING_REQUESTS
-	- APPLICATION_NOT_REGISTERED
-	- GENERIC_ERROR
-	- REJECTED  
-	- DISALLOWED
-	- USER_DISALLOWED
-	- TRUNCATED_DATA
+```
+- SUCCESS
+- INVALID_DATA
+- OUT_OF_MEMORY
+- TOO_MANY_PENDING_REQUESTS
+- APPLICATION_NOT_REGISTERED
+- GENERIC_ERROR
+- REJECTED  
+- DISALLOWED
+- USER_DISALLOWED
+- TRUNCATED_DATA
+```

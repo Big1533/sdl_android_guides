@@ -67,7 +67,6 @@ Related Operations
 
 ### Example Function Call ###
 ```java
-RPCMessage req;
-req = RPCRequestFactory.buildAddSubMenu(menuID, menuName,autoIncCorrID++);
-_sdlProxy.sendRPCRequest(req);
+AddSubMenu addSubMenu = new AddSubMenu(menuID, menuName);
+proxy.sendRPCRequest(addSubMenu);
 ```

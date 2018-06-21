@@ -66,7 +66,7 @@ Notice we now gather the extra boolean from the intent and add to our if-else st
 	}
 ```
 
-##SmartDeviceLink Router Service (New)
+## SmartDeviceLink Router Service (New)
 
 The SdlRouterService will listen for a bluetooth connection with an SDL enabled module. When a connection happens, it will alert all SDL enabled apps that a connection has been established and they should start their SDL services.
 

@@ -1,46 +1,7 @@
 
-# Installation
+# Integration Basics
 
-#### Source
-
-Download the latest release from [GitHub](https://github.com/smartdevicelink/sdl_android/releases)
-
-Extract the source code from the archive
-
-Import the code in the top level `sdl_android` folder as a module in Android Studio:
-
-1. Click `File` -> `New` -> `Import Module...` -> Choose the location of `sdl_android` as your Source Directory
-2. The module name will automatically be set to `sdl_android`, change this as desired. Click `Next` and then `Finish`
-
-The `sdl_android` library is now a module in your Android Studio project, but it needs to be added as a dependency to your application. Add the following to the gradle dependencies of your project:
-
-```gradle
-dependencies {
-    compile project(path: ':sdl_android')
-}
-
-```
-
-#### Gradle
-
-To compile with the a release of SDL Android, include the following in your app's `build.gradle` file,
-
-```
-repositories {
-    jcenter()
-}
-dependencies {
-    compile 'com.smartdevicelink:sdl_android:4.+'
-}
-```
-
-The list of releases can be found [here](https://github.com/smartdevicelink/sdl_android/releases). 
-
-!!! NOTE
-For more information, see the _Compiling With Gradle_ guide.
-!!!
-
-# Getting Started on Android
+## Getting Started on Android
 
 In this guide, we exclusively use Android Studio. We are going to set-up a bare-bones application so you get started using SDL.
 
@@ -305,6 +266,14 @@ If you created the service using the Android Studio template then the service sh
 The `SdlRouterService` must be placed in a separate process with the name `com.smartdevicelink.router`. If it is not in that process during it's start up it will stop itself.
 !!!
 
+!!! NOTE
+Setting `android:name` to `@string/sdl_router_service_version_name` for the router service metadata may cause issues with some app packaging and analyzing tools like aapt. You can avoid that by hardcoding the string value instead of using a string reference.
+!!!
+
+```xml
+<meta-data android:name="sdl_router_version"  android:value="@integer/sdl_router_service_version_value" />
+```
+
 ### Intent Filter
 
 ```xml
@@ -382,9 +351,6 @@ SdlBroadcastReceiver must call super if ```onReceive``` is overridden
 If you created the BroadcastReceiver using the Android Studio template then the service should have been added to your `AndroidManifest.xml` otherwise the receiver needs to be defined in the manifest. Regardless, the manifest needs to be edited so that the `SdlBroadcastReceiver` needs to respond to the following intents:
 
 * [android.bluetooth.device.action.ACL_CONNECTED](https://developer.android.com/reference/android/bluetooth/BluetoothDevice.html#ACTION_ACL_CONNECTED)
-* [android.bluetooth.device.action.ACL_DISCONNECTED](https://developer.android.com/reference/android/bluetooth/BluetoothDevice.html#ACTION_ACL_DISCONNECTED)
-* [android.bluetooth.adapter.action.STATE_CHANGED](https://developer.android.com/reference/android/bluetooth/BluetoothAdapter.html#ACTION_CONNECTION_STATE_CHANGED)
-* [android.media.AUDIO_BECOMING_NOISY](https://developer.android.com/reference/android/media/AudioManager.html#ACTION_AUDIO_BECOMING_NOISY)
 * sdl.router.startservice
 
 ```xml
@@ -402,9 +368,6 @@ If you created the BroadcastReceiver using the Android Studio template then the 
     
             <intent-filter>
                 <action android:name="android.bluetooth.device.action.ACL_CONNECTED" />
-                <action android:name="android.bluetooth.device.action.ACL_DISCONNECTED"/>
-                <action android:name="android.bluetooth.adapter.action.STATE_CHANGED"/>
-                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
                 <action android:name="sdl.router.startservice" />
             </intent-filter>
     

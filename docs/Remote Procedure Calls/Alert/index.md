@@ -136,7 +136,9 @@ Speak
 
 ### Example Function Call ###
 ```java
-Alert req;
-req = RPCRequestFactory.buildAlert(ttsText, _mainInstance.logTag, alertText2, playTone, duration, autoIncCorrID++);
-_sdlProxy.sendRPCRequest(req);
+Alert alert = new Alert();
+alert.setAlertText1("alert1");
+alert.setDuration(10);
+alert.setPlayTone(true);
+proxy.sendRPCRequest(alert);
 ```

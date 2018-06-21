@@ -233,7 +233,6 @@ OnAppInterfaceUnregistered
 
 ### Example Function Call ###
 ```java
-RPCMessage req;
-	req = RPCRequestFactory.buildUnregisterAppInterface(autoIncCorrID++);
-	_sdlProxy.sendRPCRequest(req);
+UnregisterAppInterface unregisterAppInterface = new UnregisterAppInterface();
+proxy.sendRPCRequest(unregisterAppInterface);
 ```

@@ -10,7 +10,10 @@
             "name": "Getting Started",
             "navigation": [
                 {
-                    "name" : "Compiling with Gradle"
+                    "name" : "Installation"
+                },
+                {
+                    "name" : "Integration Basics"
                 },
                 {
                     "name" : "Using AOA Protocol"
@@ -110,6 +113,9 @@
               },
               {
                   "name": "Updating to 4.5"
+              },
+              {
+                  "name": "Updating to 4.6"
               }
             ]
 

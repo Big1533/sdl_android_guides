@@ -66,7 +66,6 @@ Alert
 
 ### Example Function Call ###
 ```java
-Speak req;
-	req = RPCRequestFactory.buildSpeak(ttsText, autoCorrIncID++);
-_sdlProxy.sendRPCRequest(req);
+Speak speak = new Speak(ttsChunks);
+proxy.sendRPCRequest(speak);
 ```
