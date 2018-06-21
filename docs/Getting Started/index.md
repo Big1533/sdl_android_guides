@@ -16,7 +16,7 @@ The `sdl_android` library is now a module in your Android Studio project, but it
 
 ```gradle
 dependencies {
-    compile project(path: ':sdl_android')
+    implementation project(path: ':sdl_android')
 }
 
 ```
@@ -30,7 +30,7 @@ repositories {
     jcenter()
 }
 dependencies {
-    compile 'com.smartdevicelink:sdl_android:4.+'
+    implementation 'com.smartdevicelink:sdl_android:4.+'
 }
 ```
 
@@ -390,9 +390,6 @@ SdlBroadcastReceiver must call super if ```onReceive``` is overridden
 If you created the BroadcastReceiver using the Android Studio template then the service should have been added to your `AndroidManifest.xml` otherwise the receiver needs to be defined in the manifest. Regardless, the manifest needs to be edited so that the `SdlBroadcastReceiver` needs to respond to the following intents:
 
 * [android.bluetooth.device.action.ACL_CONNECTED](https://developer.android.com/reference/android/bluetooth/BluetoothDevice.html#ACTION_ACL_CONNECTED)
-* [android.bluetooth.device.action.ACL_DISCONNECTED](https://developer.android.com/reference/android/bluetooth/BluetoothDevice.html#ACTION_ACL_DISCONNECTED)
-* [android.bluetooth.adapter.action.STATE_CHANGED](https://developer.android.com/reference/android/bluetooth/BluetoothAdapter.html#ACTION_CONNECTION_STATE_CHANGED)
-* [android.media.AUDIO_BECOMING_NOISY](https://developer.android.com/reference/android/media/AudioManager.html#ACTION_AUDIO_BECOMING_NOISY)
 * sdl.router.startservice
 
 ```xml
@@ -410,9 +407,6 @@ If you created the BroadcastReceiver using the Android Studio template then the 
     
             <intent-filter>
                 <action android:name="android.bluetooth.device.action.ACL_CONNECTED" />
-                <action android:name="android.bluetooth.device.action.ACL_DISCONNECTED"/>
-                <action android:name="android.bluetooth.adapter.action.STATE_CHANGED"/>
-                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
                 <action android:name="sdl.router.startservice" />
             </intent-filter>
     

@@ -51,7 +51,6 @@ HMILevel needs to be FULL, LIMITED, or BACKGROUND.
 ### Example Function Call ###
 
 ```java
-RPCMessage req;
-	req = RPCRequestFactory.buildUnsubscribeButton(ButtonName.OK, autoIncCorrID++);
-	_sdlProxy.sendRPCRequest(req);
+UnsubscribeButton unsubscribeButton = new UnsubscribeButton(ButtonName.OK);
+proxy.sendRPCRequest(unsubscribeButton);
 ```

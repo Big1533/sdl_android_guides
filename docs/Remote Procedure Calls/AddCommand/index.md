@@ -108,6 +108,7 @@ Non-default Result Codes:
 
 ### Example Function Call 
 ```java
-commandReq = RPCRequestFactory.buildAddCommand(100, "Skip", new Vector<String>(Arrays.asList(new String[] {"Skip"})), autoIncCorrID++);
-_sdlProxy.sendRPCRequest(commandReq);
+AddCommand addCommand = new AddCommand(100);
+addCommand.setMenuParams(new MenuParams("Skip"));
+proxy.sendRPCRequest(addCommand);
 ```

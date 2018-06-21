@@ -121,7 +121,6 @@ This is sent to the mobile application after the user makes a choice from the Pe
 ### Example Function Call ###
 
 ```java
-RPCMessage req;
-req = RPCRequestFactory.buildPerformInteraction(initPrompt, displayText, interactionChoiceSetIDList, helpPrompt, timeoutPrompt, interactionMode, timeout, autoIncCorrID++);
-_sdlProxy.sendRPCRequest(req);
+PerformInteraction performInteraction = new PerformInteraction(initialTest, interactionMode, interactionChoiceSetIDList);
+proxy.sendRPCRequest(performInteraction);
 ```

@@ -53,7 +53,6 @@ HMILevel needs to be FULL, LIMITED, or BACKGROUND.
 ### Example Function Call ###
 
 ```java
-RPCMessage req;
-req = RPCRequestFactory.buildDeleteSubMenu(menuID, autoIncCorrID++);
-_sdlProxy.sendRPCRequest(req);
+DeleteSubMenu deleteSubMenu = new DeleteSubMenu(menuID);
+proxy.sendRPCRequest(deleteSubMenu);
 ```

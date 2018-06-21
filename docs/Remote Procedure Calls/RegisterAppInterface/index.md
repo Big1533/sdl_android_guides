@@ -161,7 +161,8 @@ The application could then use that information to make sure that the text writt
 ### Example Function Call ###
 ```java
 
-RegisterAppInterface req;
-req = RPCRequestFactory.buildRegisterAppInterface(_mainInstance.logTag, false, null);
-	_sdlProxy.sendRPCRequest(req);
-  ```
+RegisterAppInterface registerAppInterface = new RegisterAppInterface(syncMsgVersion,
+    appName, isMediaApplication, languageDesired, hmiDisplayLanguageDesired, 
+    appID);
+proxy.sendRPCRequest(registerAppInterface);
+```

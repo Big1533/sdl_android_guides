@@ -47,7 +47,6 @@ PerformInteraction
 
 ### Example Function Call ###
 ```java
-RPCMessage req;
-req = RPCRequestFactory.buildDeleteInteractionChoiceSet(choiceSetID, autoIncCorrID++);
-	_sdlProxy.sendRPCRequest(req);
+DeleteInteractionChoiceSet deleteChoiceSet = new DeleteInteractionChoiceSet(choiceSetId);
+proxy.sendRPCRequest(deleteChoiceSet);
 ```

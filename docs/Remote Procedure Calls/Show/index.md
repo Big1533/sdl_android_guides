@@ -141,7 +141,9 @@ HMILevel needs to be FULL, LIMITED, or BACKGROUND.
 
 ### Example Function Call ###
 ```java
-Show req;
-req = RPCRequestFactory.buildShow(mainText1, mainText2, null, mediaClock, mediaTrack, alignment, autoIncCorrID++);
-_syncProxy.sendRPCRequest(req);
+Show show = new Show();
+show.setMainField1(mainField1);
+show.setMainField2(mainField2);
+show.setAlignment(alightment);
+proxy.sendRPCRequest(show);
 ```

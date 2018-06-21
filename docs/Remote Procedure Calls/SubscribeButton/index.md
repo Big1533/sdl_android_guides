@@ -66,7 +66,6 @@ HMILevel needs to be `FULL`, `LIMITED`, or `BACKGROUND`.
 ### Example Function Call
 
 ```java
-SubscribeButton buttonReq;
-    	buttonReq = RPCRequestFactory.buildSubscribeButton(ButtonName.OK, autoIncCorrID++);
-_sdlProxy.sendRPCRequest(buttonReq);
+SubscribeButton subscribeButton = new SubscribeButton(ButtonName.OK);
+proxy.sendRPCRequest(subscribeButton);
 ```

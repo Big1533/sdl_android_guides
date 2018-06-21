@@ -65,7 +65,6 @@ HMILevel needs to be `FULL`, `LIMITED`, or `BACKGROUND`.
 ### Example Function Call ###
 
 ```java
-RPCMessage req;
-req = RPCRequestFactory.buildCreateInteractionChoiceSet(_choiceSet, choiceSetID, autoIncCorrID++);
-_sdlProxy.sendRPCRequest(req);
+CreateInteractionChoiceSet choiceSet = new CreateInteractionChoiceSet(choiceSetID, choiceSetList);
+proxy.sendRPCRequest(choiceSet);
 ```

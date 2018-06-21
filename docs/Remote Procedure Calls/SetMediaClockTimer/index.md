@@ -60,7 +60,8 @@ HMILevel needs to be `FULL`, `LIMITED`, or `BACKGROUND`.
 ```
 ### Example Function Calls
 ```java
-RPCMessage req;
-req = RPCRequestFactory.buildSetMediaClockTimer (0,15,30, updateMode, autoIncCorrID++);
-	_sdlProxy.sendRPCRequest(req);
+SetMediaClockTimer setMediaClockTimer = new SetMediaClockTimer(updateMode);
+setMediaClockTimer.setStartTime(0);
+setMediaClockTimer.setEndTime(30);
+proxy.sendRPCRequest(setMediaClockTimer);
 ```

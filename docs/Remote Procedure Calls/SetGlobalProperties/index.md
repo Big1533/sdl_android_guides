@@ -97,7 +97,8 @@ HMILevel needs to be `FULL`, `LIMITED`, or `BACKGROUND`.
 * ResetGlobalProperties
 * Example Function Call
 ```java
-RPCMessage req;
-req = RPCRequestFactory.buildSetGlobalProperties (helpText, timeoutText, autoIncCorrID++);
-_sdlProxy.sendRPCRequest(req);
+SetGlobalProperties setGlobalProperties = new SetGlobalProperties();
+setGlobalProperties.setHelpPrompt(helpPrompt);
+setGlobalProperties.setTimeoutPrompt(timeoutPrompt);
+proxy.sendRPCRequest(setGlobalProperties);
 ```

@@ -50,7 +50,6 @@ Indicates that the corresponding request either failed or succeeded. If the resp
 
 ### Example Function Call ###
 ```java
-DeleteCommand req;
-req = RPCRequestFactory.buildDeleteCommand(commandID, autoIncCorrID++);
-_sdlProxy.sendRPCRequest(req);
+DeleteCommand deleteCommand = new DeleteCommand(commandID);
+proxy.sendRPCRequest(deleteCommand);
 ```
