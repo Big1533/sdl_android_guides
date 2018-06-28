@@ -7,11 +7,26 @@ When developing an application using SmartDeviceLink, two things must always be 
 2. You must upload them from your mobile device to Core before using them.
 
 ### Detecting if Graphics are Supported
-Being able to know if graphics are supported is a very important feature of your application, as this avoids you uploading unneccessary images to the head unit. In order to see if graphics are supported, use the `getDisplayCapabilities()` method of a valid `SdlProxyALM` to find out the display capabilities of the head unit.
+Being able to know if graphics are supported is a very important feature of your application, as this avoids you uploading unneccessary images to the head unit. In order to see if graphics are supported, use the `getCapability()` method of a valid `SdlProxyALM` to find out the display capabilities of the head unit.
 
 ```java
-DisplayCapabilities displayCapabilities = proxy.getDisplayCapabilities();
-Boolean graphicsSupported = displayCapabilities.getGraphicSupported();
+if (proxy.isCapabilitySupported(SystemCapabilityType.DISPLAY)){
+		// Since the module does support this capability we can query it for more information
+		proxy.getCapability(SystemCapabilityType.DISPLAY, new OnSystemCapabilityListener(){
+
+		@Override
+		public void onCapabilityRetrieved(Object capability){
+		DisplayCapabilities dispCapability = (DisplayCapabilities) capability;
+				// Now it is possible to get details on how this capability 
+				// is supported using the dispCapability object
+		}
+
+		@Override
+		public void onError(String info){
+				Log.i(TAG, "Capability could not be retrieved: "+ info);
+		}
+	});
+}
 ```
 
 ### Uploading a File using PutFile
