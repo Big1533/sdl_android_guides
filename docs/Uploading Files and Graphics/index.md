@@ -11,19 +11,18 @@ Being able to know if graphics are supported is a very important feature of your
 
 ```java
 if (proxy.isCapabilitySupported(SystemCapabilityType.DISPLAY)){
-		// Since the module does support this capability we can query it for more information
-		proxy.getCapability(SystemCapabilityType.DISPLAY, new OnSystemCapabilityListener(){
-
+	// Since the module does support this capability we can query it for more information
+	proxy.getCapability(SystemCapabilityType.DISPLAY, new OnSystemCapabilityListener(){
 		@Override
 		public void onCapabilityRetrieved(Object capability){
 		DisplayCapabilities dispCapability = (DisplayCapabilities) capability;
-				// Now it is possible to get details on how this capability 
-				// is supported using the dispCapability object
+			// Now it is possible to get details on how this capability 
+			// is supported using the dispCapability object
 		}
 
 		@Override
 		public void onError(String info){
-				Log.i(TAG, "Capability could not be retrieved: "+ info);
+		Log.i(TAG, "Capability could not be retrieved: "+ info);
 		}
 	});
 }
