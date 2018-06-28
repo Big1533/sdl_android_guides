@@ -32,7 +32,7 @@ For example (obtaining the head unit's `NAVIGATION` capability):
 
 ```java
     // First you can check to see if the capability is supported on the module
-    if (proxy.isCapabilitySupported(SystemCapabilityType.NAVIGATION){
+    if (proxy.isCapabilitySupported(SystemCapabilityType.NAVIGATION)){
 		// Since the module does support this capability we can query it for more information
 		proxy.getCapability(SystemCapabilityType.NAVIGATION, new OnSystemCapabilityListener(){
 
