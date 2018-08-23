@@ -32,6 +32,15 @@ In the AndroidManifest for our sample project we need to ensure we have the foll
 </manifest>
 ```
 
+!!! IMPORTANT
+If the app is targeting Android P (API Level 28) or higher, the Android Manifest file should also have the following permission to allow the app to start a foreground service:
+
+```xml
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+```
+!!!
+
+
 ## SmartDeviceLink Service
 
 A SmartDeviceLink Android Service should be created to manage the lifecycle of an SDL Proxy. The SDL Service enables auto-start by creating the SDL Proxy, which then waits for a connection from SDL. This file also sends and receives messages to and from SDL after connected.
