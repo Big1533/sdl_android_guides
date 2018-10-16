@@ -13,24 +13,17 @@ Both methods have optional listeners that are specific to them, the `OnMultipleR
 List<RPCRequest> rpcs = new ArrayList<>();
 
 // rpc 1
-Show show = new Show();
-show.setMainField1("hey friends");
-show.setMainField2("");
-show.setMainField3("");
-show.setMainField4("");
-rpcs.add(show);
+SubscribeButton subscribeButtonRequestLeft = new SubscribeButton();
+subscribeButtonRequestLeft.setButtonName(ButtonName.SEEKLEFT);
+rpcs.add(subscribeButtonRequestLeft);
 
 // rpc 2
-Image image = new Image();
-image.setImageType(ImageType.DYNAMIC);
-image.setValue("appImage.jpeg"); // a previously uploaded filename using PutFile RPC
-
-Show show2 = new Show();
-show2.setGraphic(image);
-rpcs.add(show2);
+SubscribeButton subscribeButtonRequestRight = new SubscribeButton();
+subscribeButtonRequestRight.setButtonName(ButtonName.SEEKRIGHT);
+rpcs.add(subscribeButtonRequestRight);
 
 try {
-	proxy.sendRequests(rpcs, new OnMultipleRequestListener() {
+	sdlManager.sendRPCs(rpcs, new OnMultipleRequestListener() {
 	@Override
 	public void onUpdate(int remainingRequests) {
 
@@ -66,43 +59,36 @@ This method call is exactly the same as above, except for the method name being 
 
 List<RPCRequest> rpcs = new ArrayList<>();
 
-    	// rpc 1
-		Show show = new Show();
-		show.setMainField1("hey friends");
-		show.setMainField2("");
-		show.setMainField3("");
-		show.setMainField4("");
-		rpcs.add(show);
+// rpc 1
+SubscribeButton subscribeButtonRequestLeft = new SubscribeButton();
+subscribeButtonRequestLeft.setButtonName(ButtonName.SEEKLEFT);
+rpcs.add(subscribeButtonRequestLeft);
 
-		// rpc 2
-		Image image = new Image();
-		image.setImageType(ImageType.DYNAMIC);
-		image.setValue("appImage.jpeg"); // a previously uploaded filename using PutFile RPC
+// rpc 2
+SubscribeButton subscribeButtonRequestRight = new SubscribeButton();
+subscribeButtonRequestRight.setButtonName(ButtonName.SEEKRIGHT);
+rpcs.add(subscribeButtonRequestRight);
 
-		Show show2 = new Show();
-		show2.setGraphic(image);
-		rpcs.add(show2);
+	try {
+		sdlManager.sendSequentialRPCs(rpcs, new OnMultipleRequestListener() {
+			@Override
+			public void onUpdate(int remainingRequests) {
+			}
 
-		try {
-			proxy.sendSequentialRequests(rpcs, new OnMultipleRequestListener() {
-				@Override
-				public void onUpdate(int remainingRequests) {
-				}
+			@Override
+			public void onFinished() {
+			}
 
-				@Override
-				public void onFinished() {
-				}
+			@Override
+			public void onResponse(int correlationId, RPCResponse response) {
+			}
 
-				@Override
-				public void onResponse(int correlationId, RPCResponse response) {
-				}
-
-				@Override
-				public void onError(int correlationId, Result resultCode, String info) {
-				}
-			});
-		} catch (SdlException e) {
-			e.printStackTrace();
-		}
+			@Override
+			public void onError(int correlationId, Result resultCode, String info) {
+			}
+		});
+	} catch (SdlException e) {
+		e.printStackTrace();
+	}
 ```
 
