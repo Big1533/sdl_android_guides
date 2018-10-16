@@ -113,7 +113,7 @@ The `SdlManager` also now handles lock screen logic for you. By default, a defau
 
 ```xml
 <!-- Required to use the lock screen -->
-        <activity android:name="com.smartdevicelink.managers.lockscreen.SDLLockScreenActivity"
+<activity android:name="com.smartdevicelink.managers.lockscreen.SDLLockScreenActivity"
                   android:launchMode="singleTop"/>
 ```
 
