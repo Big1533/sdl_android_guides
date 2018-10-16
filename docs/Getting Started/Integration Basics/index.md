@@ -21,13 +21,9 @@ In the AndroidManifest for our sample project we need to ensure we have the foll
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.company.mySdlApplication">
     
-    ...
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    ...
 
 </manifest>
 ```
@@ -49,7 +45,7 @@ Create a new service and name it appropriately, for this guide we are going to c
  
 ```java
 public class SdlService extends Service {
-    ...
+    //...
 }
 ```
  
@@ -60,16 +56,12 @@ If you created the service using the Android Studio template then the service sh
     package="com.company.mySdlApplication">
 
     <application>
-    
-    ...
 
         <service
         android:name=".SdlService"
         android:enabled="true"/>
     
     </application>
-
-    ...
 
 </manifest>
 ```
@@ -82,7 +74,7 @@ Because of Android Oreo's requirements, it is mandatory that services enter the 
 
 public void onCreate() {
     super.onCreate();
-    ...
+    //...
     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
     	NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
      	notificationManager.createNotificationChannel(...);
@@ -176,8 +168,6 @@ public class SdlService extends Service {
             sdlManager.start();
         }
 
-    //...
-
 }
 ```
 
@@ -243,8 +233,6 @@ Once added, your `AndroidManifest.xml` should be defined like below:
     package="com.company.mySdlApplication">
 
     <application>
-    
-    ...
 
         <service
         	android:name="com.company.mySdlApplication.SdlRouterService"
@@ -262,8 +250,6 @@ Once added, your `AndroidManifest.xml` should be defined like below:
                   android:launchMode="singleTop"/>
     
     </application>
-
-    ...
 
 </manifest>
 ```
@@ -364,8 +350,6 @@ If you created the BroadcastReceiver using the Android Studio template then the 
 
     <application>
 
-        ...
-
         <receiver
             android:name=".SdlReceiver"
             android:exported="true"
@@ -380,11 +364,9 @@ If you created the BroadcastReceiver using the Android Studio template then the 
     
     </application>
     
-    ...
     <!-- Required to use the lock screen -->
     <activity android:name="com.smartdevicelink.managers.lockscreen.SDLLockScreenActivity"
                   android:launchMode="singleTop"/>
-	...
 
 </manifest>
 ```
@@ -402,7 +384,7 @@ Next, we want to make sure we supply our instance of the SdlBroadcastService wit
 public class SdlReceiver extends SdlBroadcastReceiver {
    @Override
 	public void onSdlEnabled(Context context, Intent intent) {
-		//..
+	
 	}
 
 	@Override

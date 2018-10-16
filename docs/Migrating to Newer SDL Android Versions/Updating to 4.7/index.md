@@ -20,7 +20,7 @@ Likely the most change will come to your `SdlService` class. There are going to 
 
 Previously, your SdlService had to implement this listener. This often bloated the class due to the need to override all of its functions. The need to do this has been removed in 4.7, which allows you to set only the listeners that you need. 
 
-In 4.6:
+##### In 4.6:
 
 ```java
 public class SdlService extends Service implements IProxyListenerALM {
@@ -28,15 +28,15 @@ public class SdlService extends Service implements IProxyListenerALM {
     // The proxy handles communication between the application and SDL
     private SdlProxyALM proxy = null;
     
-    ...
+    //...
     
     @Override
     public void someListener(){}
-    ...    
+    //...    
 }
 ```
 
-In 4.7 the need to implement `IProxyListenerALM` is gone:
+##### In 4.7 the need to implement `IProxyListenerALM` is gone:
 
 ```java
 public class SdlService extends Service {
@@ -44,7 +44,7 @@ public class SdlService extends Service {
 	// The SdlManager exposes the APIs needed to communicate between the application and SDL
 	private SdlManager sdlManager = null;
 	
-	...
+	//...
 }
 ```
 
