@@ -380,6 +380,10 @@ If you created the BroadcastReceiver using the Android Studio template then the 
     
     </application>
     
+    ...
+    <!-- Required to use the lock screen -->
+    <activity android:name="com.smartdevicelink.managers.lockscreen.SDLLockScreenActivity"
+                  android:launchMode="singleTop"/>
 	...
 
 </manifest>
