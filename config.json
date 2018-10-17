@@ -232,7 +232,11 @@
             "navigation" : [
               {
                   "name": "SDL Notifications"
+              },
+              {
+                  "name": "Trusted Router Service"
               }
+
             ]
         },
 
