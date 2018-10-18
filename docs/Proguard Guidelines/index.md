@@ -23,6 +23,8 @@ Developers using Proguard in this manner should be sure to include the following
 ```java
 -keep class com.smartdevicelink.** { *; }
 -keep class com.livio.** { *; }
+# Video streaming apps must add the following line
+-keep class ** extends com.smartdevicelink.streaming.video.SdlRemoteDisplay { *; }
 ```
 
 !!! note
