@@ -7,7 +7,7 @@ In order to stream video from an SDL app, we only need to manage a few things. F
 The `SdlRemoteDisplay` base class provides the easiest way to start streaming using SDL. The `SdlRemoteDisplay` is extended from Android's `Presentation` class with modifications to work with other aspects of the SDL Android library. 
 
 !!! Note
-It is recommended that you extend this as a local class within the service that you have the `SdlManager` instance.
+It is recommended that you extend this as a local class within the service that has the `SdlManager` instance.
 !!!
 
 Extending this class gives developers a familiar, native experience to handling layouts and events on screen.
@@ -51,7 +51,7 @@ if (sdlManager.getVideoStreamManager() != null) {
             if (success) {
                 sdlManager.getVideoStreamManager().startRemoteDisplayStream(getApplicationContext(), MyDisplay.class, null, false);
             } else {
-                Log.i(TAG, "Failed to start video streaming manager");
+                Log.e(TAG, "Failed to start video streaming manager");
             }
         }
     });
