@@ -2,15 +2,12 @@
 
 In order to stream video from an SDL app, we only need to manage a few things. For the most part, the library will handle the majority of logic needed to perform video streaming.
 
-## SDLProxyALM
-
-It is important that we create our `SDLProxyALM` instance with the correct settings in order to stream video. This was already covered in the [Mobile Navigation > Introduction](Mobile Navigation/Introduction).
 
 ## SDL Remote Display
 The `SdlRemoteDisplay` base class provides the easiest way to start streaming using SDL. The `SdlRemoteDisplay` is extended from Android's `Presentation` class with modifications to work with other aspects of the SDL Android library. 
 
 !!! Note
-It is recommended that you extend this as a local class within the service that you have the `SDLProxyALM` instance.
+It is recommended that you extend this as a local class within the service that you have the `SdlManager` instance.
 !!!
 
 Extending this class gives developers a familiar, native experience to handling layouts and events on screen.
@@ -39,21 +36,33 @@ public static class MyDisplay extends SdlRemoteDisplay{
 }
 ```
 
+!!! Note
+If you are obfuscating the code in your app, make sure to exclude you `SdlRemoteDisplay` class from being obfuscated. For more information on how to do that, you can check [Proguard Guidelines](/guides/android/proguard-guidelines/).
+!!!
+
 ## Managing the Stream
-The only thing left to do to start the stream is combine the `SDLProxyALM` instance and the extension of the `SdlRemoteDisplay`. This should happen when your app receives its first `HMI_FULL` status in the `onOnHMIStatus(OnHMIStatus notification) ` callback. The method that needs to be called is `startRemoteDisplayStream(Context context, final Class<? extends SdlRemoteDisplay> remoteDisplay, final VideoStreamingParameters parameters, final boolean encrypted)` from the `SDLProxyALM`.
+To start streaming video, you can use `VideoStreamingManager`. The method that needs to be called is `startRemoteDisplayStream(Context context, final Class<? extends SdlRemoteDisplay> remoteDisplay, final VideoStreamingParameters parameters, final boolean encrypted)`.
 
 ```java
-@Override
-public void onOnHMIStatus(OnHMIStatus notification) {
-    if(notification.getHmiLevel().equals(HMILevel.HMI_FULL)){
-        if (notification.getFirstRun()) {
-            proxy.startRemoteDisplayStream(getApplicationContext(), MyDisplay.class, null, false);
+if (sdlManager.getVideoStreamManager() != null) {
+    sdlManager.getVideoStreamManager().start(new CompletionListener() {
+        @Override
+        public void onComplete(boolean success) {
+            if (success) {
+                sdlManager.getVideoStreamManager().startRemoteDisplayStream(getApplicationContext(), MyDisplay.class, null, false);
+            } else {
+                Log.i(TAG, "Failed to start video streaming manager");
+            }
         }
-    }
-   
+    });
 }
-
 ```
 
 ### Ending the Stream
-When the `HMIStatus` is back to `HMI_NONE` it is time to stop the stream. This is accomplished through a method `stopRemoteDisplayStream()` in the `SDLProxyALM`.
+When the `HMIStatus` is back to `HMI_NONE` it is time to stop the stream. This is accomplished through a method `stopStreaming()`.
+
+```java
+if (sdlManager.getVideoStreamManager() != null && sdlManager.getVideoStreamManager().isStreaming()) {
+    sdlManager.getVideoStreamManager().stopStreaming();
+}
+```
