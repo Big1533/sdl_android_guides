@@ -1,4 +1,5 @@
 ## Uploading Files and Graphics
+
 Graphics allow for you to better customize what you would like to have your users see and provide a better User Interface.
 
 When developing an application using SmartDeviceLink, two things must always be remembered when using graphics:
@@ -11,7 +12,8 @@ Many of these features will be handled for you automatically by the `ScreenManag
 !!!
 
 ### Detecting if Graphics are Supported
-Being able to know if graphics are supported is a very important feature of your application, as this avoids you uploading unneccessary images to the head unit. In order to see if graphics are supported, use the `getCapability()` method of a valid `sdlManager.getSystemCapabilityManager()` to find out the display capabilities of the head unit.
+
+Being able to know if graphics are supported is a very important feature of your application, as this avoids you uploading unnecessary images to the head unit. In order to see if graphics are supported, use the `getCapability()` method of a valid `sdlManager.getSystemCapabilityManager()` to find out the display capabilities of the head unit.
 
 ```java
 sdlManager.getSystemCapabilityManager().getCapability(SystemCapabilityType.DISPLAY, new OnSystemCapabilityListener(){
@@ -34,26 +36,29 @@ New to version 4.7 of the SDL Android library are `SdlFile` and `SdlArtwork` obj
 
 #### Creation
 
-One of the hardest parts about getting a file into SDL was the boilerplate needed to convert the file into a byte array that was used by the head unit. Now, you can instantiate an `SdlFile` with:
+One of the hardest parts about getting a file into SDL was the boilerplate code needed to convert the file into a byte array that was used by the head unit. Now, you can instantiate a `SdlFile` with:
 
 ##### A resource ID
+
 ```java
 new SdlFile(@NonNull String fileName, @NonNull FileType fileType, int id, boolean persistentFile)
 ```
 ##### A URI
+
 ```java
 new SdlFile(@NonNull String fileName, @NonNull FileType fileType, Uri uri, boolean persistentFile)
 ```
 And last but not least
 
 ##### A byte array
+
 ```java
 new SdlFile(@NonNull String fileName, @NonNull FileType fileType, byte[] data, boolean persistentFile)
 ```
 
 without the need to implement the methods needed to do the conversion of data yourself.
 
-### Uploading a File 
+### Uploading a File
 
 Uploading a file with the `FileManager` is a simple process. With an instantiated `SdlManager`,
 you can simply call:
@@ -66,6 +71,7 @@ sdlManager.getFileManager().uploadFile(sdlFile, new CompletionListener() {
     }
 });
 ```
+
 #### Uploading multiple files
 
 Sometimes you need to upload more than one file. We've got you covered. Simply create a `List<SdlFile>` object, add your files, and then call:
@@ -78,27 +84,32 @@ sdlManager.getFileManager().uploadFiles(sdlFileList, new MultipleFileCompletionL
     }
 });
 ```
+
 #### Uploading Artwork
 
 As mentioned before, the behavior of `SdlFile` and `SdlArtwork` are the same. But to help separate code, we have also included `uploadArtwork` and `uploadArtworks` methods to the `FileManager` that work the same as their `SdlFile` counterparts shown above.
 
 ### File Naming
+
 The file name can only consist of letters (a-Z) and numbers (0-9), otherwise the SDL Core may fail to find the uploaded file (even if it was uploaded successfully).
 
 ### File Persistance
-`SdlFile` supports uploading persistant images, i.e. images that do not become deleted when your application disconnects. Persistance should be used for images relating to your UI, and not for dynamic aspects, such as Album Artwork.
+
+`SdlFile` supports uploading persistent images, i.e. images that do not become deleted when your application disconnects. Persistance should be used for images relating to your UI, and not for dynamic aspects, such as Album Artwork.
 
 !!! note
 Be aware that persistance will not work if space on the head unit is limited.
 !!!
 
 ### Overwrite Stored Files
+
 If a file being uploaded has the same name as an already uploaded file, the new file will overwrite the previous file. 
 
 ### Check if a File Has Already Been Uploaded
+
 `FileManager` provides 2 methods that allow you to check if a file has been uploaded.
 
-#### getRemoteFileNames()
+#### Getting Remote Files
 
 `getRemoteFileNames()` returns a `List<String>` of the names of files that are uploaded to the head unit. 
 
@@ -106,7 +117,7 @@ If a file being uploaded has the same name as an already uploaded file, the new 
 List<String> files = sdlManager.getFileManager().getRemoteFileNames();
 ```
 
-#### hasUploadedFile()
+#### See If A File is Uploaded
 
 `hasUploadedFile` takes an `SdlFile` and returns a `boolean` of whether it is uploaded or not.
 
@@ -116,6 +127,7 @@ boolean isUploaded = sdlManager.getFileManager().hasUploadedFile(sdlFile);
 
 
 ### Check the Amount of File Storage
+
 To find the amount of file storage left on the head unit, use the  the `ListFiles` RPC.
 
 ```java
@@ -142,9 +154,9 @@ try{
 
 As with uploading, there are two methods that allow you to delete remote files. 
 
-#### For a single file:
+#### For a single file
 
-To delete a single file, pass in the file name as a string. You can optionally pass in a `CompletionListener`. 
+To delete a single file, call `deleteRemoteFileWithName()` and pass in the file name as a string. You can optionally pass in a `CompletionListener`. 
 
 ```java
 sdlManager.getFileManager().deleteRemoteFileWithName("testFile", new CompletionListener() {
@@ -155,9 +167,9 @@ sdlManager.getFileManager().deleteRemoteFileWithName("testFile", new CompletionL
 });
 ```
 
-#### Multiple files:
+#### Multiple files
 
-To delete multiple files, pass in a list with the names of the files you want to delete. You can optionally pass in a `MultipleFileCompletionListener`.
+To delete multiple files, call `deleteRemoteFilesWithNames()` and pass in a list with the names of the files you want to delete. You can optionally pass in a `MultipleFileCompletionListener`.
 
 ```java
 sdlManager.getFileManager().deleteRemoteFilesWithNames(remoteFiles, new MultipleFileCompletionListener() {
@@ -169,13 +181,17 @@ sdlManager.getFileManager().deleteRemoteFilesWithNames(remoteFiles, new Multiple
 ```
 
 ## Image Specifics
+
 ### Image File Type
+
 Images may be formatted as PNG, JPEG, or BMP. Check the `DisplayCapabilities` object provided by `sdlManager.getSystemCapabilityManager().getCapability()` to find out what image formats the head unit supports.
 
 ### Image Sizes
+
 If an image is uploaded that is larger than the supported size, that image will be scaled down to accomodate.
 
 #### Image Specifications
+
 ImageName 		  	 | Used in RPC				  |	Details 																							  |	Height 		 | Width  | Type
 ---------------------|----------------------------|-------------------------------------------------------------------------------------------------------|--------------|--------|-------
 softButtonImage		 | Show 					  | Will be shown on softbuttons on the base screen														  | 70px         | 70px   | png, jpg, bmp
