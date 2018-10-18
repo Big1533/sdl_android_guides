@@ -7,6 +7,8 @@ Navigation apps are allowed to stream raw audio to be played by the head unit. T
 * **Number of Channels**: 1
 * **Bits Per Second (BPS)**: 16 bits per sample / 2 bytes per sample
 
+You can now also push `mp3` files using the `AudioStreamingManager`, which is accessed through the `SdlManager`.
+
 
 !!! Note
 For streaming consistent audio, such as music, use a normal A2DP stream and not this method.
@@ -14,47 +16,59 @@ For streaming consistent audio, such as music, use a normal A2DP stream and not 
 
 #### Streaming Audio 
 
-To stream audio, we call `proxy.startAudioStream()` which will return an `IAudioStreamListener` object that we will use to send the audio. This should happen when your app is in `HMI_FULL` status in the `onOnHMIStatus(OnHMIStatus notification) ` callback.
-
-For example: 
+To stream audio, we call `sdlManager.getAudioStreamManager().start()` which will start the manager. When that callback returns successful, you call `sdlManager.getAudioStreamManager().startAudioStream()`. When the callback for that is successful, you can push the audio source using `sdlManager.getAudioStreamManager().pushAudioSource()`. Below is an example of playing an `mp3` file that we have in our resource directory:
 
 ```java
-    private void startAudioStream(){
-
-		final InputStream is = getResources().openRawResource(R.raw.audio_resource);
-
-    	AudioStreamingParams audioParams = new AudioStreamingParams(44100, 1);
-		IAudioStreamListener listener = proxy.startAudioStream(false, AudioStreamingCodec.LPCM, audioParams);
-		if (listener != null){
-			try {
-				listener.sendAudio(readToByteBuffer(is), -1);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-
-	private static ByteBuffer readToByteBuffer(InputStream inStream) throws IOException {
-		byte[] buffer = new byte[8000];
-		ByteArrayOutputStream outStream = new ByteArrayOutputStream(8000);
-		int read;
-		while (true) {
-			read = inStream.read(buffer);
-			if (read == -1) {
-				break;
-			}
-			outStream.write(buffer, 0, read);
-		}
-		return ByteBuffer.wrap(outStream.toByteArray());
-	}
+if (sdlManager.getAudioStreamManager() != null) {
+    Log.i(TAG, "Trying to start audio streaming");
+    sdlManager.getAudioStreamManager().start(new CompletionListener() {
+        @Override
+        public void onComplete(boolean success) {
+            if (success) {
+                sdlManager.getAudioStreamManager().startAudioStream(false, new CompletionListener() {
+                    @Override
+                    public void onComplete(boolean success) {
+                        if (success) {
+                            Resources resources = getApplicationContext().getResources();
+                            int resourceId = R.raw.exampleMp3;
+                            Uri uri = new Uri.Builder()
+                            .scheme(ContentResolver.SCHEME_ANDROID_RESOURCE)
+                            .authority(resources.getResourcePackageName(resourceId))
+                            .appendPath(resources.getResourceTypeName(resourceId))
+                            .appendPath(resources.getResourceEntryName(resourceId))
+                            .build();
+                            sdlManager.getAudioStreamManager().pushAudioSource(uri, new CompletionListener() {
+                                @Override
+                                public void onComplete(boolean success) {
+                                    if (success) {
+                                        Log.i(TAG, "Audio file played successfully!");
+                                    } else {
+                                        Log.i(TAG, "Audio file failed to play!");
+                                    }
+                                }
+                            });
+                        } else {
+                            Log.d(TAG, "Audio stream failed to start!");
+                        }
+                    }
+                });
+            } else {
+                Log.i(TAG, "Failed to start audio streaming manager");
+            }
+        }
+    });
+}
 ```
 
 #### Stopping the Audio Stream
 
-When the stream is complete, or you receive HMI_NONE, you should stop the stream by calling 
+When the stream is complete, or you receive HMI_NONE, you should stop the stream by calling:
 
 ```java
-	private void stopAudioStream() {
-		proxy.endAudioStream();
-	}
+sdlManager.getAudioStreamManager().stopAudioStream(new CompletionListener() {
+    @Override
+    public void onComplete(boolean success) {
+
+    }
+});
 ```
