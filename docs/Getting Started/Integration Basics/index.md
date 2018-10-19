@@ -21,13 +21,9 @@ In the AndroidManifest for our sample project we need to ensure we have the foll
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.company.mySdlApplication">
     
-    ...
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BLUETOOTH"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    ...
 
 </manifest>
 ```
@@ -43,16 +39,15 @@ If the app is targeting Android P (API Level 28) or higher, the Android Manifest
 
 ## SmartDeviceLink Service
 
-A SmartDeviceLink Android Service should be created to manage the lifecycle of an SDL Proxy. The SDL Service enables auto-start by creating the SDL Proxy, which then waits for a connection from SDL. This file also sends and receives messages to and from SDL after connected.
+A SmartDeviceLink Android Service should be created to manage the lifecycle of the SDL session. The `SdlService` should build and start an instance of the `SdlManager` which will automatically connect with a headunit when available. This `SdlManager` will handle sending and receiving messages to and from SDL after connected.
 
-Create a new service and name it appropriately, for this guide we are going to call it `SdlService`. This service must implement the `IProxyListenerALM` interface:
+Create a new service and name it appropriately, for this guide we are going to call it `SdlService`. 
  
 ```java
-public class SdlService extends Service implements IProxyListenerALM {
-    // Inherited methods from IProxyListenerALM
+public class SdlService extends Service {
+    //...
 }
 ```
- The IProxyListenerALM interface has most of the callbacks you will receive during the SDL proxy's lifecycle. This includes callbacks for RPC responses.
  
 If you created the service using the Android Studio template then the service should have been added to your `AndroidManifest.xml` otherwise the service needs to be defined in the manifest:
 
@@ -61,16 +56,12 @@ If you created the service using the Android Studio template then the service sh
     package="com.company.mySdlApplication">
 
     <application>
-    
-    ...
 
         <service
         android:name=".SdlService"
         android:enabled="true"/>
     
     </application>
-
-    ...
 
 </manifest>
 ```
@@ -83,7 +74,7 @@ Because of Android Oreo's requirements, it is mandatory that services enter the 
 
 public void onCreate() {
     super.onCreate();
-    ...
+    //...
     if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
     	NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
      	notificationManager.createNotificationChannel(...);
@@ -121,108 +112,92 @@ public void onDestroy(){
 }
 ```
 
-### Implementing SDL Proxy Lifecycle
+### Implementing SDL Manager
 
-In order to correctly use a proxy developers need to implement methods for the proper creation and disposing of an SDL Proxy in our SDLService.
+In order to correctly connect to an SDL enabled head unit developers need to implement methods for the proper creation and disposing of an `SdlManager` in our `SdlService`.
 
 !!! NOTE
-An instance of SdlProxy cannot be reused after it is closed and properly disposed of. Instead, a new instance must be created. Only one instance of SdlProxy should be in use at any given time.
+An instance of SdlManager cannot be reused after it is closed and properly disposed of. Instead, a new instance must be created. Only one instance of SdlManager should be in use at any given time.
 !!!
 
 ```java
-public class SdlService extends Service implements IProxyListenerALM {
+public class SdlService extends Service {
 
-    //The proxy handles communication between the application and SDL
-    private SdlProxyALM proxy = null;
+    //The manager handles communication between the application and SDL
+    private SdlManager sdlManager = null;
 
     //...
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        boolean forceConnect = intent !=null && intent.getBooleanExtra(TransportConstants.FORCE_TRANSPORT_CONNECTED, false);
-        if (proxy == null) {
-            try {
-                //Create a new proxy using Bluetooth transport
-                //The listener, app name, 
-                //whether or not it is a media app and the applicationId are supplied.
-                proxy = new SdlProxyALM(this.getBaseContext(),this, "Hello SDL App", true, "8675309");
-            } catch (SdlException e) {
-                //There was an error creating the proxy
-                if (proxy == null) {
-                //Stop the SdlService
-                    stopSelf();
-                }
-            }
-        }else if(forceConnect){
-			proxy.forceOnConnected();
-		}
-
-        //use START_STICKY because we want the SDLService to be explicitly started and stopped as needed.
-        return START_STICKY;
-    }
-    
-    @Override
-    public void onDestroy() {
-        //Dispose of the proxy
-        if (proxy != null) {
-            try {
-                proxy.dispose();
-            } catch (SdlException e) {
-                e.printStackTrace();
-            } finally {
-                proxy = null;
-            }
-        }
         
-        super.onDestroy();
-    }
-    
-    @Override
-    public void onProxyClosed(String info, Exception e, SdlDisconnectedReason reason) {
-        //Stop the service
-        stopSelf();
-    }
-    
-    //...
+        if (sdlManager == null) {
+            MultiplexTransportConfig transport = new MultiplexTransportConfig(this, APP_ID, MultiplexTransportConfig.FLAG_MULTI_SECURITY_OFF);
+           
+            // The app type to be used
+            Vector<AppHMIType> appType = new Vector<>();
+            appType.add(AppHMIType.MEDIA);
+
+            // The manager listener helps you know when certain events that pertain to the SDL Manager happen
+            SdlManagerListener listener = new SdlManagerListener() {
+                
+                @Override
+                public void onStart() {
+                	// After this callback is triggered the SdlManager can be used to interact with the connected SDL session (updating the display, sending RPCs, etc)
+                }
+
+                @Override
+                public void onDestroy() {
+                    SdlService.this.stopSelf();
+                }
+
+                @Override
+                public void onError(String info, Exception e) {
+                }
+            };
+
+            // Create App Icon, this is set in the SdlManager builder
+            SdlArtwork appIcon = new SdlArtwork(ICON_FILENAME, FileType.GRAPHIC_PNG, R.mipmap.ic_launcher, true);
+
+            // The manager builder sets options for your session
+            SdlManager.Builder builder = new SdlManager.Builder(this, APP_ID, APP_NAME, listener);
+            builder.setAppTypes(appType);
+            builder.setTransportType(transport);
+            builder.setAppIcon(appIcon);
+            sdlManager = builder.build();
+            sdlManager.start();
+        }
 
 }
 ```
 
-`onProxyClosed()` is called whenever the proxy detects some disconnect in the connection, whether initiated by the app, by SDL, or by the device’s bluetooth connection. As long as the exception does not equal Sdl_PROXY_CYCLED or BLUETOOTH_DISABLED, the proxy would be reset for the exception SDL_PROXY_DISPOSED.
+The `onDestroy()` method from the `SdlManagerListener` is called whenever the manager detects some disconnect in the connection, whether initiated by the app, by SDL, or by the device’s connection.
 
 !!! IMPORTANT
-We must properly dispose of our proxy in the `onDestroy()` method because SDL will issue an error that it lost connection with the app if the connection fails before calling `proxy.dispose()`.
+The `sdlManager` must be shutdown properly in the `SdlService.onDestroy()` callback using the method `sdlManager.dispose()`.
 !!!
 
-### Implementing IProxyListenerALM Methods
+### Listening for RPC notifications and events
 
-#### onOnHMIStatus()
+We can listen for specific events using `SdlManager`'s `addOnRPCNotificationListener`. These listeners can be added either in the `onStart()` callback of the `SdlManagerListener` or after it has been triggered. The following example shows how to listen for HMI Status notifications. Additional listeners can be added for specific RPCs by using their corresponding `FunctionID` in place of the `ON_HMI_STATUS` in the following example and casting the `RPCNotification` object to the correct type. 
 
-In our `SdlService`, the `onOnHMIStatus()` method is where you should control your application with SDL various HMI Statuses. When you receive the first HMI_FULL, you should initialize your app on SDL by subscribing to buttons, registering addcommands, sending an initial show or speak command, etc.
+##### Example of a listener for HMI Status:
 
 ```java
-@Override
-public void onOnHMIStatus(OnHMIStatus notification) {
-
-    switch(notification.getHmiLevel()) {
-        case HMI_FULL:
-            //send welcome message, addcommands, subscribe to buttons ect
-            break;
-        case HMI_LIMITED:
-            break;
-        case HMI_BACKGROUND:
-            break;
-        case HMI_NONE:
-            break;
-        default:
-            return;
-    }
-}
+sdlManager.addOnRPCNotificationListener(FunctionID.ON_HMI_STATUS, new OnRPCNotificationListener() {
+		@Override
+		public void onNotified(RPCNotification notification) {
+			OnHMIStatus status = (OnHMIStatus) notification;
+			if (status.getHmiLevel() == HMILevel.HMI_FULL && ((OnHMIStatus) notification).getFirstRun()) {
+				// first time in HMI Full
+			}
+		}
+	});
 ```
 
 ## SmartDeviceLink Router Service
 
-The `SdlRouterService` will listen for a bluetooth connection with an SDL enabled module. When a connection happens, it will alert all SDL enabled apps that a connection has been established and they should start their SDL services.
+The `SdlRouterService` will listen for a connection with an SDL enabled module. When a connection happens, it will alert all SDL enabled apps that a connection has been established and they should start their SDL services.
 
 We must implement a local copy of the `SdlRouterService` into our project. The class doesn't need any modification, it's just important that we include it. We will extend the `com.smartdevicelink.transport.SdlRouterService` in our class named `SdlRouterService`:
 
@@ -243,15 +218,24 @@ The local extension of the `com.smartdevicelink.transport.SdlRouterService` must
 Make sure this local class (SdlRouterService.java) is in the same package of SdlReceiver.java (described below)
 !!!
 
-If you created the service using the Android Studio template then the service should have been added to your `AndroidManifest.xml` otherwise the service needs to be added in the manifest. Because we want our service to be seen by other SDL enabled apps, we need to set `android:exported="true"`. The system may issue a lint warning because of this, so we can suppress that using `tools:ignore="ExportedService"`.  Once added, it should be defined like below:
+If you created the service using the Android Studio template then the service should have been added to your `AndroidManifest.xml` otherwise the service needs to be added in the manifest. Because we want our service to be seen by other SDL enabled apps, we need to set `android:exported="true"`. The system may issue a lint warning because of this, so we can suppress that using `tools:ignore="ExportedService"`.  
+
+## Lock Screen Activity
+
+An Activity entry must also be added to the manifest for the SDL lock
+screen. For more information about lock screens, please see the [Adding the Lock Screen](https://smartdevicelink.com/en/guides/android/adding-the-lock-screen/) section.
+
+!!! NOTE
+When using `SdlManager`, the lock screen is enabled by default via the `LockScreenManager`. Please see the link above for more information
+!!!
+
+Once added, your `AndroidManifest.xml` should be defined like below:
 
 ```xml
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.company.mySdlApplication">
 
     <application>
-    
-    ...
 
         <service
         	android:name="com.company.mySdlApplication.SdlRouterService"
@@ -263,10 +247,12 @@ If you created the service using the Android Studio template then the service sh
             </intent-filter>
             <meta-data android:name="@string/sdl_router_service_version_name"  android:value="@integer/sdl_router_service_version_value" />
         </service>
+        
+        <!-- Required to use the lock screen -->
+        <activity android:name="com.smartdevicelink.managers.lockscreen.SDLLockScreenActivity"
+                  android:launchMode="singleTop"/>
     
     </application>
-
-    ...
 
 </manifest>
 ```
@@ -322,7 +308,7 @@ Some OEMs choose to implement custom router services. Setting the `sdl_router_se
 
 ## SmartDeviceLink Broadcast Receiver
 
-The Android implementation of the SdlProxy relies heavily on the OS's bluetooth intents. When the phone is connected to SDL, the app needs to create a SdlProxy, which publishes an SDP record for SDL to connect to. As mentioned previously, a SdlProxy cannot be re-used. When a disconnect between the app and SDL occurs, the current proxy must be disposed of and a new one created.
+The Android implementation of the SdlManager relies heavily on the OS's bluetooth and USB intents. When the phone is connected to SDL and the router service has sent a connection intent, the app needs to create an SdlManager, which will bind to the already connected router service. As mentioned previously, the SdlManager cannot be re-used. When a disconnect between the app and SDL occurs, the current SdlManager must be disposed of and a new one created.
 
 The SDL Android library has a custom broadcast receiver named `SdlBroadcastReceiver` that should be used as the base for your BroadcastReceiver. It is a child class of Android's BroadcastReceiver so all normal flow and attributes will be available. Two abstract methods will be automatically populate the class, we will fill them out soon.
 
@@ -331,12 +317,11 @@ Create a new SdlBroadcastReceiver and name it appropriately, for this guide we a
 ```java
 public class SdlReceiver extends SdlBroadcastReceiver {
 
-      	@Override
+    @Override
 	public void onSdlEnabled(Context context, Intent intent) {
 		//...
 		
 	}
-
 
 	@Override
 	public Class<? extends SdlRouterService> defineLocalSdlRouterClass() {
@@ -368,8 +353,6 @@ If you created the BroadcastReceiver using the Android Studio template then the 
 
     <application>
 
-        ...
-
         <receiver
             android:name=".SdlReceiver"
             android:exported="true"
@@ -383,8 +366,10 @@ If you created the BroadcastReceiver using the Android Studio template then the 
         </receiver>
     
     </application>
-
-...
+    
+    <!-- Required to use the lock screen -->
+    <activity android:name="com.smartdevicelink.managers.lockscreen.SDLLockScreenActivity"
+                  android:launchMode="singleTop"/>
 
 </manifest>
 ```
@@ -400,9 +385,9 @@ Next, we want to make sure we supply our instance of the SdlBroadcastService wit
 
 ```java
 public class SdlReceiver extends SdlBroadcastReceiver {
-          	@Override
+   @Override
 	public void onSdlEnabled(Context context, Intent intent) {
-		//..
+	
 	}
 
 	@Override
@@ -414,7 +399,7 @@ public class SdlReceiver extends SdlBroadcastReceiver {
 ```
 
 
-We want to start the SDL Proxy when an SDL connection is made via the `SdlRouterService`. We do this by taking action in the onSdlEnabled method:
+We want to start the SdlManager when an SDL connection is made via the `SdlRouterService`. We do this by taking action in the onSdlEnabled method:
 
 !!! MUST
 Apps must start their service in the foreground as of Android Oreo (API 26).
@@ -433,7 +418,6 @@ public class SdlReceiver extends SdlBroadcastReceiver {
 			context.startForegroundService(intent);
 		}
 	}
-
 
 	@Override
 	public Class<? extends SdlRouterService> defineLocalSdlRouterClass() {
