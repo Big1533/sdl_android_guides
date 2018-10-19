@@ -37,7 +37,7 @@ public static class MyDisplay extends SdlRemoteDisplay{
 ```
 
 !!! Note
-If you are obfuscating the code in your app, make sure to exclude you `SdlRemoteDisplay` class from being obfuscated. For more information on how to do that, you can check [Proguard Guidelines](/guides/android/proguard-guidelines/).
+If you are obfuscating the code in your app, make sure to exclude your `SdlRemoteDisplay` class. For more information on how to do that, you can check [Proguard Guidelines](/guides/android/proguard-guidelines/).
 !!!
 
 ## Managing the Stream
