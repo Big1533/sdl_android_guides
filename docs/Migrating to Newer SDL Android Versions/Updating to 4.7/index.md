@@ -12,7 +12,7 @@
 
 ## Video Streaming:
 
-Previously, developers had to make sure that the app in HMI_FULL before starting the video stream, In 4.7, the developer can start video streaming in `VideoStreamingManager.start()`'s `CompletionListener`. The `VideoStreamingManager` will take care of starting the video when the app is ready for that.
+Previously, developers had to make sure that the app was in HMI_FULL before starting the video stream, In 4.7, the developer can start video streaming in `VideoStreamingManager.start()`'s `CompletionListener`. The `VideoStreamingManager` will take care of starting the video when the app becomes ready.
 
 ### In 4.6:
 
