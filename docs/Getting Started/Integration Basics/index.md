@@ -39,7 +39,7 @@ If the app is targeting Android P (API Level 28) or higher, the Android Manifest
 
 ## SmartDeviceLink Service
 
-A SmartDeviceLink Android Service should be created to manage the lifecycle of the SdlManager. The SDL Service enables auto-start by creating the SdlManager, which then waits for a connection from SDL. This file also sends and receives messages to and from SDL after connected.
+A SmartDeviceLink Android Service should be created to manage the lifecycle of the SDL session. The `SdlService` should build and start an instance of the `SdlManager` which will automatically connect with a headunit when available. This `SdlManager` will handle sending and receiving messages to and from SDL after connected.
 
 Create a new service and name it appropriately, for this guide we are going to call it `SdlService`. 
  
@@ -114,7 +114,7 @@ public void onDestroy(){
 
 ### Implementing SDL Manager
 
-In order to correctly connect to an SDL enabled head unit developers need to implement methods for the proper creation and disposing of an SdlManager in our SDLService.
+In order to correctly connect to an SDL enabled head unit developers need to implement methods for the proper creation and disposing of an `SdlManager` in our `SdlService`.
 
 !!! NOTE
 An instance of SdlManager cannot be reused after it is closed and properly disposed of. Instead, a new instance must be created. Only one instance of SdlManager should be in use at any given time.
@@ -143,7 +143,7 @@ public class SdlService extends Service {
                 
                 @Override
                 public void onStart() {
-                	// RPC listeners and other functionality can be called once this callback is triggered.
+                	// After this callback is triggered the SdlManager can be used to interact with the connected SDL session (updating the display, sending RPCs, etc)
                 }
 
                 @Override
@@ -171,15 +171,15 @@ public class SdlService extends Service {
 }
 ```
 
-`onDestroy()` is called whenever the manager detects some disconnect in the connection, whether initiated by the app, by SDL, or by the device’s connection.
+The `onDestroy()` method from the `SdlManagerListener` is called whenever the manager detects some disconnect in the connection, whether initiated by the app, by SDL, or by the device’s connection.
 
 !!! IMPORTANT
-We must properly stop the service in the `onDestroy()` method as shown above.
+The `sdlManager` must be shutdown properly in the `SdlService.onDestroy()` callback using the method `sdlManager.dispose()`.
 !!!
 
-### Listening for events
+### Listening for RPC notifications and events
 
-We can listen for specific events using `SdlManager`'s `addOnRPCNotificationListener`. These listeners can be placed in the `onStart()` callback of the `SdlManagerListener`. We give an example of using this below, to obtain the HMI Status. Other listeners for specific RPCs can be added easily by changing the `FunctionID` to that of the RPC that is to be listened for and by casting the notification to the appropriate type.
+We can listen for specific events using `SdlManager`'s `addOnRPCNotificationListener`. These listeners can be added either in the `onStart()` callback of the `SdlManagerListener` or after it has been triggered. The following example shows how to listen for HMI Status notifications. Additional listeners can be added for specific RPCs by using their corresponding `FunctionID` in place of the `ON_HMI_STATUS` in the following example and casting the `RPCNotification` object to the correct type. 
 
 ##### Example of a listener for HMI Status:
 
@@ -220,7 +220,10 @@ Make sure this local class (SdlRouterService.java) is in the same package of Sdl
 
 If you created the service using the Android Studio template then the service should have been added to your `AndroidManifest.xml` otherwise the service needs to be added in the manifest. Because we want our service to be seen by other SDL enabled apps, we need to set `android:exported="true"`. The system may issue a lint warning because of this, so we can suppress that using `tools:ignore="ExportedService"`.  
 
-We also need to define the activity used for the lock screen. For more information about lock screens, please see the [Adding the Lock Screen](https://smartdevicelink.com/en/guides/android/adding-the-lock-screen/) section.
+## Lock Screen Activity
+
+An Activity entry must also be added to the manifest for the SDL lock
+screen. For more information about lock screens, please see the [Adding the Lock Screen](https://smartdevicelink.com/en/guides/android/adding-the-lock-screen/) section.
 
 !!! NOTE
 When using `SdlManager`, the lock screen is enabled by default via the `LockScreenManager`. Please see the link above for more information
@@ -305,7 +308,7 @@ Some OEMs choose to implement custom router services. Setting the `sdl_router_se
 
 ## SmartDeviceLink Broadcast Receiver
 
-The Android implementation of the SdlManager relies heavily on the OS's bluetooth and USB intents. When the phone is connected to SDL, the app needs to create a SdlManager, which publishes an SDP record for SDL to connect to. As mentioned previously, the SdlManager cannot be re-used. When a disconnect between the app and SDL occurs, the current SdlManager must be disposed of and a new one created.
+The Android implementation of the SdlManager relies heavily on the OS's bluetooth and USB intents. When the phone is connected to SDL and the router service has sent a connection intent, the app needs to create an SdlManager, which will bind to the already connected router service. As mentioned previously, the SdlManager cannot be re-used. When a disconnect between the app and SDL occurs, the current SdlManager must be disposed of and a new one created.
 
 The SDL Android library has a custom broadcast receiver named `SdlBroadcastReceiver` that should be used as the base for your BroadcastReceiver. It is a child class of Android's BroadcastReceiver so all normal flow and attributes will be available. Two abstract methods will be automatically populate the class, we will fill them out soon.
 
