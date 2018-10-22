@@ -7,7 +7,7 @@ Both methods have optional listeners that are specific to them, the `OnMultipleR
 
 ### Send Requests
 
-`sendRequests` allows you to easily send an ArrayList of `RPCRequests` easily to the head unit. When you send multiple RPCs concurrently there is no guarantee of the order in which the RPCs will be sent or in which order Core will return responses. The method also comes with its own listener, `OnMultipleRequestListener` that will provide you with updates as the sending progresses, errors that may arise, and let you know when the sending is finished. Below is a sample call:
+`sendRPCs` allows you to easily send an ArrayList of `RPCRequests` easily to the head unit. When you send multiple RPCs concurrently there is no guarantee of the order in which the RPCs will be sent or in which order Core will return responses. The method also comes with its own listener, `OnMultipleRequestListener` that will provide you with updates as the sending progresses, errors that may arise, and let you know when the sending is finished. Below is a sample call:
 
 ```java
 List<RPCRequest> rpcs = new ArrayList<>();
@@ -51,9 +51,9 @@ try {
 
 ### Send Sequential Requests
 
-As you may have guessed, this method is called similarly to `sendRequests` but sends the requests synchronously, guaranteeing order. It is important to note that you want to build your array with the items that you want to send first, first. This is particularly useful for RPCs that are dependent upon other ones, such as a `performInteraction` needing a `createInteractionChoiceSet`'s id. 
+As you may have guessed, this method is called similarly to `sendRPCs` but sends the requests synchronously, guaranteeing order. It is important to note that you want to build your array with the items that you want to send first, first. This is particularly useful for RPCs that are dependent upon other ones, such as a `performInteraction` needing a `createInteractionChoiceSet`'s id. 
 
-This method call is exactly the same as above, except for the method name being `sendSequentialRequests`. For your convinience, the listener is also the same and performs similarly. 
+This method call is exactly the same as above, except for the method name being `sendSequentialRPCs`. For your convinience, the listener is also the same and performs similarly. 
 
 ```java
 
