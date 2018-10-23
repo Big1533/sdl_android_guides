@@ -41,7 +41,7 @@ If you are obfuscating the code in your app, make sure to exclude your class tha
 !!!
 
 ## Managing the Stream
-To start streaming video, you can use `VideoStreamingManager`. The method that needs to be called is `startRemoteDisplayStream(Context context, final Class<? extends SdlRemoteDisplay> remoteDisplay, final VideoStreamingParameters parameters, final boolean encrypted)`.
+The `VideoStreamingManager` can be used to start streaming video after the `SdlManager` has successfully been started. This is performed by calling the method `startRemoteDisplayStream(Context context, final Class<? extends SdlRemoteDisplay> remoteDisplay, final VideoStreamingParameters parameters, final boolean encrypted)`.
 
 ```java
 if (sdlManager.getVideoStreamManager() != null) {
