@@ -1,6 +1,6 @@
 ### Sending RPCs
 
-There are new method names that extend previous functionality when it comes to sending RPCs.
+There are new method names and locations that mimic previous functionality for sending RPCs. These methods are located in the `SdlManager` and have the new names of `sendRPC`, `sendRPCs`, and `sendSequentialRPCs`.
 
 ##### 4.6:
 
