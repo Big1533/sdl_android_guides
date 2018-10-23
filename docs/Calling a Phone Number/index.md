@@ -13,13 +13,14 @@ Dialing a Phone Number allows you to send a phone number to dial on the user's p
 3. DISALLOWED - Your app does not have permission to use `DialNumber`.
 
 ### Detecting if DialNumber is Available
-`DialNumber` is a newer RPC, so there is a possibility that not all head units will support it. To see if `DialNumber` is supported, you may look at your SdlProxyALM object's getHmiCapabilities method after the successfully creating the proxy.
+`DialNumber` is a newer RPC, so there is a possibility that not all head units will support it. To see if `DialNumber` is supported, you may look at the `HMICapabilities` that can be retrieved using `SystemCapabilityManager`.
 
 ```java
-if(proxy.getHmiCapabilities().isPhoneCallAvailable()){
-	// DialNumber supported
+HMICapabilities hmiCapabilities = (HMICapabilities) sdlManager.getSystemCapabilityManager().getCapability(SystemCapabilityType.HMI);
+if(hmiCapabilities.isPhoneCallAvailable()){
+    // DialNumber supported
 }else{
-	// DialNumber is not supported
+    // DialNumber is not supported
 }
 ```
 
@@ -45,5 +46,5 @@ dialNumber.setOnRPCResponseListener(new OnRPCResponseListener() {
     }
 });
     
-proxy.sendRPCRequest(dialNumber);
+sdlManager.sendRPC(dialNumber);
 ```
