@@ -19,6 +19,9 @@
                     "name" : "Using AOA Protocol"
                 },
                 {
+                    "name" : "Multiple Transports"
+                },
+                {
                     "name" : "Sending Multiple RPCs"
                 },
                 {
