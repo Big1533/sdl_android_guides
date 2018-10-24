@@ -44,6 +44,11 @@ public class SdlService extends Service {
 
 After removing `IProxyListenerALM ` from the `SdlService`, all of its previously overridden functions will need to be removed. If your app used any of these callback methods, it will help to document which ones they were, as you will need to add in the listeners that you need using the `SdlManager`'s `addOnRPCNotificationListener`.
 
+!!! note
+When you start using the managers, you have to make sure that your app subscribes to notifications before sending the corresponding RPC requests and subscriptions or else some notifications may be missed.
+!!!
+
+
 ### Creation of SdlManager
 
 As we no longer want to directly instantiate `SdlProxyALM`, we need to instantiate the `SdlManager` instead. This is best done using the `SdlManager.Builder` class and using your application's details and configurations. In order to receive life cycle events from the `SdlManager`, an `SdlManagerListener` must be provided. The new code should resemble the following:
@@ -171,4 +176,57 @@ sdlManager.sendRPCs(rpcs, new OnMultipleRequestListener() {
 sdlManager.sendSequentialRPCs(rpcs, new OnMultipleRequestListener() {
 	//...
 });
+```
+
+
+### Subscribing to AudioPassThru Notifications
+
+Previously, your `SdlService` had to implement `IProxyListenerALM` interface which means your `SdlService` class had to override all of the `IProxyListenerALM` callback methods including `onOnAudioPassThru`.
+
+```java
+@Override
+public void onOnHMIStatus(OnHMIStatus notification) {
+    if(notification.getHmiLevel() == HMILevel.HMI_FULL && notification.getFirstRun()) {
+        PerformAudioPassThru performAPT = new PerformAudioPassThru();
+        performAPT.setAudioPassThruDisplayText1("Ask me \"What's the weather?\"");
+        performAPT.setAudioPassThruDisplayText2("or \"What's 1 + 2?\"");
+        performAPT.setInitialPrompt(TTSChunkFactory.createSimpleTTSChunks("Ask me What's the weather? or What's 1 plus 2?"));
+        performAPT.setSamplingRate(SamplingRate._22KHZ);
+        performAPT.setMaxDuration(7000);
+        performAPT.setBitsPerSample(BitsPerSample._16_BIT);
+        performAPT.setAudioType(AudioType.PCM);
+        performAPT.setMuteAudio(false);
+        proxy.sendRPCRequest(performAPT);
+    }
+}
+
+@Override
+public void onOnAudioPassThru(OnAudioPassThru notification) {
+    byte[] dataRcvd = notification.getAPTData();
+    processAPTData(dataRcvd); // Do something with audio data
+}
+```
+
+In 4.7 and the new manager APIs, in order to receive the  `OnAudioPassThru ` notifications, your app must add a `OnRPCNotificationListener` using the `SdlManager`'s method `addOnRPCNotificationListener`. This will subscribe the app to any notifications of the provided type, in this case `ON_AUDIO_PASS_THRU`. The listener should be added before sending the corresponding RPC request/subscription or else some notifications may be missed. 
+
+```java
+sdlManager.addOnRPCNotificationListener(FunctionID.ON_AUDIO_PASS_THRU, new OnRPCNotificationListener() {
+    @Override
+    public void onNotified(RPCNotification notification) {
+        OnAudioPassThru onAudioPassThru = (OnAudioPassThru) notification;
+        byte[] dataRcvd = onAudioPassThru.getAPTData();
+        processAPTData(dataRcvd); // Do something with audio data
+    }
+});
+
+PerformAudioPassThru performAPT = new PerformAudioPassThru();
+performAPT.setAudioPassThruDisplayText1("Ask me \"What's the weather?\"");
+performAPT.setAudioPassThruDisplayText2("or \"What's 1 + 2?\"");
+performAPT.setInitialPrompt(TTSChunkFactory.createSimpleTTSChunks("Ask me What's the weather? or What's 1 plus 2?"));
+performAPT.setSamplingRate(SamplingRate._22KHZ);
+performAPT.setMaxDuration(7000);
+performAPT.setBitsPerSample(BitsPerSample._16_BIT);
+performAPT.setAudioType(AudioType.PCM);
+performAPT.setMuteAudio(false);
+sdlManager.sendRPC(performAPT);
 ```
