@@ -4,13 +4,9 @@
 
 In this guide we take you through the steps to get our sample project, Hello Sdl Android, running and connected to Sdl Core as well as showing up on the generic HMI. 
 
-First, make sure you download or clone the latest release from [GitHub](https://github.com/smartdevicelink/hello_sdl_android).
+First, make sure you download or clone the latest release from [GitHub](https://github.com/smartdevicelink/sdl_android). It is a package within the SDL Android library.
 
 Open the project in [Android Studio](https://developer.android.com/studio/index.html). We will exclusively use Android Studio as it is the current supported platform for Android development. 
-
-!!! Note 
-The SDL Android Library is set up to use sdl_android with Gradle. When you clone the repository, perform a Gradle sync.
-!!!
 
 ### Getting Started
 
@@ -32,12 +28,11 @@ There are many flavors to choose from and for now we will only be concerned with
 
 Versions Include:
 
-* lbt - Legacy Bluetooth
-* mbt - Multiplexing Bluetooth
-* tcp - Transmission Control Protocol
-* usb - Universal Serial Bus
+* `multi` - Multiplexing (Bluetooth, USB, TCP (as secondary transport))
+* `multi_high_bandwidth` - Multiplexing for apps that require a high bandwidth transport
+* `tcp` - Transmission Control Protocol - used only for debugging purposes
 
-We will mainly be dealing with mbt (if using a TDK) or tcp (if connecting to SDL Core via a virtual machine or your localhost)
+We will mainly be dealing with `multi` (if using a TDK) or `tcp` (if connecting to SDL Core via a virtual machine or your localhost, or to Manticore)
 
 ### Transports
 
@@ -63,11 +58,11 @@ if you do not change the target IP address, the application will not connect to 
 
 #### Configure for Bluetooth
 
-Right out of the box, all you need to do to run bluetooth is to select the ```mbt_offDebug``` (Multiplexing Bluetooth) build flavor.
+Right out of the box, all you need to do to run bluetooth is to select the ```multi_sec_offDebug``` (Multiplexing) build flavor.
 
 #### Configure for USB (AOA)
 
-To connect to an SDL Core instance or TDK via USB transport, select the ```usbDebug``` build flavor. There is more information for USB transport under Getting Started - Using AOA Protocol.  
+To connect to an SDL Core instance or TDK via USB transport, select the ```multi_sec_offDebug ``` (Multiplexing) build flavor. There is more information for USB transport under [Getting Started - Using AOA Protocol](Getting Started/Using AOA Protocol).  
 
 ### Building the Project
 
@@ -93,7 +88,7 @@ Click on the Hello Sdl icon in the HMI.
 
 This is the main screen of the Hello Sdl App. If you get to this point, the project is working.
 
-On the device you are running the app on, a lock screen should now appear once the app is opened on the HMI:
+On the device you are running the app on, a lock screen should now appear once the app is opened on the HMI if distracted driver notifications are set to `DD_On`:
 
 ![Lockscreen](assets/lockscreen.png)
 
@@ -117,7 +112,7 @@ Sometimes things don't always go as planned, and so this section exists. If your
 
 #### Bluetooth
 
-1. Make sure the build flavor ```mbt_offDebug``` is selected. 
+1. Make sure the build flavor ```multi_sec_offDebug ``` is selected. 
 2. Ensure your phone is properly paired with the TDK
 3. Make sure Bluetooth is turned on - on Both the TDK and your phone
 4. Make sure apps are enabled on the TDK (in settings)

@@ -177,6 +177,72 @@ sdlManager.sendSequentialRPCs(rpcs, new OnMultipleRequestListener() {
 	//...
 });
 ```
+## Subscribing to VehicleData Notifications
+
+Previously, your `SdlService` had to implement `IProxyListenerALM` interface which means your `SdlService` class had to override all of the `IProxyListenerALM` callback methods including `onOnVehicleData`.
+
+```java
+@Override
+public void onOnHMIStatus(OnHMIStatus notification) {
+    if(notification.getHmiLevel() == HMILevel.HMI_FULL && notification.getFirstRun()) {
+        SubscribeVehicleData subscribeRequest = new SubscribeVehicleData();
+        subscribeRequest.setPrndl(true);
+        subscribeRequest.setOnRPCResponseListener(new OnRPCResponseListener() {
+            @Override
+            public void onResponse(int correlationId, RPCResponse response) {
+                if(response.getSuccess()){
+                    Log.i("SdlService", "Successfully subscribed to vehicle data.");
+                }else{
+                    Log.i("SdlService", "Request to subscribe to vehicle data was rejected.");
+                }
+            }
+        });
+        try {
+            proxy.sendRPCRequest(subscribeRequest);
+        } catch (SdlException e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+@Override
+public void onOnVehicleData(OnVehicleData notification) {
+    PRNDL prndl = notification.getPrndl();
+    Log.i("SdlService", "PRNDL status was updated to: " prndl.toString());
+}
+```
+
+In 4.7 and the new manager APIs, in order to receive the  `OnVehicleData ` notifications, your app must add a `OnRPCNotificationListener` using the `SdlManager`'s method `addOnRPCNotificationListener`. This will subscribe the app to any notifications of the provided type, in this case `ON_VEHICLE_DATA`. The listener should be added before sending the corresponding RPC request/subscription or else some notifications may be missed. 
+
+
+```java
+sdlManager.addOnRPCNotificationListener(FunctionID.ON_VEHICLE_DATA, new OnRPCNotificationListener() {
+    @Override
+    public void onNotified(RPCNotification notification) {
+        OnVehicleData onVehicleDataNotification = (OnVehicleData) notification;
+        if (onVehicleDataNotification.getPrndl() != null) {
+            Log.i("SdlService", "PRNDL status was updated to: " + onVehicleDataNotification.getPrndl());
+        }
+    }
+});
+
+
+SubscribeVehicleData subscribeRequest = new SubscribeVehicleData();
+subscribeRequest.setPrndl(true);
+subscribeRequest.setOnRPCResponseListener(new OnRPCResponseListener() {
+    @Override
+    public void onResponse(int correlationId, RPCResponse response) {
+        if(response.getSuccess()){
+            Log.i("SdlService", "Successfully subscribed to vehicle data.");
+        }else{
+            Log.i("SdlService", "Request to subscribe to vehicle data was rejected.");
+        }
+    }
+});
+sdlManager.sendRPC(subscribeRequest);
+```
+
+
 
 
 ## Subscribing to AudioPassThru Notifications
@@ -260,6 +326,7 @@ sdlManager.getVideoStreamManager().start(new CompletionListener() {
 ```
 
 ## Audio Streaming
+
 
 With the addition of the `AudioStreamingManager`, which is accessed through `SdlManager`, you can now use `mp3` files in addition to `raw`. The `AudioStreamingManager` also handles `AudioStreamingCapabilities` for you, so your stream will use the correct capabilities for the connected head unit. We suggest that for any audio streaming that this is now used. Below is the difference in streaming from 4.6 to 4.7
 
