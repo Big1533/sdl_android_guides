@@ -179,7 +179,7 @@ sdlManager.sendSequentialRPCs(rpcs, new OnMultipleRequestListener() {
 ```
 
 
-### Subscribing to AudioPassThru Notifications
+## Subscribing to AudioPassThru Notifications
 
 Previously, your `SdlService` had to implement `IProxyListenerALM` interface which means your `SdlService` class had to override all of the `IProxyListenerALM` callback methods including `onOnAudioPassThru`.
 
@@ -231,10 +231,35 @@ performAPT.setMuteAudio(false);
 sdlManager.sendRPC(performAPT);
 ```
 
+## Video Streaming:
 
+Previously, developers had to make sure that the app was in HMI_FULL before starting the video stream, In 4.7, after the `SdlManager` has called its `onStart` method, the developer can start video streaming in `VideoStreamingManager.start()`'s `CompletionListener`. The `VideoStreamingManager` will take care of starting the video when the app becomes ready.
 
+### 4.6:
+```java
+    if(notification.getHmiLevel().equals(HMILevel.HMI_FULL)){
+        if (notification.getFirstRun()) {
+            proxy.startRemoteDisplayStream(getApplicationContext(), MyDisplay.class, null, false);
+        }
+    }
 
-### Audio Streaming
+}
+```
+
+### 4.7:
+
+```java
+sdlManager.getVideoStreamManager().start(new CompletionListener() {
+    @Override
+    public void onComplete(boolean success) {
+        if (success) {
+            sdlManager.getVideoStreamManager().startRemoteDisplayStream(getApplicationContext(), MyDisplay.class, null, false);
+        } 
+    }
+});
+```
+
+## Audio Streaming
 
 With the addition of the `AudioStreamingManager`, which is accessed through `SdlManager`, you can now use `mp3` files in addition to `raw`. The `AudioStreamingManager` also handles `AudioStreamingCapabilities` for you, so your stream will use the correct capabilities for the connected head unit. We suggest that for any audio streaming that this is now used. Below is the difference in streaming from 4.6 to 4.7
 
