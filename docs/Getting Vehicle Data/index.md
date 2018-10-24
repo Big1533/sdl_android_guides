@@ -57,11 +57,7 @@ vdRequest.setOnRPCResponseListener(new OnRPCResponseListener() {
 		}
 	}
 });
-try {
-	sdlManager.sendRPC(vdRequest);
-} catch (SdlException e) {
-	e.printStackTrace();
-}
+sdlManager.sendRPC(vdRequest);
 ```
 
 ### Subscribing to Vehicle Data
@@ -97,13 +93,8 @@ subscribeRequest.setOnRPCResponseListener(new OnRPCResponseListener() {
             Log.i("SdlService", "Request to subscribe to vehicle data was rejected.");
         }
     }
-});
-    
-try {
-    sdlManager.sendRPC(subscribeRequest);
-} catch (SdlException e) {
-    e.printStackTrace();
-}
+}); 
+sdlManager.sendRPC(subscribeRequest);
 ```
 
 **After that**, the `onNotified` method should be called when there is an update to the subscribed vehicle data.
@@ -124,10 +115,5 @@ unsubscribeRequest.setOnRPCResponseListener(new OnRPCResponseListener() {
         }
     }
 });
-	
-try {
-    sdlManager.sendRPC(unsubscribeRequest);
-} catch (SdlException e) {
-    e.printStackTrace();
-}
+sdlManager.sendRPC(unsubscribeRequest);
 ```
