@@ -13,7 +13,7 @@ Many of these features will be handled for you automatically by the `ScreenManag
 
 ### Detecting if Graphics are Supported
 
-Being able to know if graphics are supported is a very important feature of your application, as this avoids you uploading unnecessary images to the head unit. In order to see if graphics are supported, use the `getCapability()` method of a valid `sdlManager.getSystemCapabilityManager()` to find out the display capabilities of the head unit.
+Being able to know if graphics are supported is a very important feature of your application, as this avoids you uploading unnecessary images to the head unit. In order to see if graphics are supported, use the `getCapability()` method of a valid `SystemCapabilityManager` obtained from `sdlManager.getSystemCapabilityManager()` to find out the display capabilities of the head unit.
 
 ```java
 sdlManager.getSystemCapabilityManager().getCapability(SystemCapabilityType.DISPLAY, new OnSystemCapabilityListener(){
@@ -32,11 +32,11 @@ sdlManager.getSystemCapabilityManager().getCapability(SystemCapabilityType.DISPL
 
 ### SDL File and SDL Artwork
 
-New to version 4.7 of the SDL Android library are `SdlFile` and `SdlArtwork` objects. These have been created in parallel with the `FileManager` to help streamline SDL workflow. `SdlArtwork` is an extension of `SdlFile` that pertains only to graphic specific file types, and its use case is similar. For the rest of this document, `SdlFile` will be described, but everything also applies to `SdlArtwork`.
+SDL files and artwork are uploaded through the `FileManager`. This is accomplished with `SdlFile` and `SdlArtwork` objects. The `FileManager` helps streamline the file management workflow within SDL. `SdlArtwork` is an extension of `SdlFile` that pertains only to graphic specific file types, and its use case is similar. For the rest of this document, `SdlFile` will be described, but everything also applies to `SdlArtwork`.
 
 #### Creation
 
-One of the hardest parts about getting a file into SDL was the boilerplate code needed to convert the file into a byte array that was used by the head unit. Now, you can instantiate a `SdlFile` with:
+The first step in uploading files to the connected module is creating an instance of `SdlFile`. There are a few different constructors that can be used based on the source of the file. The following can be used to instantiate `SdlFile`:
 
 ##### A resource ID
 
@@ -48,7 +48,6 @@ new SdlFile(@NonNull String fileName, @NonNull FileType fileType, int id, boolea
 ```java
 new SdlFile(@NonNull String fileName, @NonNull FileType fileType, Uri uri, boolean persistentFile)
 ```
-And last but not least
 
 ##### A byte array
 
@@ -56,7 +55,6 @@ And last but not least
 new SdlFile(@NonNull String fileName, @NonNull FileType fileType, byte[] data, boolean persistentFile)
 ```
 
-without the need to implement the methods needed to do the conversion of data yourself.
 
 ### Uploading a File
 
@@ -95,10 +93,10 @@ The file name can only consist of letters (a-Z) and numbers (0-9), otherwise the
 
 ### File Persistance
 
-`SdlFile` supports uploading persistent images, i.e. images that do not become deleted when your application disconnects. Persistance should be used for images relating to your UI, and not for dynamic aspects, such as Album Artwork.
+`SdlFile` supports uploading persistent images, i.e. images that do not become deleted when your application disconnects. Persistence should be used for images relating to your UI like your app icon, and not for dynamic aspects, such as Album Artwork.
 
 !!! note
-Be aware that persistance will not work if space on the head unit is limited.
+Be aware that persistence will not work if space on the head unit is limited. Persistence is also not guaranteed. 
 !!!
 
 ### Overwrite Stored Files
@@ -107,7 +105,7 @@ If a file being uploaded has the same name as an already uploaded file, the new 
 
 ### Check if a File Has Already Been Uploaded
 
-`FileManager` provides 2 methods that allow you to check if a file has been uploaded.
+`FileManager` provides two methods that allow you to check if a file has been uploaded.
 
 #### Getting Remote Files
 
@@ -128,7 +126,7 @@ boolean isUploaded = sdlManager.getFileManager().hasUploadedFile(sdlFile);
 
 ### Check the Amount of File Storage
 
-To find the amount of file storage left on the head unit, use the  the `ListFiles` RPC.
+To find the amount of file storage left on the head unit, use the `ListFiles` RPC.
 
 ```java
 ListFiles listFiles = new ListFiles();
@@ -188,7 +186,7 @@ Images may be formatted as PNG, JPEG, or BMP. Check the `DisplayCapabilities` ob
 
 ### Image Sizes
 
-If an image is uploaded that is larger than the supported size, that image will be scaled down to accomodate.
+If an image is uploaded that is larger than the supported size, that image will be scaled down to accommodate.
 
 #### Image Specifications
 
