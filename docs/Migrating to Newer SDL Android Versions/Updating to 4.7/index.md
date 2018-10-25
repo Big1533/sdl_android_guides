@@ -1,5 +1,6 @@
 # Updating from 4.6 to 4.7
 
+
 ## Overview
 
 This guide is to help developers get setup with the SDL Android library version 4.7. It is assumed that the developer is already updated to 4.6 of the library. This version includes the addition of the SdlManagers and a re-working of the transports greatly enhancing the use of the `SdlRouterService` and adding the functionality for secondary transports on supporting versions of SDL Core.
@@ -458,4 +459,268 @@ sdlManager.getFileManager().uploadFile(sdlFile, new CompletionListener() {
                             
     }
 });
+```
+
+
+## Setting text:
+
+Previously, to set text fields, the developer had to create a `Show` RPC, set the text fields, and then send the PRC. It was also the developer's responsibility to make sure that they set only the lines of text that are supported by the template. In 4.7, the `ScreenManager` can be used and handles such logic internally. If a specific text field is not supported, it will be automatically hyphenated with other texts to make sure that everything is displayed correctly.
+
+### In 4.6:
+
+```java	
+Show show = new Show();
+show.setMainField1("Hello, this is MainField1.");
+show.setMainField2("Hello, this is MainField2.");
+show.setMainField3("Hello, this is MainField3.");
+show.setMainField4("Hello, this is MainField4.");
+show.setOnRPCResponseListener(new OnRPCResponseListener() {
+    @Override
+    public void onResponse(int correlationId, RPCResponse response) {
+        if (((ShowResponse) response).getSuccess()) {
+            Log.i("SdlService", "Successfully showed.");
+        } else {
+            Log.i("SdlService", "Show request was rejected.");
+        }
+    }
+});
+proxy.sendRPCRequest(show);
+```
+
+### In 4.7:
+
+```java
+sdlManager.getScreenManager().beginTransaction();
+sdlManager.getScreenManager().setTextField1("Hello, this is MainField1.");
+sdlManager.getScreenManager().setTextField2("Hello, this is MainField2.");
+sdlManager.getScreenManager().setTextField3("Hello, this is MainField3.");
+sdlManager.getScreenManager().setTextField4("Hello, this is MainField4.");
+sdlManager.getScreenManager().commit(new CompletionListener() {
+	@Override
+	public void onComplete(boolean success) {
+		Log.i(TAG, "ScreenManager update complete: " + success);
+
+	}
+});
+```
+
+## Setting images:
+
+Previously, to set an image, the developer had to upload the image using the `PutFile` RPC. When it is uploaded, a `Show` RPC was then created and sent to display the image. In 4.7, the `ScreenManager` handles uploading the image and sending the RPCs internally.
+
+### In 4.6:
+
+```java	
+Image image = new Image();
+image.setImageType(ImageType.DYNAMIC);
+image.setValue("appImage.jpeg"); // a previously uploaded filename using PutFile RPC
+
+Show show = new Show();
+show.setGraphic(image);
+show.setCorrelationID(CorrelationIdGenerator.generateId());
+show.setOnRPCResponseListener(new OnRPCResponseListener() {
+    @Override
+    public void onResponse(int correlationId, RPCResponse response) {
+        if (((ShowResponse) response).getSuccess()) {
+            Log.i("SdlService", "Successfully showed.");
+        } else {
+            Log.i("SdlService", "Show request was rejected.");
+        }
+    }
+});
+proxy.sendRPCRequest(show);
+```
+
+### In 4.7:
+
+```java
+SdlArtwork sdlArtwork = new SdlArtwork("appImage.jpeg", FileType.GRAPHIC_JPEG, R.drawable.appImage, true);
+sdlManager.getScreenManager().setPrimaryGraphic(sdlArtwork);
+```
+
+
+
+
+## Using soft buttons:
+
+Previously, to add a soft button with an image the developer had to upload the image by sending a `PutFile` RPC, and after the image is uploaded, creating a `SoftButton` object, then creating a `Show` RPC. They would then need to set the button in the RPC, and then send the request. In 4.7, the `ScreenManager` takes care of sending the RPCs. The developer just has to create `softButtonObject`, add a state to it, then use the `ScreenManager` to set soft button objects. 
+
+### In 4.6:
+
+```java	
+Image cancelImage = new Image();
+cancelImage.setImageType(ImageType.DYNAMIC);
+cancelImage.setValue("cancel.jpeg"); // a previously uploaded filename using PutFile RPC
+
+List<SoftButton> softButtons = new ArrayList<>();
+
+SoftButton cancelButton = new SoftButton();
+cancelButton.setType(SoftButtonType.SBT_IMAGE);
+cancelButton.setImage(cancelImage);
+cancelButton.setSoftButtonID(1);
+
+softButtons.add(cancelButton);
+
+Show show = new Show();
+show.setSoftButtons(softButtons);
+proxy.sendRPCRequest(show);
+```
+
+### In 4.7:
+
+```java
+SoftButtonState softButtonState = new SoftButtonState("state1", "cancel", new SdlArtwork("cancel.jpeg", FileType.GRAPHIC_JPEG, R.drawable.cancel, true));
+SoftButtonObject softButtonObject = new SoftButtonObject("object", Collections.singletonList(softButtonState), softButtonState.getName(), null);
+sdlManager.getScreenManager().setSoftButtonObjects(Collections.singletonList(softButtonObject));
+```
+
+Receiving button events on previous versions of SDL had to be done using `onOnButtonEvent` and `onOnButtonPress` callbacks from the `IProxyListenerALM` interface. The id had to be checked to know the exact button that received the event. In 4.7, it is much cleaner: a listener can be added to the `SoftButtonObject`, so the developer can easily tell when and which soft button received the event.
+
+### In 4.6:
+
+```java
+@Override
+public void onOnButtonEvent(OnButtonEvent notification) {
+   Log.i(TAG, "onOnButtonEvent: ");
+
+   if (notification.getButtonName() == CUSTOM_BUTTON){
+        int ID = notification.getCustomButtonName();
+        Log.i(TAG, "Button event received for button " + ID);
+    }
+}
+
+@Override
+public void onOnButtonPress(OnButtonPress notification) {
+    Log.i(TAG, "onOnButtonPress: ");
+
+    if (notification.getButtonName() == CUSTOM_BUTTON){
+        int ID = notification.getCustomButtonName();
+        Log.i(TAG, "Button press received for button " + ID);
+    }
+}
+```
+
+
+### In 4.7:
+
+```java
+softButtonObject.setOnEventListener(new SoftButtonObject.OnEventListener() {
+    @Override
+    public void onPress(SoftButtonObject softButtonObject, OnButtonPress onButtonPress) {
+        Log.i(TAG, "OnButtonPress: ");
+    }
+
+    @Override
+    public void onEvent(SoftButtonObject softButtonObject, OnButtonEvent onButtonEvent) {
+        Log.i(TAG, "OnButtonEvent: ");
+    }
+});
+```
+
+
+
+
+
+
+### Receiving Subscribe Buttons Events
+ Previously, your `SdlService` had to implement `IProxyListenerALM` interface which means your `SdlService` class had to override all of the `IProxyListenerALM` callback methods including `OnButtonEvent` and `OnButtonPress`.
+
+
+```java
+@Override
+public void onOnHMIStatus(OnHMIStatus notification) {
+    if(notification.getHmiLevel() == HMILevel.HMI_FULL && notification.getFirstRun()) {
+        SubscribeButton subscribeButtonRequest = new SubscribeButton();
+        subscribeButtonRequest.setButtonName(ButtonName.SEEKRIGHT);
+        proxy.sendRPCRequest(subscribeButtonRequest);
+    }
+}
+
+@@Override
+public void onOnButtonEvent(OnButtonEvent notification) {
+    switch(notification.getButtonName()){
+            case OK: 
+                break;
+            case SEEKLEFT:
+                break;
+            case SEEKRIGHT:
+                break;
+            case TUNEUP:
+                break;
+            case TUNEDOWN:
+                break;
+            default:
+                break;
+        }
+}
+
+@Override
+public void onOnButtonPress(OnButtonPress notification) {
+        switch(notification.getButtonName()){
+            case OK: 
+                break;
+            case SEEKLEFT:
+                break;
+            case SEEKRIGHT:
+                break;
+            case TUNEUP:
+                break;
+            case TUNEDOWN:
+                break;
+            default:
+                break;
+        }
+}
+```
+
+
+ In 4.7 and the new manager APIs, in order to receive the `OnButtonEvent` and `OnButtonPress` notifications, your app must add a `OnRPCNotificationListener` using the `SdlManager`'s method `addOnRPCNotificationListener`. This will subscribe the app to any notifications of the provided type, in this case `ON_BUTTON_EVENT` and `ON_BUTTON_PRESS`. The listener should be added before sending the corresponding RPC request/subscription or else some notifications may be missed. 
+ 
+
+```java
+sdlManager.addOnRPCNotificationListener(FunctionID.ON_BUTTON_EVENT, new OnRPCNotificationListener() {
+    @Override
+    public void onNotified(RPCNotification notification) {
+        OnButtonPress onButtonPressNotification = (OnButtonPress) notification;
+        switch (onButtonPressNotification.getButtonName()) {
+            case OK:
+                break;
+            case SEEKLEFT:
+                break;
+            case SEEKRIGHT:
+                break;
+            case TUNEUP:
+                break;
+            case TUNEDOWN:
+                break;
+            default:
+                break;
+        }
+    }
+});
+
+sdlManager.addOnRPCNotificationListener(FunctionID.ON_BUTTON_PRESS, new OnRPCNotificationListener() {
+    @Override
+    public void onNotified(RPCNotification notification) {
+        OnButtonPress onButtonPressNotification = (OnButtonPress) notification;
+        switch (onButtonPressNotification.getButtonName()) {
+            case OK:
+                break;
+            case SEEKLEFT:
+                break;
+            case SEEKRIGHT:
+                break;
+            case TUNEUP:
+                break;
+            case TUNEDOWN:
+                break;
+            default:
+                break;
+        }
+    }
+});
+
+SubscribeButton subscribeButtonRequest = new SubscribeButton();
+subscribeButtonRequest.setButtonName(ButtonName.SEEKRIGHT);
+sdlManager.sendRPC(subscribeButtonRequest);
 ```
