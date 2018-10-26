@@ -109,15 +109,6 @@ public class SdlService extends Service {
 
 Once you receive the `onStart` callback from `SdlManager`, you can add in your listeners and start adding UI elements. There will be more about adding the UI elements later. The last example in this section will be about adding specific listeners. Because we removed the `IProxyListenerALM` implementation, you will have to set listeners for the needs of your app.
 
-### Lock Screen
-
-The `SdlManager` also now handles lock screen logic for you. By default, an included lock screen is enabled. A more in depth description of these changes will be described below including customization and disabling of it. Because the lock screen is its own activity, an entry must be made in the `AndroidManifest.xml` file:
-
-```xml
-<!-- Required to use the lock screen -->
-<activity android:name="com.smartdevicelink.managers.lockscreen.SDLLockScreenActivity"
-                  android:launchMode="singleTop"/>
-```
 
 ### Listening for RPC notifications and events
 
@@ -178,6 +169,86 @@ sdlManager.sendSequentialRPCs(rpcs, new OnMultipleRequestListener() {
 	//...
 });
 ```
+
+### Lock Screens
+
+There has been a major overhaul for lock screens in 4.7. Complicated lock screen setups are no longer required due to the addition of the `LockScreenManager`. Instead of going over the previous lock screen tutorial and then writing another one I will give brief instructions on how to either continue using your lock screen implementation, or upgrading to the new managed system. This review is brief, it is recommended that you look at the full [lock screen guide](https://smartdevicelink.com/en/guides/android/adding-the-lock-screen/)
+
+#### Using your current implementation
+
+If you would like to keep your current lock screen implementation, but would like to use the `SdlManager` for its other functionalities, you must disable the `LockScreenManager`. (This is not recommended as the new `LockScreenManager` takes care of a lot of boiler plate code and reduces possible errors)
+
+##### Disabling the Lock Screen Manager:
+
+To disable, create a `LockScreenConfig` object and set it in the `SdlManager.Builder` in your `SdlService.java` class.
+
+```java
+lockScreenConfig.setEnabled(false);
+//...
+builder.setLockScreenConfig(lockScreenConfig);
+```
+
+#### Using the new LockScreenManager
+
+If you want SDL to handle the lock screen logic for you, it is simple. You will remove the classes that currently handle your lock screen, and set the variables you want for your new lock screen as defined in the [lock screen guide](https://smartdevicelink.com/en/guides/android/adding-the-lock-screen/). This simple addition is handled during the instantiation of the the `SdlManager` within `SdlService.java`.
+
+
+##### Lock Screen Activity
+
+You must declare the `SDLLockScreenActivity` in your manifest. To do so, simply add the following to your app's `AndroidManifest.xml` if you have not already done so:
+
+```xml
+<activity android:name="com.smartdevicelink.managers.lockscreen.SDLLockScreenActivity"
+                  android:launchMode="singleTop"/>
+```
+
+!!! MUST
+This manifest entry must be added for the lock screen feature to work.
+!!!
+
+##### Configurations
+
+The default configurations should work for most app developers and is simple to get up and and running. However, it is easy to perform deeper configurations to the lock screen for your app. Below are the options that are available to customize your lock screen which builds on top of the logic already implemented in the `LockScreenManager`.
+
+There is a setter in the `SdlManager.Builder` that allows you to set a `LockScreenConfig` by calling `builder.setLockScreenConfig(lockScreenConfig)`. The following options are available to be configured with the`LockScreenConfig`.
+
+In order to to use these features, create a `LockScreenConfig` object and set it using `SdlManager.Builder` before you build `SdlManager`.
+
+###### Custom Background Color
+
+In your `LockScreenConfig` object, you can set the background color to a color resource that you have defined in your `Colors.xml` file:
+
+```java
+lockScreenConfig.setBackgroundColor(resourceColor); // For example, R.color.black
+```
+
+###### Custom App Icon
+
+In your `LockScreenConfig` object, you can set the resource location of the drawable icon you would like displayed:
+
+```java
+lockScreenConfig.setAppIcon(appIconInt); // For example, R.drawable.lockscreen_icon
+```
+
+###### Showing The Device Logo
+
+This sets whether or not to show the connected device's logo on the default lock screen. The logo will come from the connected hardware if set by the manufacturer. When using a Custom View, the custom layout will have to handle the logic to display the device logo or not. The default setting is false, but some OEM partners may require it.
+
+In your `LockScreenConfig` object, you can set the boolean of whether or not you want the device logo shown, if available:
+
+```java
+lockScreenConfig.showDeviceLogo(true);
+```
+
+###### Setting A Custom Lock Screen View
+
+If you'd rather provide your own layout, it is easy to set. In your `LockScreenConfig` object, you can set the reference to the custom layout to be used for the lock screen. If this is set, the other customizations described above will be ignored:
+
+```java
+lockScreenConfig.setCustomView(customViewInt);
+```
+
+
 ## Subscribing to VehicleData Notifications
 
 Previously, your `SdlService` had to implement `IProxyListenerALM` interface which means your `SdlService` class had to override all of the `IProxyListenerALM` callback methods including `onOnVehicleData`.

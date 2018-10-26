@@ -1,165 +1,84 @@
 # Adding the Lock Screen
 
-In order for your SDL application to be certified with most OEMs you will be required to implement a lock screen on the mobile device. The lock screen will disable user interactions with the application while they are using the head-unit to control application functionality. The URL for the lock screen image to display is send by the head-unit.
+In order for your SDL application to be certified with most OEMs you will be required to implement a lock screen on the mobile device. The lock screen will disable user interactions with the application while they are using the head-unit to control application functionality. OEMs may choose to send their logo for your app's lock screen to use; the `LockScreenManager` takes care of this automatically using the default layout. 
 
 !!! NOTE
 This guide assumes that you have an SDL Service implemented as defined in the [Getting Started](/guides/android/getting-started/) guide.
 !!!
 
+There is a manager called the `LockScreenManager` that is accessed through the `SdlManager` that handles much of the logic for you. If you have implemented the `SdlManager` and have defined the `SDLLockScreenActivity` in your manifest but have not defined any lock screen configuration, you are already have a working default configuration. This guide will go over specific configurations you are able to implement using the `LockScreenManager` functionality.
+
 ## Lock Screen Activity
 
-First, we need to create a new activity that will host our lock screen. In the activity we add a simple [BroadcastReceiver](https://developer.android.com/reference/android/content/BroadcastReceiver.html) that listens for `CLOSE_LOCK_SCREEN_ACTION` intents. In the broadcast receiver we will then call [finish()](https://developer.android.com/reference/android/app/Activity.html#finish()) in order to shutdown the activity. We also check for a Bitmap extra, `LOCKSCREEN_BITMAP_EXTRA`, in the intent that started the activity:
-
-```java
-public class LockScreenActivity extends Activity {
-    public static final String LOCKSCREEN_BITMAP_EXTRA = "LOCKSCREEN_BITMAP_EXTRA";
-    public static final String CLOSE_LOCK_SCREEN_ACTION = "CLOSE_LOCK_SCREEN";
-
-    private final BroadcastReceiver closeLockScreenBroadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            finish();
-        }
-    };
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        registerReceiver(closeLockScreenBroadcastReceiver, new IntentFilter(CLOSE_LOCK_SCREEN_ACTION));
-
-        setContentView(R.layout.activity_lock_screen);
-
-        Intent intent = getIntent();
-        ImageView imageView = (ImageView) findViewById(R.id.lockscreen);
-
-        if(intent.hasExtra(LOCKSCREEN_BITMAP_EXTRA)){
-            Bitmap lockscreen = (Bitmap) intent.getParcelableExtra(LOCKSCREEN_BITMAP_EXTRA);
-            if(lockscreen != null){
-                imageView.setImageBitmap(lockscreen);
-            }
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        unregisterReceiver(closeLockScreenBroadcastReceiver);
-        super.onDestroy();
-    }
-}
-```
-
-When the activity is created it will generate a layout file to use. We updated this layout to display a default sample image from `res/drawable` in the middle of the screen:
+You must declare the `SDLLockScreenActivity` in your manifest. To do so, simply add the following to your app's `AndroidManifest.xml` if you have not already done so:
 
 ```xml
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:gravity="center">
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:src="@drawable/sample_lock" <!-- Replace with your own default image -->
-        android:id="@+id/lockscreen"/>
-</LinearLayout>
+<activity android:name="com.smartdevicelink.managers.lockscreen.SDLLockScreenActivity"
+                  android:launchMode="singleTop"/>
 ```
 
-In our AndroidManifest we need to define the style and launch mode for our lock screen activity. The theme is set to `@android:style/Theme.Black.NoTitleBar.Fullscreen` and the launch mode is set to [singleInstance](https://developer.android.com/guide/topics/manifest/activity-element.html#lmode):
+!!! MUST
+This manifest entry must be added for the lock screen feature to work.
+!!!
 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.livio.hellosdl">
+## Configurations
 
-    <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+The default configurations should work for most app developers and is simple to get up and and running. However, it is easy to perform deeper configurations to the lock screen for your app. Below are the options that are available to customize your lock screen which builds on top of the logic already implemented in the `LockScreenManager`.
 
-        ...
+There is a setter in the `SdlManager.Builder` that allows you to set a `LockScreenConfig` by calling `builder.setLockScreenConfig(lockScreenConfig)`. The following options are available to be configured with the`LockScreenConfig`.
 
-        <activity android:name=".LockScreenActivity"
-            android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
-            android:launchMode="singleInstance"/>
-            
-    </application>
+In order to to use these features, create a `LockScreenConfig` object and set it using `SdlManager.Builder` before you build `SdlManager`.
 
-</manifest>
-```
+#### Custom Background Color
 
-## Updating SDL Service
-To fully implement a lock screen, you'll want to add a LockScreenManager as a member of your Service.
+In your `LockScreenConfig` object, you can set the background color to a color resource that you have defined in your `Colors.xml` file:
 
 ```java
-public class SdlService extends Service implements IProxyListenerALM{
-	//...
-	
-	private LockScreenManager lockScreenManager = new LockScreenManager();
-	
-	//...
+lockScreenConfig.setBackgroundColor(resourceColor); // For example, R.color.black
 ```
 
-The LockScreenManager can download and hold a lock screen Bitmap given a URL and a class that implements its callbacks. You can create a class similar to this:
+#### Custom App Icon
+
+In your `LockScreenConfig` object, you can set the resource location of the drawable icon you would like displayed:
 
 ```java
-private class LockScreenDownloadedListener implements LockScreenManager.OnLockScreenIconDownloadedListener{
-
-		@Override
-		public void onLockScreenIconDownloaded(Bitmap icon) {
-			Log.i(TAG, "Lock screen icon downloaded successfully");
-		}
-
-		@Override
-		public void onLockScreenIconDownloadError(Exception e) {
-			Log.e(TAG, "Couldn't download lock screen icon, resorting to default.");
-		}
-}
+lockScreenConfig.setAppIcon(appIconInt); // For example, R.drawable.lockscreen_icon
 ```
 
-You should prepare to accept and download the lock screen image from the URL sent by the head-unit in the `onOnSystemRequest` callback. 
+#### Showing The Device Logo
+
+This sets whether or not to show the connected device's logo on the default lock screen. The logo will come from the connected hardware if set by the manufacturer. When using a Custom View, the custom layout will have to handle the logic to display the device logo or not. The default setting is false, but some OEM partners may require it.
+
+In your `LockScreenConfig` object, you can set the boolean of whether or not you want the device logo shown, if available:
 
 ```java
-public void onOnSystemRequest(OnSystemRequest notification) {
-		if(notification.getRequestType().equals(RequestType.LOCK_SCREEN_ICON_URL)){
-			if(notification.getUrl() != null && lockScreenManager.getLockScreenIcon() == null){
-				lockScreenManager.downloadLockScreenIcon(notification.getUrl(), new LockScreenDownloadedListener());
-			}
-		}
-	}
+lockScreenConfig.showDeviceLogo(true);
 ```
 
-Now that our lock screen activity and manager are setup, all we have to do is handle starting and stopping the activity. In the `onOnLockScreenNotification` we need to trigger the lock screen to be displayed with the HMI Level is set to FULL and when the lock screen status is required. If available, we also need to pass along the Bitmap for the lock screen image. To finish, we need to close the lock screen when the the lock screen status is OFF:
+#### Setting A Custom Lock Screen View
+
+If you'd rather provide your own layout, it is easy to set. In your `LockScreenConfig` object, you can set the reference to the custom layout to be used for the lock screen. If this is set, the other customizations described above will be ignored:
 
 ```java
-@Override
-public void onOnLockScreenNotification(OnLockScreenStatus notification) {
-		if(notification.getHMILevel() == HMILevel.HMI_FULL && notification.getShowLockScreen() == LockScreenStatus.REQUIRED) {
-			Intent showLockScreenIntent = new Intent(this, LockScreenActivity.class);
-			showLockScreenIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			if(lockScreenManager.getLockScreenIcon() != null){
-				showLockScreenIntent.putExtra(LockScreenActivity.LOCKSCREEN_BITMAP_EXTRA, lockScreenManager.getLockScreenIcon());
-			}
-			startActivity(showLockScreenIntent);
-		}else if(notification.getShowLockScreen() == LockScreenStatus.OFF){
-			sendBroadcast(new Intent(LockScreenActivity.CLOSE_LOCK_SCREEN_ACTION));
-		}
-}
+lockScreenConfig.setCustomView(customViewInt);
 ```
 
-We also need to close the lock screen when a disconnect happens. We do that by sending another broadcast in the `SdlService.onDestroy` callback:
+#### Disabling the Lock Screen Manager:
+
+Please note that a lock screen will likely be required by OEMs. You can disable the `LockScreenManager`, but you will then be required to create your own implementation. This is not recommended as the `LockScreenConfig ` should enable all possible settings while still adhering to most OEM requirements. However, if it  is unavoidable to create one from scratch the `LockScreenManager` can be disabled via the `LockScreenConfig` as follows.
 
 ```java
-@Override
-public void onDestroy() {
-    ...
-    sendBroadcast(new Intent(LockScreenActivity.CLOSE_LOCK_SCREEN_ACTION));
-    ...
-}
+lockScreenConfig.setEnabled(false);
 ```
 
-Now when the HMI fully displays the application, the mobile device will display the lock screen with an image provided by the head-unit.
+!!!NOTE
+When the enabled flag is set to `false` all other config options will be ignored.
+!!!
+
+
+
+
+
+
+
+
