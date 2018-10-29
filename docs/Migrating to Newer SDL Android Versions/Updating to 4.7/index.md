@@ -1001,6 +1001,72 @@ subscribeButtonRequest.setButtonName(ButtonName.SEEKRIGHT);
 sdlManager.sendRPC(subscribeButtonRequest);
 ```
 
+## Checking Permissions:
+
+Previously, it was not easy to check if specific permission had changed. Developers had to keep checking `onOnHMIStatus` and `onOnPermissionsChange` callbacks and manually check the responses to see if the permission is allowed. In 4.7, the `PermissionManager` implements all of this logic internally. It keeps a cached copy of the callback responses whenever an update is received. So developer can call `isRPCAllowed()` any time to know if a permission is allowed. It also makes it very simple to add a listener.
+
+### In 4.6:
+
+```java
+@Override
+public void onOnHMIStatus(OnHMIStatus notification) {
+    hmiLevel = notification.getHmiLevel();
+    if (checkShowPermission(FunctionID.SHOW.toString(), hmiLevel, permissionItems)){
+        // Show RPC is allowed
+    }
+}
+
+@Override
+public void onOnPermissionsChange(OnPermissionsChange notification) {
+    permissionItems = notification.getPermissionItem();
+    if (checkShowPermission(FunctionID.SHOW.toString(), hmiLevel, permissionItems)){
+        // Show RPC is allowed
+    }
+}
+
+private boolean checkShowPermission(String rpcName, HMILevel hmiLevel, List<PermissionItem> permissionItems){
+    PermissionItem permissionItem = null;
+    for (PermissionItem item : permissionItems) {
+        if (rpcName.equals(item.getRpcName())){
+            permissionItem = item;
+            break;
+        }
+    }
+    if (hmiLevel == null || permissionItem == null || permissionItem.getHMIPermissions() == null || permissionItem.getHMIPermissions().getAllowed() == null){
+            return false;
+    } else if (permissionItem.getHMIPermissions().getUserDisallowed() != null){
+        return permissionItem.getHMIPermissions().getAllowed().contains(hmiLevel) && !permissionItem.getHMIPermissions().getUserDisallowed().contains(hmiLevel);
+    } else {
+        return permissionItem.getHMIPermissions().getAllowed().contains(hmiLevel);
+    }
+}
+```
+
+### In 4.7:
+
+To check if a permission is allowed:
+
+```java
+boolean allowed = sdlManager.getPermissionManager().isRPCAllowed(FunctionID.SHOW);
+```
+
+To setup a permission listener:
+
+```java
+List<PermissionElement> permissionElements = Collections.singletonList(new PermissionElement(FunctionID.SHOW, null));
+UUID listenerId = sdlManager.getPermissionManager().addListener(permissionElements, PermissionManager.PERMISSION_GROUP_TYPE_ANY, new OnPermissionChangeListener() {
+    @Override
+    public void onPermissionsChange(@NonNull Map<FunctionID, PermissionStatus> allowedPermissions, @NonNull int permissionGroupStatus) {
+        if (allowedPermissions.get(FunctionID.SHOW).getIsRPCAllowed()) {
+            // Show RPC is allowed
+        }
+    }
+});
+```
+
+For more information about `PermissionManager`, you can check [this page](/guides/android/permission-manager/).
+
+
 ## Remote Control
 
 ### Subscribing to OnInteriorVehicleData Notifications
