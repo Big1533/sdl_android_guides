@@ -249,6 +249,211 @@ lockScreenConfig.setCustomView(customViewInt);
 ```
 
 
+### Using AOA Protocol
+
+If your app uses USB to connect to SDL, this update provides a very useful enhancement. AOA connections now work with the `SdlRouterService`. This means that multiple USB apps can be connected to the head unit at once.
+
+#### SdlBroadcastReceiver
+
+Since the AOA transport will now use the multiplexing feature, it is important that your app correctly adds funcitonality for the `SdlRouterService`. This starts in the `SdlBroadcastReciever`.
+
+##### 4.6:
+```java
+public class SdlReceiver extends com.smartdevicelink.SdlBroadcastReceiver {
+
+    @Override
+    public void onSdlEnabled(Context context, Intent intent) {
+        //Use the provided intent but set the class to your SdlService
+        intent.setClass(context, SdlService.class);
+        context.startService(intent);
+    }
+
+    @Override
+    public Class<? extends SdlRouterService> defineLocalSdlRouterClass() {
+         return null;
+    }
+    
+}
+```
+##### 4.7:
+```java
+public class SdlReceiver extends com.smartdevicelink.SdlBroadcastReceiver {
+
+    @Override
+    public void onSdlEnabled(Context context, Intent intent) {
+        //Use the provided intent but set the class to your SdlService
+        intent.setClass(context, SdlService.class);
+        context.startService(intent);
+    }
+
+    @Override
+    public Class<? extends SdlRouterService> defineLocalSdlRouterClass() {
+        // define your local router service. For example:
+        return com.sdl.hellosdlandroid.SdlRouterService.class;
+    }
+    
+}
+```
+
+#### SdlRouterService
+
+
+The `SdlRouterService` will listen for a connection with an SDL enabled module. When a connection happens, it will alert all SDL enabled apps that a connection has been established and they should start their SDL services.
+
+##### 4.6:
+
+(No implementation required).
+
+##### 4.7:
+We must implement a local copy of the `SdlRouterService` into our project. The class doesn't need any modification, it's just important that we include it. We will extend the `com.smartdevicelink.transport.SdlRouterService` in our class named `SdlRouterService`:
+
+!!! NOTE
+Do not include an import for `com.smartdevicelink.transport.SdlRouterService`. Otherwise, we will get an error for `'SdlRouterService' is already defined in this compilation unit`.
+!!!
+
+```Java
+public class SdlRouterService extends  com.smartdevicelink.transport.SdlRouterService {
+//Nothing to do here
+}
+```
+
+!!! MUST
+The local extension of the `com.smartdevicelink.transport.SdlRouterService` must be named `SdlRouterService`.
+!!!
+
+!!! MUST
+Make sure this local class (SdlRouterService.java) is in the same package of SdlReceiver.java 
+!!!
+
+#### SdlService
+
+##### 4.6: 
+
+```java 
+transport = new USBTransportConfig(getBaseContext(), (UsbAccessory) intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY), false, false);
+```
+##### 4.7:
+
+```java
+MultiplexTransportConfig transport = new MultiplexTransportConfig(this, APP_ID, MultiplexTransportConfig.FLAG_MULTI_SECURITY_MED);
+```
+
+###### Additional configurations: 
+
+If your app requires high bandwidth transport, you can now specify that: 
+
+```java
+transport.setRequiresHighBandwidth(true);
+```
+
+!!! Note
+If your app only works when a high bandwidth transport is available, you should set `setRequiresHighBandwidth` to `true`. You cannot be certain that all core implementations support multiple transports. You could also set `TransportType.USB` as your only supported primary transport
+!!!
+
+Since the `SdlRouterService` now works with multiple transports, you can set your own configuration, for example: 
+
+```java
+static final List<TransportType> multiplexPrimaryTransports = Arrays.asList(TransportType.USB, TransportType.BLUETOOTH);
+static final List<TransportType> multiplexSecondaryTransports = Arrays.asList(TransportType.TCP, TransportType.USB, TransportType.BLUETOOTH);
+
+//...
+
+transport.setPrimaryTransports(multiplexPrimaryTransports);
+transport.setSecondaryTransports(multiplexSecondaryTransports);
+```
+!!! NOTE
+Multiple transports only work on supported versions of SDL Core.
+!!!
+
+#### AndroidManifest
+
+#### 4.6
+
+```xml
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    
+    <uses-feature android:name="android.hardware.usb.accessory"/>
+
+	<service
+   		android:name=".SdlService"
+       android:enabled="true"/>
+
+
+	<receiver
+		android:name=".SdlReceiver"
+       android:enabled="true"
+       android:exported="true"
+       tools:ignore="ExportedReceiver">
+       <intent-filter>
+       	<action android:name="com.smartdevicelink.USB_ACCESSORY_ATTACHED"/> <!--For AOA -->
+          <action android:name="sdl.router.startservice" />
+   		</intent-filter>
+	</receiver>
+	
+	<activity android:name="com.smartdevicelink.transport.USBAccessoryAttachmentActivity"
+   		android:launchMode="singleTop">
+       <intent-filter>
+         	<action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" />
+       </intent-filter>
+
+       <meta-data
+         	android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"
+          android:resource="@xml/accessory_filter" />
+	</activity>
+
+```
+
+#### 4.7
+
+```xml
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <uses-feature android:name="android.hardware.usb.accessory"/>
+
+
+        <service
+        android:name=".SdlService"
+        android:enabled="true"/>
+
+	<service
+		android:name="com.company.mySdlApplication.SdlRouterService"
+      	android:exported="true" 
+      	android:process="com.smartdevicelink.router"
+       tools:ignore="ExportedService">
+       <intent-filter>
+       	<action android:name="com.smartdevicelink.router.service"/>
+       </intent-filter>
+       <meta-data android:name="@string/sdl_router_service_version_name"  android:value="@integer/sdl_router_service_version_value" />
+	</service>
+	<receiver
+		android:name=".SdlReceiver"
+       android:enabled="true"
+       android:exported="true"
+       tools:ignore="ExportedReceiver">
+       <intent-filter>
+       	<action android:name="com.smartdevicelink.USB_ACCESSORY_ATTACHED"/> <!--For AOA -->
+          <action android:name="android.bluetooth.device.action.ACL_CONNECTED" />
+          <action android:name="sdl.router.startservice" />
+   		</intent-filter>
+	</receiver>
+	
+	<activity android:name="com.smartdevicelink.transport.USBAccessoryAttachmentActivity"
+   		android:launchMode="singleTop">
+       <intent-filter>
+         	<action android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED" />
+       </intent-filter>
+
+       <meta-data
+         	android:name="android.hardware.usb.action.USB_ACCESSORY_ATTACHED"
+          android:resource="@xml/accessory_filter" />
+	</activity>
+
+```
+
 ## Subscribing to VehicleData Notifications
 
 Previously, your `SdlService` had to implement `IProxyListenerALM` interface which means your `SdlService` class had to override all of the `IProxyListenerALM` callback methods including `onOnVehicleData`.
