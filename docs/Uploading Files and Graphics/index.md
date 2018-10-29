@@ -141,11 +141,9 @@ listFiles.setOnRPCResponseListener(new OnRPCResponseListener() {
         }
     }
 });
-try{
-	sdlManager.sendRPC(listFiles);
-} catch (SdlException e) {
-	e.printStackTrace();
-}
+
+sdlManager.sendRPC(listFiles);
+
 ```
 
 ### Delete Stored Files

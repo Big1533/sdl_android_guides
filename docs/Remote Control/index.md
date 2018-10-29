@@ -25,7 +25,7 @@ Currently, the Remote Control feature supports these modules:
 | Seat                 |
 | Audio                |
 | Light                |
-| HMI Settings          |
+| HMI Settings         |
 
 The following table lists what control items are in each control module.
 
@@ -198,11 +198,8 @@ buttonPress.setModuleType(ModuleType.RADIO);
 buttonPress.setButtonName(ButtonName.EJECT);
 buttonPress.setButtonPressMode(ButtonPressMode.SHORT);
 
-try {
-    sdlManager.sendRPC(buttonPress);
-} catch (SdlException e) {
-    e.printStackTrace();
-}
+sdlManager.sendRPC(buttonPress);
+
 ```
 #### Subscribing to changes
 

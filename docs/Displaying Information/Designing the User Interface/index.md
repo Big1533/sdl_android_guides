@@ -47,11 +47,8 @@ setDisplayLayoutRequest.setOnRPCResponseListener(new OnRPCResponseListener() {
     }
 });
 
-try{
-    sdlManager.sendRPC(setDisplayLayoutRequest);
-}catch (SdlException e){
-    e.printStackTrace();
-}
+sdlManager.sendRPC(setDisplayLayoutRequest);
+
 ```
 
 ### Available Templates

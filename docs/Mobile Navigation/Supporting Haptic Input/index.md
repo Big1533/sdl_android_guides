@@ -36,11 +36,11 @@ public static class MyPresentation extends SdlRemoteDisplay {
 }
 ```
 
-This will go through your view that was passed in and then find and send the rects to the head unit for use. When your UI changes, call `invalidate()` from your class that extends SdlRemoteDisplay;
+This will go through your view that was passed in and then find and send the rects to the head unit for use. When your UI changes, call `invalidate()` from your class that extends `SdlRemoteDisplay`.
 
 ### Sending your own Rects
 
-It is also possible that you may want to create your own rects instead of using the automated methods in the Presentation class. It is important that if sending this data youself that you also use the `SystemCapabilityManager` to check if you are on a head unit that supports this feature. If the capability is available, it is easy to build the area you want to become selectable:
+It is also possible that you may want to create your own rects instead of using the automated methods in the Presentation class. It is important that if sending this data yourself that you also use the `SystemCapabilityManager` to check if you are on a head unit that supports this feature. If the capability is available, it is easy to build the area you want to become selectable:
 
 ```java
 public void sendHapticData() {
@@ -61,11 +61,8 @@ public void sendHapticData() {
 	SendHapticData sendHapticData = new SendHapticData();
 	sendHapticData.setHapticRectData(hapticArray);
 
-	try {
-		sdlManager.sendRPC(sendHapticData);
-	} catch (SdlException e) {
-		e.printStackTrace();
-	}
+	sdlManager.sendRPC(sendHapticData);
+
 }
 ```
 
