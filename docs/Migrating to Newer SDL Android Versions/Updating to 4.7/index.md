@@ -1001,6 +1001,35 @@ subscribeButtonRequest.setButtonName(ButtonName.SEEKRIGHT);
 sdlManager.sendRPC(subscribeButtonRequest);
 ```
 
+## Changing The Template:
+
+Previously, developers had to pass a string that represents the name of the template to `SetDisplayLayout`. In 4.7, a new `PredefinedLayout` enum is introduced to hold all possible values for the templates.
+
+### In 4.6:
+
+```java
+SetDisplayLayout setDisplayLayoutRequest = new SetDisplayLayout();
+setDisplayLayoutRequest.setDisplayLayout("GRAPHIC_WITH_TEXT");
+try{
+    proxy.sendRPCRequest(setDisplayLayoutRequest);
+}catch (SdlException e){
+    e.printStackTrace();
+}
+```
+
+### In 4.7:
+
+```java
+SetDisplayLayout setDisplayLayoutRequest = new SetDisplayLayout();
+setDisplayLayoutRequest.setDisplayLayout(PredefinedLayout.GRAPHIC_WITH_TEXT.toString());
+try{
+    sdlManager.sendRPC(setDisplayLayoutRequest);
+}catch (SdlException e){
+    e.printStackTrace();
+}
+```
+
+
 ## Checking Permissions:
 
 Previously, it was not easy to check if specific permission had changed. Developers had to keep checking `onOnHMIStatus` and `onOnPermissionsChange` callbacks and manually check the responses to see if the permission is allowed. In 4.7, the `PermissionManager` implements all of this logic internally. It keeps a cached copy of the callback responses whenever an update is received. So developer can call `isRPCAllowed()` any time to know if a permission is allowed. It also makes it very simple to add a listener.
