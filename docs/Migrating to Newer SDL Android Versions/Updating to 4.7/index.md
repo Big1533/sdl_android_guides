@@ -795,3 +795,59 @@ SubscribeButton subscribeButtonRequest = new SubscribeButton();
 subscribeButtonRequest.setButtonName(ButtonName.SEEKRIGHT);
 sdlManager.sendRPC(subscribeButtonRequest);
 ```
+
+## Remote Control
+
+### Subscribing to OnInteriorVehicleData Notifications
+ Previously, your `SdlService` had to implement `IProxyListenerALM` interface which means your `SdlService` class had to override all of the `IProxyListenerALM` callback methods including `onOnInteriorVehicleData`.
+
+
+```java
+@Override
+public void onOnHMIStatus(OnHMIStatus notification) {
+    if(notification.getHmiLevel() == HMILevel.HMI_FULL && notification.getFirstRun()) {
+        GetInteriorVehicleData interiorVehicleData = new GetInteriorVehicleData();
+        interiorVehicleData.setModuleType(ModuleType.RADIO);
+        interiorVehicleData.setSubscribe(true);
+        interiorVehicleData.setOnRPCResponseListener(new OnRPCResponseListener() {
+                @Override
+                public void onResponse(int correlationId, RPCResponse response) {
+                    GetInteriorVehicleData getResponse = (GetInteriorVehicleData) response;
+                    //This can now be used to retrieve data
+                }
+        });
+        proxy.sendRPCRequest(interiorVehicleData);
+    }
+}
+
+@Override
+public void onOnInteriorVehicleData(OnInteriorVehicleData response) {
+    //Perform action based on notification
+}
+```
+
+
+ In 4.7 and the new manager APIs, in order to receive the  `OnInteriorVehicleData ` notifications, your app must add a `OnRPCNotificationListener` using the `SdlManager`'s method `addOnRPCNotificationListener`. This will subscribe the app to any notifications of the provided type, in this case `ON_INTERIOR_VEHICLE_DATA`. The listener should be added before sending the corresponding RPC request/subscription or else some notifications may be missed. 
+ 
+
+```java
+sdlManager.addOnRPCNotificationListener(FunctionID.ON_INTERIOR_VEHICLE_DATA, new OnRPCNotificationListener() {
+    @Override
+    public void onNotified(RPCNotification notification) {
+        OnInteriorVehicleData onInteriorVehicleData = (OnInteriorVehicleData) notification;
+        //Perform action based on notification
+    }
+});
+
+GetInteriorVehicleData interiorVehicleData = new GetInteriorVehicleData();
+interiorVehicleData.setModuleType(ModuleType.RADIO);
+interiorVehicleData.setSubscribe(true);
+interiorVehicleData.setOnRPCResponseListener(new OnRPCResponseListener() {
+    @Override
+    public void onResponse(int correlationId, RPCResponse response) {
+        GetInteriorVehicleData getResponse = (GetInteriorVehicleData) response;
+        //This can now be used to retrieve data
+    }
+});
+sdlManager.sendRPC(interiorVehicleData);
+```
