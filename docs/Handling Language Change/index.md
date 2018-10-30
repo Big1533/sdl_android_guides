@@ -1,17 +1,10 @@
 # Handling a Language Change 
 
-!!! NOTE
-This guide applies if your app uses the Multiplex Transport
-!!!
 
-When a user changes the language on a head unit, the `onProxyClosed()` callback will be called in your app's SDL Service and your app will disconnect from Core. In order for your app to automatically reconnect to the head unit, there are a few changes to make in the following files: 
+When a user changes the language on a head unit, an `OnLanguageChange` notification will be sent from Core. Then your app will will disconnect. In order for your app to automatically reconnect to the head unit, there are a few changes to make in the following files: 
 
 * Local SDL Broadcast Receiver
 * Local SDL Service
-
-!!! NOTE
-This guide assumes you have set your app up for Multiplexing using the **Integration Basics** guide
-!!!
 
 ## SDL Broadcast Receiver
 
@@ -57,25 +50,17 @@ public void onSdlEnabled(Context context, Intent intent) {
 
 ## SDL Service
 
-Without accounting for a language change, your SDL Service's `onProxyClosed()` method probably looked similar to this:
+We want to tell our local SDL Broadcast Receiver to restart the service when an `OnLanguageChange` notification is received from Core . To do so, add a notification listener as follows: 
+
 
 ```java
-@Override
-public void onProxyClosed(String info, Exception e, SdlDisconnectedReason reason) {
-	stopSelf();
-}
-```
-
-We want to tell our local SDL Broadcast Receiver to restart the service when the reason for closing is a language change. To do so, modify the method as follows: 
-
-```java
-@Override
-public void onProxyClosed(String info, Exception e, SdlDisconnectedReason reason) {
-	stopSelf();
-	if(reason.equals(SdlDisconnectedReason.LANGUAGE_CHANGE)){
-		Intent intent = new Intent(TransportConstants.START_ROUTER_SERVICE_ACTION);
-		intent.putExtra(SdlReceiver.RECONNECT_LANG_CHANGE, true);
-		sendBroadcast(intent);
-	}
-}
+sdlManager.addOnRPCNotificationListener(FunctionID.ON_LANGUAGE_CHANGE, new OnRPCNotificationListener() {
+    @Override
+    public void onNotified(RPCNotification notification) {
+        SdlService.this.stopSelf();
+        Intent intent = new Intent(TransportConstants.START_ROUTER_SERVICE_ACTION);
+        intent.putExtra(SdlReceiver.RECONNECT_LANG_CHANGE, true);
+        AndroidTools.sendExplicitBroadcast(context, intent, null);
+    }
+});
 ```

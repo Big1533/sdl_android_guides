@@ -1102,6 +1102,39 @@ UUID listenerId = sdlManager.getPermissionManager().addListener(permissionElemen
 For more information about `PermissionManager`, you can check [this page](/guides/android/permission-manager/).
 
 
+### Handling a Language Change
+
+Previously, to let your app reconnect after the user changes the head unit language, your app had to send an intent in the `onProxyClosed` callback. That intent should be received by `SdlReceiver` to start the `SdlService`. The `SdlReceiver` part did not change so we will only cover the changes in sending the intent which was done in previous versions as the following:
+
+```java
+@Override
+public void onProxyClosed(String info, Exception e, SdlDisconnectedReason reason) {
+    stopSelf();
+    if(reason.equals(SdlDisconnectedReason.LANGUAGE_CHANGE)){
+        Intent intent = new Intent(TransportConstants.START_ROUTER_SERVICE_ACTION);
+        intent.putExtra(SdlReceiver.RECONNECT_LANG_CHANGE, true);
+        sendBroadcast(intent);
+    }
+}
+```
+
+In 4.7, the app has to send the intent in a `ON_LANGUAGE_CHANGE` notification listener as the following:
+
+```java
+sdlManager.addOnRPCNotificationListener(FunctionID.ON_LANGUAGE_CHANGE, new OnRPCNotificationListener() {
+    @Override
+    public void onNotified(RPCNotification notification) {
+        SdlService.this.stopSelf();
+        Intent intent = new Intent(TransportConstants.START_ROUTER_SERVICE_ACTION);
+        intent.putExtra(SdlReceiver.RECONNECT_LANG_CHANGE, true);
+        AndroidTools.sendExplicitBroadcast(context, intent, null);
+    }
+});
+```
+
+Fore more information about handling language changes please visit [this page](/guides/android/handling-language-change/)
+
+
 ## Remote Control
 
 ### Subscribing to OnInteriorVehicleData Notifications
