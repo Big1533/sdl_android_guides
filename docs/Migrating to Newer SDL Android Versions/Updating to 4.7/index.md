@@ -3,12 +3,12 @@
 
 ## Overview
 
-This guide is to help developers get setup with the SDL Android library version 4.7. It is assumed that the developer is already updated to 4.6 of the library. This version includes the addition of the SdlManagers and a re-working of the transports which greatly enhances the use of the `SdlRouterService` and adding the functionality for secondary transports on supporting versions of SDL Core.
+This guide is to help developers get setup with the SDL Android library version 4.7. It is assumed that the developer is already updated to 4.6 of the library. This version includes the addition of the SdlManagers and a re-working of the transports which greatly enhances the use of the `SdlRouterService`, along with adding the functionality for secondary transports on supporting versions of SDL Core.
 
-In this guide we will be focusing on the transitioning from the proxy, which implemented `SdlProxyALM` into using the `SdlManager` system, which includes specialized sub-managers that you can interact with through. We will follow the naming convention of the guides, highlighting the previous way of implementing SDL and showing the new ways of implementing it.
+In this guide we will be focusing on the transitioning from the proxy, which implemented `SdlProxyALM` into using the `SdlManager` system, which includes specialized sub-managers that you can interact with through the `SdlManager`. We will follow the naming convention of the guides, highlighting the previous way of implementing SDL and showing the new ways of implementing it.
 
 !!! NOTE
-Moving from the `SdlProxyALM` implementation to the `SdlManager` API will require you to manually subscribe to the notifications that you wish to receive and response to requests instead of all notifications and responses being passed through the `IProxyListenerALM` interface.
+Moving from the `SdlProxyALM` implementation to the `SdlManager` API will require you to manually subscribe to the notifications and responses that you wish to receive instead of all of the notifications and responses being passed through the `IProxyListenerALM` interface.
 !!!
 
 ## Integration Basics
@@ -17,7 +17,7 @@ The `SdlService` class will contain a great deal of changes as it acts as the ma
 
 ### Removal of IProxyListenerALM
 
-Previously, your `SdlService` had to implement the `IProxyListenerALM`interface. This often added many unnecessary lines of code to the class due to the need to override all of its functions. The need to do this has been removed in 4.7 with the inclusion of the `SdlManager` APIs. Developers now only have to add the listeners they need.
+Previously, your `SdlService` had to implement the `IProxyListenerALM` interface. This often added many unnecessary lines of code to the class due to the need to override all of its functions. The need to do this has been removed in 4.7 with the inclusion of the `SdlManager` APIs. Developers now only have to add the listeners they need.
 
 ##### 4.6:
 
@@ -26,12 +26,12 @@ public class SdlService extends Service implements IProxyListenerALM {
 
     // The proxy handles communication between the application and SDL
     private SdlProxyALM proxy = null;
-    
+
     //...
-    
+
     @Override
     public void someListener(){}
-    //...    
+    //...
 }
 ```
 
@@ -42,7 +42,7 @@ public class SdlService extends Service {
 
 	// The SdlManager exposes the APIs needed to communicate between the application and SDL
 	private SdlManager sdlManager = null;
-	
+
 	//...
 }
 ```
@@ -56,7 +56,7 @@ When you start using the managers, you have to make sure that your app subscribe
 
 ### Creation of SdlManager
 
-As we no longer want to directly instantiate `SdlProxyALM`, we need to instantiate the `SdlManager` instead. This is best done using the `SdlManager.Builder` class and using your application's details and configurations. In order to receive life cycle events from the `SdlManager`, an `SdlManagerListener` must be provided. The new code should resemble the following:
+As we no longer want to directly instantiate `SdlProxyALM`, we need to instantiate the `SdlManager` instead. This is best done using the `SdlManager.Builder` class using your application's details and configurations. In order to receive life cycle events from the `SdlManager`, an `SdlManagerListener` must be provided. The new code should resemble the following:
 
 ```java
 public class SdlService extends Service {
@@ -68,17 +68,17 @@ public class SdlService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        
+
         if (sdlManager == null) {
             MultiplexTransportConfig transport = new MultiplexTransportConfig(this, APP_ID, MultiplexTransportConfig.FLAG_MULTI_SECURITY_OFF);
-           
+
             // The app type to be used
             Vector<AppHMIType> appType = new Vector<>();
             appType.add(AppHMIType.MEDIA);
 
             // The manager listener helps you know when certain events that pertain to the SDL Manager happen
             SdlManagerListener listener = new SdlManagerListener() {
-                
+
                 @Override
                 public void onStart() {
                 	// RPC listeners and other functionality can be called once this callback is triggered.
@@ -197,7 +197,7 @@ public class SdlReceiver extends com.smartdevicelink.SdlBroadcastReceiver {
     public Class<? extends SdlRouterService> defineLocalSdlRouterClass() {
          return null;
     }
-    
+
 }
 ```
 ##### 4.7:
@@ -216,7 +216,7 @@ public class SdlReceiver extends com.smartdevicelink.SdlBroadcastReceiver {
         // define your local router service. For example:
         return com.sdl.hellosdlandroid.SdlRouterService.class;
     }
-    
+
 }
 ```
 
@@ -247,14 +247,14 @@ The local extension of the `com.smartdevicelink.transport.SdlRouterService` must
 !!!
 
 !!! MUST
-Make sure this local class (SdlRouterService.java) is in the same package of SdlReceiver.java 
+Make sure this local class (SdlRouterService.java) is in the same package of SdlReceiver.java
 !!!
 
 #### SdlService
 
-##### 4.6: 
+##### 4.6:
 
-```java 
+```java
 transport = new USBTransportConfig(getBaseContext(), (UsbAccessory) intent.getParcelableExtra(UsbManager.EXTRA_ACCESSORY), false, false);
 ```
 ##### 4.7:
@@ -263,9 +263,9 @@ transport = new USBTransportConfig(getBaseContext(), (UsbAccessory) intent.getPa
 MultiplexTransportConfig transport = new MultiplexTransportConfig(this, APP_ID, MultiplexTransportConfig.FLAG_MULTI_SECURITY_MED);
 ```
 
-##### Additional configurations: 
+##### Additional configurations:
 
-If your app requires high bandwidth transport, you can now specify that: 
+If your app requires high bandwidth transport, you can now specify that:
 
 ```java
 transport.setRequiresHighBandwidth(true);
@@ -275,7 +275,7 @@ transport.setRequiresHighBandwidth(true);
 If your app only works when a high bandwidth transport is available, you should set `setRequiresHighBandwidth` to `true`. You cannot be certain that all core implementations support multiple transports. You could also set `TransportType.USB` as your only supported primary transport
 !!!
 
-Since the `SdlRouterService` now works with multiple transports, you can set your own configuration, for example: 
+Since the `SdlRouterService` now works with multiple transports, you can set your own configuration, for example:
 
 ```java
 static final List<TransportType> multiplexPrimaryTransports = Arrays.asList(TransportType.USB, TransportType.BLUETOOTH);
@@ -297,7 +297,7 @@ Multiple transports only work on supported versions of SDL Core.
 ```xml
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    
+
     <uses-feature android:name="android.hardware.usb.accessory"/>
 
 	<service
@@ -315,7 +315,7 @@ Multiple transports only work on supported versions of SDL Core.
           <action android:name="sdl.router.startservice" />
    		</intent-filter>
 	</receiver>
-	
+
 	<activity android:name="com.smartdevicelink.transport.USBAccessoryAttachmentActivity"
    		android:launchMode="singleTop">
        <intent-filter>
@@ -346,7 +346,7 @@ Multiple transports only work on supported versions of SDL Core.
 
 	<service
 		android:name="com.company.mySdlApplication.SdlRouterService"
-      	android:exported="true" 
+      	android:exported="true"
       	android:process="com.smartdevicelink.router"
        tools:ignore="ExportedService">
        <intent-filter>
@@ -365,7 +365,7 @@ Multiple transports only work on supported versions of SDL Core.
           <action android:name="sdl.router.startservice" />
    		</intent-filter>
 	</receiver>
-	
+
 	<activity android:name="com.smartdevicelink.transport.USBAccessoryAttachmentActivity"
    		android:launchMode="singleTop">
        <intent-filter>
@@ -424,6 +424,7 @@ There is a setter in the `SdlManager.Builder` that allows you to set a `LockScre
 
 In order to to use these features, create a `LockScreenConfig` object and set it using `SdlManager.Builder` before you build `SdlManager`.
 
+
 ###### Custom Background Color
 
 In your `LockScreenConfig` object, you can set the background color to a color resource that you have defined in your `Colors.xml` file:
@@ -466,7 +467,7 @@ Previously, to set text fields, the developer had to create a `Show` RPC, set th
 
 ##### 4.6:
 
-```java	
+```java
 Show show = new Show();
 show.setMainField1("Hello, this is MainField1.");
 show.setMainField2("Hello, this is MainField2.");
@@ -508,7 +509,7 @@ Previously, to set an image, the developer had to upload the image using the `Pu
 
 ##### 4.6:
 
-```java	
+```java
 Image image = new Image();
 image.setImageType(ImageType.DYNAMIC);
 image.setValue("appImage.jpeg"); // a previously uploaded filename using PutFile RPC
@@ -540,11 +541,11 @@ sdlManager.getScreenManager().setPrimaryGraphic(sdlArtwork);
 
 ### Using soft buttons:
 
-Previously, to add a soft button with an image the developer had to upload the image by sending a `PutFile` RPC, and after the image is uploaded, creating a `SoftButton` object, then creating a `Show` RPC. They would then need to set the button in the RPC, and then send the request. In 4.7, the `ScreenManager` takes care of sending the RPCs. The developer just has to create `softButtonObject`, add a state to it, then use the `ScreenManager` to set soft button objects. 
+Previously, to add a soft button with an image the developer had to upload the image by sending a `PutFile` RPC, and after the image is uploaded, creating a `SoftButton` object, then creating a `Show` RPC. They would then need to set the button in the RPC, and then send the request. In 4.7, the `ScreenManager` takes care of sending the RPCs. The developer just has to create `softButtonObject`, add a state to it, then use the `ScreenManager` to set soft button objects.
 
 ##### 4.6:
 
-```java	
+```java
 Image cancelImage = new Image();
 cancelImage.setImageType(ImageType.DYNAMIC);
 cancelImage.setValue("cancel.jpeg"); // a previously uploaded filename using PutFile RPC
@@ -634,7 +635,7 @@ public void onOnHMIStatus(OnHMIStatus notification) {
 @@Override
 public void onOnButtonEvent(OnButtonEvent notification) {
     switch(notification.getButtonName()){
-            case OK: 
+            case OK:
                 break;
             case SEEKLEFT:
                 break;
@@ -650,7 +651,7 @@ public void onOnButtonEvent(OnButtonEvent notification) {
 @Override
 public void onOnButtonPress(OnButtonPress notification) {
         switch(notification.getButtonName()){
-            case OK: 
+            case OK:
                 break;
             case SEEKLEFT:
                 break;
@@ -665,8 +666,8 @@ public void onOnButtonPress(OnButtonPress notification) {
 ```
 
 
- In 4.7 and the new manager APIs, in order to receive the `OnButtonEvent` and `OnButtonPress` notifications, your app must add a `OnRPCNotificationListener` using the `SdlManager`'s method `addOnRPCNotificationListener`. This will subscribe the app to any notifications of the provided type, in this case `ON_BUTTON_EVENT` and `ON_BUTTON_PRESS`. The listener should be added before sending the corresponding RPC request/subscription or else some notifications may be missed. 
- 
+ In 4.7 and the new manager APIs, in order to receive the `OnButtonEvent` and `OnButtonPress` notifications, your app must add a `OnRPCNotificationListener` using the `SdlManager`'s method `addOnRPCNotificationListener`. This will subscribe the app to any notifications of the provided type, in this case `ON_BUTTON_EVENT` and `ON_BUTTON_PRESS`. The listener should be added before sending the corresponding RPC request/subscription or else some notifications may be missed.
+
 
 ```java
 sdlManager.addOnRPCNotificationListener(FunctionID.ON_BUTTON_EVENT, new OnRPCNotificationListener() {
@@ -783,7 +784,7 @@ you can simply call:
 sdlManager.getFileManager().uploadFile(sdlFile, new CompletionListener() {
     @Override
     public void onComplete(boolean success) {
-                            
+
     }
 });
 ```
@@ -826,7 +827,7 @@ public void onOnVehicleData(OnVehicleData notification) {
 }
 ```
 
-In 4.7 and the new manager APIs, in order to receive the  `OnVehicleData ` notifications, your app must add a `OnRPCNotificationListener` using the `SdlManager`'s method `addOnRPCNotificationListener`. This will subscribe the app to any notifications of the provided type, in this case `ON_VEHICLE_DATA`. The listener should be added before sending the corresponding RPC request/subscription or else some notifications may be missed. 
+In 4.7 and the new manager APIs, in order to receive the  `OnVehicleData ` notifications, your app must add a `OnRPCNotificationListener` using the `SdlManager`'s method `addOnRPCNotificationListener`. This will subscribe the app to any notifications of the provided type, in this case `ON_VEHICLE_DATA`. The listener should be added before sending the corresponding RPC request/subscription or else some notifications may be missed.
 
 ##### 4.7:
 
@@ -891,9 +892,9 @@ public void onOnAudioPassThru(OnAudioPassThru notification) {
 }
 ```
 
-In 4.7 and the new manager APIs, in order to receive the  `OnAudioPassThru ` notifications, your app must add a `OnRPCNotificationListener` using the `SdlManager`'s method `addOnRPCNotificationListener`. This will subscribe the app to any notifications of the provided type, in this case `ON_AUDIO_PASS_THRU`. The listener should be added before sending the corresponding RPC request/subscription or else some notifications may be missed. 
+In 4.7 and the new manager APIs, in order to receive the  `OnAudioPassThru ` notifications, your app must add a `OnRPCNotificationListener` using the `SdlManager`'s method `addOnRPCNotificationListener`. This will subscribe the app to any notifications of the provided type, in this case `ON_AUDIO_PASS_THRU`. The listener should be added before sending the corresponding RPC request/subscription or else some notifications may be missed.
 
-##### 4.7: 
+##### 4.7:
 ```java
 sdlManager.addOnRPCNotificationListener(FunctionID.ON_AUDIO_PASS_THRU, new OnRPCNotificationListener() {
     @Override
@@ -916,7 +917,7 @@ performAPT.setMuteAudio(false);
 sdlManager.sendRPC(performAPT);
 ```
 
-## Mobile Navigation 
+## Mobile Navigation
 
 ### Video Streaming:
 
@@ -942,7 +943,7 @@ sdlManager.getVideoStreamManager().start(new CompletionListener() {
     public void onComplete(boolean success) {
         if (success) {
             sdlManager.getVideoStreamManager().startRemoteDisplayStream(getApplicationContext(), MyDisplay.class, null, false);
-        } 
+        }
     }
 });
 ```
@@ -1167,8 +1168,8 @@ public void onOnInteriorVehicleData(OnInteriorVehicleData response) {
 ```
 
 
- In 4.7 and the new manager APIs, in order to receive the  `OnInteriorVehicleData ` notifications, your app must add a `OnRPCNotificationListener` using the `SdlManager`'s method `addOnRPCNotificationListener`. This will subscribe the app to any notifications of the provided type, in this case `ON_INTERIOR_VEHICLE_DATA`. The listener should be added before sending the corresponding RPC request/subscription or else some notifications may be missed. 
- 
+ In 4.7 and the new manager APIs, in order to receive the  `OnInteriorVehicleData ` notifications, your app must add a `OnRPCNotificationListener` using the `SdlManager`'s method `addOnRPCNotificationListener`. This will subscribe the app to any notifications of the provided type, in this case `ON_INTERIOR_VEHICLE_DATA`. The listener should be added before sending the corresponding RPC request/subscription or else some notifications may be missed.
+
 #### 4.7:
 
 ```java

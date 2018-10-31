@@ -27,7 +27,7 @@ After the `SdlManager` has been successfully started the module will have sent a
 
 ### Templates
 
-Each car manufacturer supports a set of templates for the user interface. These templates determine the position and size of the text, images, and buttons on the screen. A list of supported templates is sent with `RegisterAppInterface` response and can be accessed using the `SystemCapabilityManager`.  
+Each car manufacturer supports a set of templates for the user interface. These templates determine the position and size of the text, images, and buttons on the screen. A list of supported templates is sent with `RegisterAppInterface` response and can be accessed using the `SystemCapabilityManager`.
 
 To change a template at any time, send a `SetDisplayLayout` RPC to the SDL Core. If you want to ensure that the new template is used, wait for a response from the SDL Core before sending any more user interface RPCs.
 

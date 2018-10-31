@@ -26,11 +26,11 @@ and replace `{version}` with the desired release version in format of `x.x.x`. T
 
 ### Examples
 
-To compile release 4.7.0, use the following line:
+To compile release 4.7.1, use the following line:
 
 ```
 dependencies {
-    implementation 'com.smartdevicelink:sdl_android:4.7.0'
+    implementation 'com.smartdevicelink:sdl_android:4.7.1'
 }
 ```
 

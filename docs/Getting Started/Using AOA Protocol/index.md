@@ -86,6 +86,6 @@ MultiplexTransportConfig transport = new MultiplexTransportConfig(this, appId, M
 transport.setPrimaryTransports(multiplexPrimaryTransports);
 ```
 
-### Multiple Transport
+### Multiple Transports
 
-Since the `SdlRouterService` now handles both bluetooth and AOA/USB connections an app will be connected to the transport that connects first if the app includes them in their transport config. If a module supports secondary transports, the second transport to be connected of bluetooth or USB will be available as well as potentially TCP. This means even though the app might register over bluetooth, if USB or TCP are available those transports will be available for high bandwidth services. For more information please see the [Multiple Transport Guide](/guides/android/getting-started/multiple-transports/). 
+Since the `SdlRouterService` now handles both bluetooth and AOA/USB connections, an app will be connected to the transport that connects first if the app includes it in their transport config. If a module supports secondary transports, the second transport to be connected of bluetooth or USB will be available as well as potentially TCP. This means even though the app might register over bluetooth, if USB or TCP are available those transports will be available for high bandwidth services. For more information please see the [Multiple Transport Guide](/guides/android/getting-started/multiple-transports/). 

@@ -207,7 +207,7 @@ Do not include an import for `com.smartdevicelink.transport.SdlRouterService`. O
 
 ```Java
 public class SdlRouterService extends  com.smartdevicelink.transport.SdlRouterService {
-//Nothing to do here
+    //Nothing to do here
 }
 ```
 !!! MUST
@@ -215,7 +215,7 @@ The local extension of the `com.smartdevicelink.transport.SdlRouterService` must
 !!!
 
 !!! MUST
-Make sure this local class (SdlRouterService.java) is in the same package of SdlReceiver.java (described below)
+Make sure this local class `SdlRouterService.java` is in the same package of `SdlReceiver.java` (described below)
 !!!
 
 If you created the service using the Android Studio template then the service should have been added to your `AndroidManifest.xml` otherwise the service needs to be added in the manifest. Because we want our service to be seen by other SDL enabled apps, we need to set `android:exported="true"`. The system may issue a lint warning because of this, so we can suppress that using `tools:ignore="ExportedService"`.  

@@ -1,4 +1,4 @@
-## Sending Multiple RPCs
+# Sending Multiple RPCs
 
 ## Batch Sending RPCs
 
@@ -50,9 +50,9 @@ sdlManager.sendRPCs(rpcs, new OnMultipleRequestListener() {
 
 ### Send Sequential Requests
 
-As you may have guessed, this method is called similarly to `sendRPCs` but sends the requests synchronously, guaranteeing order. It is important to note that you want to build your array with the items that you want to send first, first. This is particularly useful for RPCs that are dependent upon other ones, such as a `performInteraction` needing a `createInteractionChoiceSet`'s id. 
+As you may have guessed, this method is called similarly to `sendRPCs` but sends the requests synchronously, guaranteeing order. It is important to note that you want to build your array with the items that you want to send first, first. This is particularly useful for RPCs that are dependent upon other ones, such as a `performInteraction` needing a `createInteractionChoiceSet`'s id.
 
-This method call is exactly the same as above, except for the method name being `sendSequentialRPCs`. For your convenience, the listener is also the same and performs similarly. 
+This method call is exactly the same as above, except for the method name being `sendSequentialRPCs`. For your convenience, the listener is also the same and performs similarly.
 
 ```java
 
@@ -71,22 +71,22 @@ rpcs.add(subscribeButtonRequestRight);
 sdlManager.sendSequentialRPCs(rpcs, new OnMultipleRequestListener() {
 	@Override
 	public void onUpdate(int remainingRequests) {
-	
+
 	}
 
 	@Override
 	public void onFinished() {
-	
+
 	}
 
 	@Override
 	public void onResponse(int correlationId, RPCResponse response) {
-	
+
 	}
 
 	@Override
 	public void onError(int correlationId, Result resultCode, String info) {
-	
+
 	}
 });
 

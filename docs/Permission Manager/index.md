@@ -1,6 +1,6 @@
 # Permission Manager
 
-The `PermissionManager` allows developers to easily query whether specific RPCs are allowed or not. It also allows a listener to be added for a list of RPCs so that if there are changes in their permissions, the app will be notified. 
+The `PermissionManager` allows developers to easily query whether specific RPCs are allowed or not. It also allows a listener to be added for a list of RPCs so that if there are changes in their permissions, the app will be notified.
 
 
 ## Querying Permission
@@ -68,7 +68,7 @@ if (status.get(FunctionID.GET_VEHICLE_DATA).getAllowedParameters().get(GetVehicl
 ```
 
 ## Adding Permissions Change Listener
-In some cases, the app may need to be notified when there is a change in some permissions. Developers can use the `PermissionManager` to add a listener that will be called when the specified permissions change. The listener can be called either if there is any change or only when all permissions become allowed. That can be determined by the `PermissionGroupType` value that is passed to the `AddListener` method:
+In some cases, the app may need to be notified when there is a change in some permissions. Developers can use the `PermissionManager` to add a listener that will be called when the specified permissions change. The listener can be called either when there is any change or only when all permissions become allowed. That can be determined by the `PermissionGroupType` value that is passed to the `AddListener` method:
 
 
 | Permission Group Type | Description |
@@ -93,7 +93,7 @@ UUID listenerId = sdlManager.getPermissionManager().addListener(permissionElemen
         }
 
         if (allowedPermissions.get(FunctionID.GET_VEHICLE_DATA).getAllowedParameters().get(GetVehicleData.KEY_RPM)){
-            // rpm parameter in GetVehicleData RPC is allowed           
+            // rpm parameter in GetVehicleData RPC is allowed
         }
     }
 });

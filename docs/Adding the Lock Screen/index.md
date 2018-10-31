@@ -1,6 +1,6 @@
 # Adding the Lock Screen
 
-In order for your SDL application to be certified with most OEMs you will be required to implement a lock screen on the mobile device. The lock screen will disable user interactions with the application while they are using the head-unit to control application functionality. OEMs may choose to send their logo for your app's lock screen to use; the `LockScreenManager` takes care of this automatically using the default layout. 
+In order for your SDL application to be certified with most OEMs you will be required to implement a lock screen on the mobile device. The lock screen will disable user interactions with the application on the mobile device while they are using the head-unit to control application functionality. OEMs may choose to send their logo for your app's lock screen to use; the `LockScreenManager` takes care of this automatically using the default layout.
 
 !!! NOTE
 This guide assumes that you have an SDL Service implemented as defined in the [Getting Started](/guides/android/getting-started/) guide.
@@ -71,7 +71,7 @@ Please note that a lock screen will likely be required by OEMs. You can disable 
 lockScreenConfig.setEnabled(false);
 ```
 
-!!!NOTE
+!!! NOTE
 When the enabled flag is set to `false` all other config options will be ignored.
 !!!
 
