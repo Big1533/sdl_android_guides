@@ -1,107 +1,92 @@
 ## Text, Images, and Buttons
-All text, images, and buttons on the HMI screen must be sent as part of a `Show` RPC. Subscribe buttons are sent as part of a `SubscribeButton` RPC.
+
+All text, images, and soft buttons on the HMI screen must be sent as part of a `Show` RPC. The `ScreenManager` will take care of creating and sending the `Show` request for text, images, and soft buttons so developers don't have to worry about that. Subscribe buttons need to be sent as part of a `SubscribeButton` RPC.
 
 ### Text
-A maximum of four lines of text can be set in `Show` RPC, however, some templates may only support 1, 2, or 3 lines of text. If all four lines of text are set in the `Show` RPC, but the template only supports three lines of text, then the fourth line will simply be ignored.
+
+A maximum of four lines of text can be sent to the module, however, some templates may only support 1, 2, or 3 lines of text. The `ScreenManager` well automatically handle the combining of lines based on how many lines are available and which fields the developer has set. For example, if all four lines of text are set in the `ScreenManager`, but the template only supports three lines of text, then the `ScreenManager` will hyphenate the third and fourth line and display them in one line.
 
 ```java
-Show show = new Show();
-show.setMainField1("Hello, this is MainField1.");
-show.setMainField2("Hello, this is MainField2.");
-show.setMainField3("Hello, this is MainField3.");
-show.setMainField4("Hello, this is MainField4.");
-show.setOnRPCResponseListener(new OnRPCResponseListener() {
-    @Override
-    public void onResponse(int correlationId, RPCResponse response) {
-        if (((ShowResponse) response).getSuccess()) {
-            Log.i("SdlService", "Successfully showed.");
-        } else {
-            Log.i("SdlService", "Show request was rejected.");
-        }
-    }
+//Start the UI updates
+sdlManager.getScreenManager().beginTransaction();
+
+sdlManager.getScreenManager().setTextField1("Hello, this is MainField1.");
+sdlManager.getScreenManager().setTextField2("Hello, this is MainField2.");
+sdlManager.getScreenManager().setTextField3("Hello, this is MainField3.");
+sdlManager.getScreenManager().setTextField4("Hello, this is MainField4.");
+
+//Commit the UI updates
+sdlManager.getScreenManager().commit(new CompletionListener() {
+	@Override
+	public void onComplete(boolean success) {
+		Log.i(TAG, "ScreenManager update complete: " + success);
+	}
 });
-proxy.sendRPCRequest(show);
 ```
 
+!!! NOTE
+If you don't use `beginTransaction()` and `commit()`, `ScreenManager` will still update the text fields correctly, however, it will send a `Show` request every time a text field is set. It is always recommended to use transactions if you have a batch of `ScreenManager` updates. Transactions will let the `ScreenManager` queue the updates and send them all at once in one `Show` RPC when `commit()` is called resulting in better performance and UI stability.
+!!!
+
 ### Images
-The position and size of images on the screen is determined by the currently set template. All images must first be uploaded to the remote system using the `PutFile` RPC before being used in a `Show` RPC. Once the image has been successfully uploaded, the app will be notified in the upload method's completion handler. For information relating to how to upload images, go to the [Uploading Files and Graphics](Uploading Files and Graphics) section.
+
+The position and size of images on the screen is determined by the currently set template. `ScreenManager` will handle uploading images and sending the `Show` RPC to display the images when they are ready.
 
 !!! NOTE
-Some head units you may be connected to may not support images at all. Please consult the `getGraphicSupported()` method in the `DisplayCapabilities` property available from the `SdlProxyALM` object.
+Some head units may only support certain images or possibly none at all. Please consult the `getGraphicSupported()` method in the `DisplayCapabilities` using the `SystemCapabilityManager`.
 !!!
 
 #### Show the Image on a Head Unit
-Once the image has been uploaded to the head unit, you can show the image on the user interface. To send the image, create an `Image` (com.smartdevicelink.rpc.Image) object, and send it using the `Show` RPC. The `Value` property should be set to the same value used in the `filename` property when it was previously uploaded. Since you have uploaded your own image, the `ImageType` property should be set to `ImageType.DYNAMIC`.
+
+To display an image in the head unit, you have to create an `SdlArtwork` object and set it using the `ScreenManager`. The `fileName` property should be set to the name that you want to use to save the file in the head unit. The `FileType` should be set to the correct type of image that is being sent, in the example it is set to `FileType.GRAPHIC_JPEG` because the image has JPEG format. The `id` is set to the Android resource id of the image that you want to use. The `persistentFile` is a boolean that represents whether you want the file to persist between sessions.
 
 ```java
-Image image = new Image();
-image.setImageType(ImageType.DYNAMIC);
-image.setValue("appImage.jpeg"); // a previously uploaded filename using PutFile RPC
-
-Show show = new Show();
-show.setGraphic(image);
-show.setCorrelationID(CorrelationIdGenerator.generateId());
-show.setOnRPCResponseListener(new OnRPCResponseListener() {
-    @Override
-    public void onResponse(int correlationId, RPCResponse response) {
-        if (((ShowResponse) response).getSuccess()) {
-            Log.i("SdlService", "Successfully showed.");
-        } else {
-            Log.i("SdlService", "Show request was rejected.");
-        }
-    }
-});
-proxy.sendRPCRequest(show);
+SdlArtwork sdlArtwork = new SdlArtwork("appImage.jpeg", FileType.GRAPHIC_JPEG, R.drawable.appImage, true);
+sdlManager.getScreenManager().setPrimaryGraphic(sdlArtwork);
 ```
 
 ### Soft & Subscribe Buttons
-Buttons on the HMI screen are referred to as soft buttons to distinguish them from hard buttons, which are physical buttons on the head unit. Don’t confuse soft buttons with subscribe buttons, which are buttons that can detect user selection on hard buttons (or built-in soft buttons).
+
+Buttons pushed by an app to the module's HMI screen are referred to as soft buttons to distinguish them from hard or preloaded buttons, which are either physical buttons on the head unit or buttons that exist on the module at all times. Don’t confuse soft buttons with subscribe buttons, which are buttons that can detect user selection on hard buttons (or built-in soft buttons).
 
 #### Soft Buttons
-Soft buttons can be created with text, images or both text and images. The location, size, and number of soft buttons visible on the screen depends on the template. If the button has an image, remember to upload the image first to the head unit before setting the image in the `SoftButton` instance.
 
-!!! NOTE
-If a button type is set to `SBT_IMAGE` or `SBT_BOTH` but no image is stored on the head unit, the button might not show up on the HMI screen.
-!!!
+Soft buttons can be created with text, images or both text and images. The location, size, and number of soft buttons visible on the screen depends on the template. A `SoftButtonObject` can have multiple `SoftButtonState` objects; each state can have text, image, or both. Buttons can be transitioned from one state to another at runtime.
 
 ```java
-Image cancelImage = new Image();
-cancelImage.setImageType(ImageType.DYNAMIC);
-cancelImage.setValue("cancel.jpeg");
+SoftButtonState softButtonState1 = new SoftButtonState("state1", "state1", new SdlArtwork("state1.png", FileType.GRAPHIC_PNG, R.drawable.state1, true));
 
-List<SoftButton> softButtons = new ArrayList<>();
+SoftButtonState softButtonState2 = new SoftButtonState("state2", "state2", new SdlArtwork("state2.png", FileType.GRAPHIC_PNG, R.drawable.state2, true));
 
-SoftButton yesButton = new SoftButton();
-yesButton.setType(SoftButtonType.SBT_TEXT);
-yesButton.setText("Yes");
-yesButton.setSoftButtonID(0);
+List<SoftButtonState> softButtonStates = Arrays.asList(softButtonState1, softButtonState2);
+SoftButtonObject softButtonObject = new SoftButtonObject("object", softButtonStates, softButtonState1.getName(), null);
 
-SoftButton cancelButton = new SoftButton();
-cancelButton.setType(SoftButtonType.SBT_IMAGE);
-cancelButton.setImage(cancelImage);
-cancelButton.setSoftButtonID(1);
+//We will add a listener for events in the next example here 
 
-softButtons.add(yesButton);
-softButtons.add(cancelButton);
-
-Show show = new Show();
-show.setSoftButtons(softButtons);
-show.setOnRPCResponseListener(new OnRPCResponseListener() {
-    @Override
-    public void onResponse(int correlationId, RPCResponse response) {
-        if (((ShowResponse) response).getSuccess()) {
-            Log.i("SdlService", "Successfully showed.");
-        } else {
-            Log.i("SdlService", "Show request was rejected.");
-        }
-    }
-});
-proxy.sendRPCRequest(show);
+sdlManager.getScreenManager().setSoftButtonObjects(Collections.singletonList(softButtonObject));
 ```
 
 
+##### Receiving Soft Buttons Events
+
+Once you have created soft buttons, you will likely want to know when events happen to those buttons. These events come through two callbacks `onEvent` and `onPress `. Depending which type of event you're looking for you can use that type of callback. 
+
+```java
+softButtonObject.setOnEventListener(new SoftButtonObject.OnEventListener() {
+    @Override
+    public void onPress(SoftButtonObject softButtonObject, OnButtonPress onButtonPress) {
+        softButtonObject.transitionToNextState();
+    }
+
+    @Override
+    public void onEvent(SoftButtonObject softButtonObject, OnButtonEvent onButtonEvent) {
+
+    }
+});
+```
+
 #### Subscribe Buttons
-Subscribe buttons are used to detect changes to hard buttons. You can subscribe to the following hard buttons:
+Subscribe buttons are used to detect changes to hard or preloaded buttons. You can subscribe to the following hard buttons:
 
 | Button  | Template | Button Type |
 | ------------- | ------------- | ------------- |
@@ -121,60 +106,66 @@ You can subscribe to buttons using the `SubscribeButton` RPC.
 ```java
 SubscribeButton subscribeButtonRequest = new SubscribeButton();
 subscribeButtonRequest.setButtonName(ButtonName.SEEKRIGHT);
-proxy.sendRPCRequest(subscribeButtonRequest);
+sdlManager.sendRPC(subscribeButtonRequest);
 ```
 
 !!! NOTE
-It is not required to manually subscribe to soft buttons. When soft buttons are added, your app will automatically be subscribed for their events
+It is not required to manually subscribe to soft buttons. When soft buttons are added, your app will automatically be subscribed for their events.
 !!!
 
-#### Receiving Buttons Events
-Once you have successfully subscribed to buttons and/or added soft buttons you will likely want to know when events happen to those buttons. These events come through two callbacks from the `IProxyListenerALM` interface, `onOnButtonEvent` and `onOnButtonPress `. Depending which type of event you're looking for you can use that type of callback. The `ButtonName` enum refers to which button the event happened to. `SoftButton` events will have the `ButtonName` of `CUSTOM_BUTTON`.
+##### Receiving Subscribe Buttons Events
+
+When you want to subscribe to buttons, you will be subscribing to events that happen to those buttons. These events come through two callbacks `OnButtonEvent` and `OnButtonPress `. Depending which type of event you're looking for you can use that type of callback. The `ButtonName` enum refers to which button the event happened to.
+
+!!! NOTE
+Some templates will not show a preloaded button until an app subscribes to it. After an app subscribes to the events of that button, it will appear. 
+!!!
 
 ```java
-@Override
-public void onOnButtonEvent(OnButtonEvent notification) {
-	switch(notification.getButtonName()){
-			case CUSTOM_BUTTON:
-				//Custom buttons are the soft buttons previously added.
-				int ID = notification.getCustomButtonID();
-				Log.d("SdlService", "Button event received for button " + ID); 
-				break;
-			case OK: 
-				break;
-			case SEEKLEFT:
-				break;
-			case SEEKRIGHT:
-				break;
-			case TUNEUP:
-				break;
-			case TUNEDOWN:
-				break;
-			default:
-				break;
-		}
-}
+sdlManager.addOnRPCNotificationListener(FunctionID.ON_BUTTON_EVENT, new OnRPCNotificationListener() {
+    @Override
+    public void onNotified(RPCNotification notification) {
+        OnButtonPress onButtonPressNotification = (OnButtonPress) notification;
+        switch (onButtonPressNotification.getButtonName()) {
+            case OK:
+                break;
+            case SEEKLEFT:
+                break;
+            case SEEKRIGHT:
+                break;
+            case TUNEUP:
+                break;
+            case TUNEDOWN:
+                break;
+            default:
+                break;
+        }
+    }
+});
 
-@Override
-public void onOnButtonPress(OnButtonPress notification) {
-		switch(notification.getButtonName()){
-			case CUSTOM_BUTTON:
-				//Custom buttons are the soft buttons previously added.
-				int ID = notification.getCustomButtonName();
-				Log.d("SdlService", "Button press received for button " + ID); 
-				break;
-			case OK: 
-				break;
-			case SEEKLEFT:
-				break;
-			case SEEKRIGHT:
-				break;
-			case TUNEUP:
-				break;
-			case TUNEDOWN:
-				break;
-			default:
-				break;
-		}
-}
+
+sdlManager.addOnRPCNotificationListener(FunctionID.ON_BUTTON_PRESS, new OnRPCNotificationListener() {
+    @Override
+    public void onNotified(RPCNotification notification) {
+        OnButtonPress onButtonPressNotification = (OnButtonPress) notification;
+        switch (onButtonPressNotification.getButtonName()) {
+            case OK:
+                break;
+            case SEEKLEFT:
+                break;
+            case SEEKRIGHT:
+                break;
+            case TUNEUP:
+                break;
+            case TUNEDOWN:
+                break;
+            default:
+                break;
+        }
+    }
+});
 ```
+
+!!! NOTE
+The app should subscribe to button events before sending the `SubscribeButton` request to make sure that it doesn't miss any button events.
+!!!

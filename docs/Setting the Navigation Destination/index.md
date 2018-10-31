@@ -17,13 +17,14 @@ This currently is only supported for Embedded Navigation. This does not work wit
 3. DISALLOWED - Your app does not have permission to use `SendLocation`.
 
 ### Detecting if SendLocation is Available
-`SendLocation` is a newer RPC, so there is a possibility that not all head units will support it, especially if you are connected to a head unit that does not have an embedded navigation. To see if `SendLocation` is supported, you may look at your `SdlProxyALM` object's `getHmiCapabilities` method after the successfully creating the proxy.
+`SendLocation` is a newer RPC, so there is a possibility that not all head units will support it, especially if you are connected to a head unit that does not have an embedded navigation. To see if `SendLocation` is supported, you may look at `HmiCapabilities` that can be retrieved using `SystemCapabilityManager`.
 
 ```java
-if(proxy.getHmiCapabilities().isNavigationAvailable()){
-	// SendLocation supported
+HMICapabilities hmiCapabilities = (HMICapabilities) sdlManager.getSystemCapabilityManager().getCapability(SystemCapabilityType.HMI);
+if (hmiCapabilities.isNavigationAvailable()){
+    // SendLocation supported
 }else{
-	// SendLocation is not supported
+    // SendLocation is not supported
 }
 ```
 
@@ -64,5 +65,5 @@ sendLocation.setOnRPCResponseListener(new OnRPCResponseListener() {
     }
 });
 
-proxy.sendRPCRequest(sendLocation);
+sdlManager.sendRPC(sendLocation);
 ```

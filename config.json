@@ -19,6 +19,9 @@
                     "name" : "Using AOA Protocol"
                 },
                 {
+                    "name" : "Multiple Transports"
+                },
+                {
                     "name" : "Sending Multiple RPCs"
                 },
                 {
@@ -98,6 +101,10 @@
         },
 
         {
+            "name": "Permission Manager"
+        },
+
+        {
             "name": "Remote Control"
         },
 
@@ -116,115 +123,12 @@
               },
               {
                   "name": "Updating to 4.6"
+              },
+              {
+                  "name": "Updating to 4.7"
               }
             ]
 
-        },
-
-        {
-            "name": "Remote Procedure Calls",
-            "navigation": [
-                {
-                    "name" : "AddCommand"
-                },
-                {
-                    "name" : "DeleteCommand"
-                },
-                {
-                    "name" : "AddSubMenu"
-                },
-                {
-                    "name" : "DeleteSubMenu"
-                },
-                {
-                    "name" : "Alert"
-                },
-                {
-                    "name" : "CreateInteractionChoiceSet"
-                },
-                {
-                    "name" : "DeleteInteractionChoiceSet"
-                },
-                {
-                    "name" : "RegisterAppInterface"
-                },
-                {
-                    "name" : "UnregisterAppInterface"
-                },
-                {
-                    "name" : "Speak"
-                },
-                {
-                    "name" : "ResetGlobalProperties"
-                },
-                {
-                    "name" : "SetGlobalProperties"
-                },
-                {
-                    "name" : "SetMediaClockTimer"
-                },
-                {
-                    "name" : "Show"
-                },
-                {
-                    "name" : "SubscribeButton"
-                },
-                {
-                    "name" : "UnSubscribeButton"
-                },
-                {
-                    "name" : "PerformInteraction"
-                },
-                {
-                    "name" : "PerformAudioPassThru"
-                },
-                {
-                    "name" : "EndAudioPassThru"
-                },
-                {
-                    "name" : "SubscribeVehicleData"
-                },
-                {
-                    "name" : "UnsubscribeVehicleData"
-                },
-                {
-                    "name" : "GetVehicleData"
-                },
-                {
-                    "name" : "ReadDID"
-                },
-                {
-                    "name" : "GetDTCs"
-                },
-                {
-                    "name" : "ScrollableMessage"
-                },
-                {
-                    "name" : "Slider"
-                },
-                {
-                    "name" : "ChangeRegistration"
-                },
-                {
-                    "name" : "GenericResponse"
-                },
-                {
-                    "name" : "PutFile"
-                },
-                {
-                    "name" : "DeleteFile"
-                },
-                {
-                    "name" : "ListFiles"
-                },
-                {
-                    "name" : "SetAppIcon"
-                },
-                {
-                    "name" : "SetDisplayLayout"
-                }
-
-            ]
         },
 
         {
@@ -232,7 +136,11 @@
             "navigation" : [
               {
                   "name": "SDL Notifications"
+              },
+              {
+                  "name": "Trusted Router Service"
               }
+
             ]
         },
 

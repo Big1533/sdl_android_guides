@@ -1,4 +1,5 @@
 ## Knowing the In-Car UI Status
+
 Once your app is connected to Core, most of the interaction you will be doing requires knowledge of the current In-Car UI, or HMI, Status. The HMI Status informs you of where the user is within the head unit in a general sense. 
 
 Refer to the table below of all possible HMI States:
@@ -11,18 +12,27 @@ LIMITED     | For Media apps, this means that a user has opened your app, but is
 FULL        | Your app is currently in focus on the screen.
 
 ### Monitoring HMI Status
-Monitoring HMI Status is possible through an `OnHMIStatus` notification in the `onOnHMIStatus()` callback in your app's SDL Service. It will give you information relating to the previous and new HMI levels your app is progressing through.
+
+Monitoring HMI Status is possible through an `OnHMIStatus` notification that you can subscribe to via the `SdlManager`'s `addOnRPCNotificationListener`.
 
 ```java
-public void onOnHMIStatus(OnHMIStatus notification) {
-	// Check notification for various HMI info
-}
+sdlManager.addOnRPCNotificationListener(FunctionID.ON_HMI_STATUS, new OnRPCNotificationListener() {
+	@Override
+	public void onNotified(RPCNotification notification) {
+		OnHMIStatus status = (OnHMIStatus) notification;
+		if (status.getHmiLevel() == HMILevel.HMI_FULL && ((OnHMIStatus) notification).getFirstRun()) {
+			// first time in HMI Full
+		}
+	}
+});
 ```
 
 ### More Detailed HMI Information
+
 When an interaction occurs relating to your application, there is some additional pieces of information that can be observed that help figure out a more descriptive picture of what is going on with the Head Unit.
 
 #### Audio Streaming State
+
 From the documentation, Audio Streaming State informs your app whether any currently streaming audio is audible to user (AUDIBLE) or not (NOT_AUDIBLE). A value of NOT_AUDIBLE means that either the application's audio will not be audible to the user, or that the application's audio should not be audible to the user (i.e. some other application on the mobile device may be streaming audio and the application's audio would be blended with that other audio).
 
 You will see this come in for things such as Alert, PerformAudioPassThru, Speaks, etc.
@@ -34,6 +44,7 @@ ATTENUATED  			| Some kind of audio mixing is occuring between what you are stre
 NOT_AUDIBLE 			| Your streaming audio is not audible. This could occur during a VRSESSSION System Context.
 
 #### System Context
+
 System Context informs your app if there is potentially a blocking HMI component while your app is still visible. An example of this would be if your application is open, and you display an Alert. Your app will receive a System Context of ALERT while it is presented on the screen, followed by MAIN when it is dismissed.
 
 System Context State   | What does this mean?
@@ -45,10 +56,13 @@ HMI_OBSCURED    	   | The app's display HMI is being blocked by either a system 
 ALERT 				   | An alert that you have sent is currently visible (Other apps will not receive this).
 
 ### Monitoring Audio Streaming State and System Context
+
 Monitoring these two properties is quite easy using the `OnHMIStatus` notification.
 
 ```java
-public void onOnHMIStatus(OnHMIStatus notification) {
+@Override
+public void onNotified(RPCNotification notification) {
+	OnHMIStatus status = (OnHMIStatus) notification;
 	AudioStreamingState streamingState = notification.getAudioStreamingState();
 	SystemContext systemContext = notification.getSystemContext();
 }

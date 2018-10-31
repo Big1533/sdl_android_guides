@@ -25,7 +25,7 @@ AddCommand addCommand = new AddCommand();
 addCommand.setCmdID(0); // Ensure this is unique
 addCommand.setMenuParams(menuParams);  // Set the menu parameters
 
-proxy.sendRPCRequest(addCommand);
+sdlManager.sendRPC(addCommand);
 ```
 
 #### Add a Submenu
@@ -60,7 +60,7 @@ int cmdID_to_delete = 1;
 DeleteCommand deleteCommand = new DeleteCommand();
 deleteCommand.setCmdID(cmdID_to_delete);
     
-proxy.sendRPCRequest(deleteCommand);
+sdlManager.sendRPC(deleteCommand);
 ```
 
 #### Delete Submenus
@@ -104,7 +104,7 @@ public void onResponse(int correlationId, RPCResponse response) {
 }
 });
 	
-proxy.sendRPCRequest(choiceSet);
+sdlManager.sendRPC(choiceSet);
 ```
 
 #### Format the Set of Custom Menu Items
@@ -206,7 +206,7 @@ performInteraction.setOnRPCResponseListener(new OnRPCResponseListener() {
     }
 });
 
-proxy.sendRPCRequest(performInteraction);
+sdlManager.sendRPC(performInteraction);
 ```
 
 #### Delete the Custom Menu
@@ -216,5 +216,5 @@ If the information in the menu is dynamic, then the old interaction choice set n
 DeleteInteractionChoiceSet deleteInteractionChoiceSet = new DeleteInteractionChoiceSet();
 deleteInteractionChoiceSet.setInteractionChoiceSetID(interactionChoiceSetID_to_delete); // Replace with interaction choice set to delete
     
-proxy.sendRPCRequest(deleteInteractionChoiceSet);
+sdlManager.sendRPC(deleteInteractionChoiceSet);
 ```

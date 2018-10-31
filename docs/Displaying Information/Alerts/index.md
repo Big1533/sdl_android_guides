@@ -41,7 +41,7 @@ alert.setPlayTone(true);
 alert.setSoftButtons(softButtons); // softButtons populated elsewhere
 
 // Send alert
-proxy.sendRPCRequest(alert);
+sdlManager.sendRPC(alert);
 ```
 
 ### Dismissing the Alert
