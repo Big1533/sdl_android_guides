@@ -352,7 +352,7 @@ Multiple transports only work on supported versions of SDL Core.
        <intent-filter>
        	<action android:name="com.smartdevicelink.router.service"/>
        </intent-filter>
-       <meta-data android:name="@string/sdl_router_service_version_name"  android:value="@integer/sdl_router_service_version_value" />
+       <meta-data android:name="sdl_router_version"  android:value="@integer/sdl_router_service_version_value" />
 	</service>
 	<receiver
 		android:name=".SdlReceiver"
