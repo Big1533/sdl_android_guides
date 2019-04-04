@@ -113,6 +113,15 @@
         },
 
         {
+            "name": "App Services",
+            "navigation" : [
+              {
+                  "name": "Creating an App Service"
+              }
+            ]
+        },
+
+        {
             "name": "Migrating to Newer SDL Android Versions",
             "navigation" : [
               {
