@@ -142,7 +142,7 @@ sdlManager.sendRPC(onAppData);
 final Image image = new Image("turn", ImageType.DYNAMIC);
 final SdlArtwork navInstructionArt = new SdlArtwork("turn", FileType.GRAPHIC_PNG, R.drawable.turn, true);
         
-sdlManager.getFileManager().uploadFile(navInstructionArt, new CompletionListener() {
+sdlManager.getFileManager().uploadFile(navInstructionArt, new CompletionListener() { // We have to send the image to the system before it's used in the app service.
     @Override
     public void onComplete(boolean success) {
         if (success){
