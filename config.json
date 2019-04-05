@@ -117,6 +117,9 @@
             "navigation" : [
               {
                   "name": "Creating an App Service"
+              },
+              {
+                  "name": "Using App Services"
               }
             ]
         },
