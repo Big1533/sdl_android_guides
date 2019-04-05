@@ -39,6 +39,7 @@ You may only ask for vehicle data that is available to your appName & appId comb
 | My key | myKey | Information about whether or not the emergency 911 override has been activated |
 | Turn signal | turnSignal | The status of the turn light indicator |
 | Electronic park brake status | electronicParkBrakeStatus | The status of the park brake as provided by Electric Park Brake (EPB) system |
+| Cloud app vehicle id | cloudAppVehicleID | The id for the vehicle when connecting to cloud applications |
 
 ### Single Time Vehicle Data Retrieval
 Using `GetVehicleData`, we can ask for vehicle data a single time, if needed. 
