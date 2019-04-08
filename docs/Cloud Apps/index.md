@@ -1,7 +1,7 @@
 ## Cloud Apps
 
 ### Cloud App Properties 
-App stores need to manage the `CloudAppProperties` for cloud apps in the policy table in order to enable/disable a cloud app from appearing on the HMI or deliver the necessary authentication information if the app requires it. This table includes the properties that are included in `CloudAppProperties`.
+App stores may need to manage the `CloudAppProperties` for cloud apps in the policy table in order to enable/disable a cloud app from appearing on the HMI or deliver the necessary authentication information if the app requires it. This table includes the properties that are included in `CloudAppProperties`.
 
 | Parameter Name  |  Description |
 | ------------- | ------------- |
