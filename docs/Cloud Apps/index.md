@@ -61,7 +61,7 @@ sdlManager.sendRPC(getCloudAppProperties);
 
 ### Auth Token
 
-A Cloud apps can retrieve its `authToken` from policy table after the app successfully starts the RPC service by using the `SdlManager` as in the following example:
+A Cloud app can retrieve its `authToken` from policy table after the app successfully starts the RPC service by using the `SdlManager` as in the following example. The `authToken` can be used later by the app to authenticate websocket connection on app activation:
 
 ```java
 String authToken = sdlManager.getAuthToken();
