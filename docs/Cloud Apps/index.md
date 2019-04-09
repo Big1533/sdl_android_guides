@@ -1,11 +1,11 @@
 ## Cloud Apps
 
 
-OEMs can create their own app stores to handle adding and removing cloud apps. App stores can also handle user authentication for the installed cloud apps. For example, users can log in after installing a cloud app using the app store. After that, app store saves the authentication token for the cloud app in the local policy table. Then, the cloud app can retrieve the authentication token from the policy table and use it to authenticate the websocket connection.
+OEMs can create their own app stores to handle installing and uninstalling cloud apps. App stores can also handle user authentication for the installed cloud apps. For example, users can log in after installing a cloud app using the app store. After that, app store saves the authentication token for the cloud app in the local policy table. Then, the cloud app can retrieve the authentication token from the local policy table and use it to authenticate the websocket connection.
 
 
 ### Setting and Getting Cloud App Properties 
-OEM's App store can manage the properties of a specific cloud app by setting and getting its `CloudAppProperties`. This table summarizes the properties that are included in `CloudAppProperties`.
+OEM's app store can manage the properties of a specific cloud app by setting and getting its `CloudAppProperties`. This table summarizes the properties that are included in `CloudAppProperties`.
 
 | Parameter Name  |  Description |
 | ------------- | ------------- |
@@ -65,7 +65,7 @@ sdlManager.sendRPC(getCloudAppProperties);
 
 ### Retrieving Authentication Token
 
-A Cloud app can retrieve its `authToken` from local policy table after the app successfully starts the RPC service by using the `SdlManager` as in the following example. The `authToken` can be used later by the app to authenticate websocket connection on app activation:
+A cloud app can retrieve its `authToken` from local policy table after starting the RPC service. The `authToken` can be used later by the app to authenticate websocket connection on app activation:
 
 ```java
 String authToken = sdlManager.getAuthToken();
