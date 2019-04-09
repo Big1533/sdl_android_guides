@@ -1,7 +1,11 @@
 ## Cloud Apps
 
-### Cloud App Properties 
-App stores may need to manage the `CloudAppProperties` for cloud apps in the policy table in order to enable/disable a cloud app from appearing on the HMI or deliver the necessary authentication information if the app requires it. This table includes the properties that are included in `CloudAppProperties`.
+
+OEMs can create their own app stores to handle adding and removing cloud apps. App stores can also handle user authentication for the installed cloud apps. For example, users can log in after installing a cloud app using the app store. After that, app store saves the authentication token for the cloud app in the local policy table. Then, the cloud app can retrieve the authentication token from the policy table and use it to authenticate the websocket connection.
+
+
+### Setting and Getting Cloud App Properties 
+OEM's App store can manage the properties of a specific cloud app by setting and getting its `CloudAppProperties`. This table summarizes the properties that are included in `CloudAppProperties`.
 
 | Parameter Name  |  Description |
 | ------------- | ------------- |
@@ -18,7 +22,7 @@ Only trusted app stores are allowed to set or get `CloudAppProperties` for other
 !!!
 
 
-App stores can set cloud properties for a cloud app by sending `SetCloudAppProperties` request to Core to store the properties in the policy table. For example, in this piece of code, the app store can set the `authToken` for a cloud app after the user logs in:
+App stores can set cloud properties for a cloud app by sending `SetCloudAppProperties` request to Core to store the properties in the local policy table. For example, in this piece of code, the app store can set the `authToken` for a cloud app after the user logs in:
 
 ```java
 CloudAppProperties cloudAppProperties = new CloudAppProperties("<appId>");
@@ -37,7 +41,7 @@ setCloudAppProperties.setOnRPCResponseListener(new OnRPCResponseListener() {
 sdlManager.sendRPC(setCloudAppProperties);
 ```
 
-Also, app stores can retrieve cloud properties for a specific cloud app from policy table by sending `GetCloudAppProperties` and specifying the `appId` for that cloud app as in this example:
+and to retrieve cloud properties for a specific cloud app from local policy table, app stores can send `GetCloudAppProperties` by specifying the `appId` for that cloud app as in this example:
 
 ```java
 GetCloudAppProperties getCloudAppProperties = new GetCloudAppProperties("<appId>");
@@ -59,9 +63,9 @@ sdlManager.sendRPC(getCloudAppProperties);
 
 
 
-### Auth Token
+### Retrieving Authentication Token
 
-A Cloud app can retrieve its `authToken` from policy table after the app successfully starts the RPC service by using the `SdlManager` as in the following example. The `authToken` can be used later by the app to authenticate websocket connection on app activation:
+A Cloud app can retrieve its `authToken` from local policy table after the app successfully starts the RPC service by using the `SdlManager` as in the following example. The `authToken` can be used later by the app to authenticate websocket connection on app activation:
 
 ```java
 String authToken = sdlManager.getAuthToken();
