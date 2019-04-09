@@ -46,7 +46,7 @@ SdlArtwork sdlArtwork = new SdlArtwork("appImage.jpeg", FileType.GRAPHIC_JPEG, R
 sdlManager.getScreenManager().setPrimaryGraphic(sdlArtwork);
 ```
 
-To use `SdlArtwork` wit static images, you can use the constructor that takes the static icon name as the only argument as in the following sample:
+To use `SdlArtwork` with static images, you can use the constructor that takes the static icon name as the only argument as in the following sample:
 
 ```java
 SdlArtwork sdlArtwork = new SdlArtwork(StaticIconName.ALBUM);
