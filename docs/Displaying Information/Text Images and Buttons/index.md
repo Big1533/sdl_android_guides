@@ -38,10 +38,18 @@ Some head units may only support certain images or possibly none at all. Please 
 
 #### Show the Image on a Head Unit
 
-To display an image in the head unit, you have to create an `SdlArtwork` object and set it using the `ScreenManager`. The `fileName` property should be set to the name that you want to use to save the file in the head unit. The `FileType` should be set to the correct type of image that is being sent, in the example it is set to `FileType.GRAPHIC_JPEG` because the image has JPEG format. The `id` is set to the Android resource id of the image that you want to use. The `persistentFile` is a boolean that represents whether you want the file to persist between sessions.
+To display an image in the head unit, you have to create an `SdlArtwork` object and set it using the `ScreenManager`. `SdlArtwork` supports both dynamic and static images. 
+To use it with dynamic images, you can use the constructor that takes multiple arguments. The `fileName` property should be set to the name that you want to use to save the file in the head unit. The `FileType` should be set to the correct type of image that is being sent, in the example it is set to `FileType.GRAPHIC_JPEG` because the image has JPEG format. The `id` is set to the Android resource id of the image that you want to use. The `persistentFile` is a boolean that represents whether you want the file to persist between sessions.
 
 ```java
 SdlArtwork sdlArtwork = new SdlArtwork("appImage.jpeg", FileType.GRAPHIC_JPEG, R.drawable.appImage, true);
+sdlManager.getScreenManager().setPrimaryGraphic(sdlArtwork);
+```
+
+To use `SdlArtwork` with static images, you can use the constructor that takes the static icon name as the only argument as in the following sample:
+
+```java
+SdlArtwork sdlArtwork = new SdlArtwork(StaticIconName.ALBUM);
 sdlManager.getScreenManager().setPrimaryGraphic(sdlArtwork);
 ```
 
