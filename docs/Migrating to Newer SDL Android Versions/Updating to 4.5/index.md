@@ -30,7 +30,7 @@ Assuming the manifest was up to date with version 4.4 requirements we need to ad
             <intent-filter>
                 <action android:name="com.smartdevicelink.router.service"/>
             </intent-filter>
-            <meta-data android:name="@string/sdl_router_service_version_name"  android:value="@integer/sdl_router_service_version_value" />
+            <meta-data android:name="sdl_router_version"  android:value="@integer/sdl_router_service_version_value" />
         </service>
     
     </application>
@@ -60,22 +60,22 @@ This `intent-filter` MUST be included.
 #### Router Service Version
 
 ```xml
-<meta-data android:name="@string/sdl_router_service_version_name"  android:value="@integer/sdl_router_service_version_value" />
+<meta-data android:name="sdl_router_version"  android:value="@integer/sdl_router_service_version_value" />
 ```
 
-Adding the `sdl_router_service_version` metadata allows the library to know the version of the router service that the app is using. This makes it simpler for the library to choose the newest router service when multiple router services are available.
+Adding the `sdl_router_version` metadata allows the library to know the version of the router service that the app is using. This makes it simpler for the library to choose the newest router service when multiple router services are available.
 
 #### Custom Router Service
 
 ```xml
-<meta-data android:name="@string/sdl_router_service_is_custom_name" android:value="false" />
+<meta-data android:name="sdl_custom_router" android:value="false" />
 ```
 
 !!! NOTE
 This is only for specific OEM applications, therefore normal developers do not need to worry about this.
 !!!
 
-Some OEMs choose to implement custom router services. Setting the `sdl_router_service_is_custom_name` metadata value to `true` means that the app is using something custom over the default router service that is included in the SDL Android library. Do not include this `meta-data` entry unless you know what you are doing. 
+Some OEMs choose to implement custom router services. Setting the `sdl_custom_router` metadata value to `true` means that the app is using something custom over the default router service that is included in the SDL Android library. Do not include this `meta-data` entry unless you know what you are doing. 
 
 ## Android Oreo's Push To Foreground Services
 
