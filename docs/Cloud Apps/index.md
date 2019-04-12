@@ -23,7 +23,7 @@ Only trusted app stores are allowed to set or get `CloudAppProperties` for other
 !!!
 
 #### Using SetCloudAppProperties
-App stores can set cloud properties for a cloud app by sending `SetCloudAppProperties` request to Core to store the properties in the local policy table. For example, in this piece of code, the app store can set the `authToken` for a cloud app after the user logs in:
+App stores can set cloud properties for a cloud app by sending `SetCloudAppProperties` request to Core to store the properties in the local policy table. For example, in this piece of code, the app store can set the `authToken` to associate a user with a login for a cloud app after the user logs in to the app using the app store:
 
 ```java
 CloudAppProperties cloudAppProperties = new CloudAppProperties("<appId>");
