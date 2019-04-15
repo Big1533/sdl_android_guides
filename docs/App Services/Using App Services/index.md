@@ -151,7 +151,7 @@ Actions are generic URI-based strings sent to any app service (active or not). Y
 
 ##### Java
 ```java
-PerformAppServiceInteraction performAppServiceInteraction = new PerformAppServiceInteraction("sdlexample://x-callback-url/showText?x-source=MyApp&text=My%20Custom%20String","<#Previously Retrived ServiceID#>","<#Your App Id#>");
+PerformAppServiceInteraction performAppServiceInteraction = new PerformAppServiceInteraction("sdlexample://x-callback-url/showText?x-source=MyApp&text=My%20Custom%20String","<#Previously Retrieved ServiceID#>","<#Your App Id#>");
 performAppServiceInteraction.setOnRPCResponseListener(new OnRPCResponseListener() {
     @Override
     public void onResponse(int correlationId, RPCResponse response) {
