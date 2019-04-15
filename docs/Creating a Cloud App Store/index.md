@@ -69,13 +69,14 @@ sdlManager.sendRPC(getCloudAppProperties);
 ### Getting the Cloud App Icon
 The cloud app icon will automatically be downloaded by the cloud app from the url provided by the policy table and sent to Core.
 
-### Using CloudAppVehicleID (Optional)
-The `CloudAppVehicleID` is an optional parameter used by cloud apps to identify a head unit. The content of `CloudAppVehicleID` is up to the OEM's implementation. Possible values could be the VIN or a hashed VIN. 
-`CloudAppVehicleID` value can be retrieved as part of the `GetVehicleData` RPC.  To find out more about how to retrieve `CloudAppVehicleID`, check out the  [Getting Vehicle Data](Getting Vehicle Data) section.
-
-### Getting the Authentication Token
+### Retrieving the Authentication Token
+When users install cloud apps from an OEM's app store, they may be asked to login to that cloud app using the app store. After login in, app store can save the `authToken` in the local policy table to be used later by cloud app for user authentication. 
 A cloud app can retrieve its `authToken` from local policy table after starting the RPC service. The `authToken` can be used later by the app to authenticate websocket connection on app activation:
 
 ```java
 String authToken = sdlManager.getAuthToken();
 ```
+
+### Using CloudAppVehicleID (Optional)
+The `CloudAppVehicleID` is an optional parameter used by cloud apps to identify a head unit. The content of `CloudAppVehicleID` is up to the OEM's implementation. Possible values could be the VIN or a hashed VIN. 
+`CloudAppVehicleID` value can be retrieved as part of the `GetVehicleData` RPC.  To find out more about how to retrieve `CloudAppVehicleID`, check out the  [Getting Vehicle Data](Getting Vehicle Data) section.
