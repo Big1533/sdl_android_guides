@@ -1,154 +1,141 @@
-{
-    "Authors": [
-        "Joey Grover", "Corey Maylone", "Austin Kirk", "Brett McIsaac"
-    ],
-    "languages": [
-        "en"
-    ],
-    "navigation": [
-        {
-            "name": "Getting Started",
-            "navigation": [
-                {
-                    "name" : "Installation"
-                },
-                {
-                    "name" : "Integration Basics"
-                },
-                {
-                    "name" : "Using AOA Protocol"
-                },
-                {
-                    "name" : "Multiple Transports"
-                },
-                {
-                    "name" : "Sending Multiple RPCs"
-                },
-                {
-                    "name": "Hello Sdl Android"
-                }
-            ]
-        },
-        {
-            "name": "Adding the Lock Screen"
-        },
-        {
-            "name": "Displaying Information",
-            "navigation": [
-                {
-                    "name" : "Designing the User Interface"
-                },
-                {
-                    "name" : "Text Images and Buttons"
-                },
-                {
-                    "name" : "Menus"
-                },
-                {
-                    "name" : "Alerts"
-                }
-            ]
-        },
-        {
-            "name": "Uploading Files and Graphics"
-        },
-        {
-            "name": "Getting Vehicle Data"
-        },
-        {
-            "name": "Knowing the In-Car UI Status"
-        },
-        {
-            "name": "Setting the Navigation Destination"
-        },
-
-        {
-            "name": "Calling a Phone Number"
-        },
-
-        {
-            "name": "Getting In-Car Audio"
-        },
-
-        {
-            "name": "Mobile Navigation",
-            "navigation" : [
-              {
-                  "name": "Introduction"
-              },
-              {
-                  "name": "Video Streaming"
-              },
-              {
-                  "name": "Audio Streaming"
-              },
-              {
-                  "name": "Supporting Haptic Input"
-              }
-            ]
-        },
-
-        {
-            "name": "Setting Security Level for Multiplexing"
-        },
-
-        {
-            "name": "Handling Language Change"
-        },
-
-        {
-            "name": "System Capability Manager"
-        },
-
-        {
-            "name": "Permission Manager"
-        },
-
-        {
-            "name": "Remote Control"
-        },
-
-        {
-            "name": "Creating a Cloud App Store"
-        },
-
-        {
-            "name": "Proguard Guidelines"
-        },
-
-        {
-            "name": "Migrating to Newer SDL Android Versions",
-            "navigation" : [
-              {
-                  "name": "Updating to 4.4"
-              },
-              {
-                  "name": "Updating to 4.5"
-              },
-              {
-                  "name": "Updating to 4.6"
-              },
-              {
-                  "name": "Updating to 4.7"
-              }
-            ]
-
-        },
-
-        {
-            "name": "Frequently Asked Questions",
-            "navigation" : [
-              {
-                  "name": "SDL Notifications"
-              },
-              {
-                  "name": "Trusted Router Service"
-              }
-
-            ]
-        },
-
-	{
-	}
-    ]
+{  
+   "Authors":[  
+      "Joey Grover",
+      "Corey Maylone",
+      "Austin Kirk",
+      "Brett McIsaac",
+      "Bilal Alsharifi"
+   ],
+   "languages":[  
+      "en"
+   ],
+   "navigation":[  
+      {  
+         "name":"Getting Started",
+         "navigation":[  
+            {  
+               "name":"Installation"
+            },
+            {  
+               "name":"Integration Basics"
+            },
+            {  
+               "name":"Using AOA Protocol"
+            },
+            {  
+               "name":"Multiple Transports"
+            },
+            {  
+               "name":"Sending Multiple RPCs"
+            },
+            {  
+               "name":"Hello Sdl Android"
+            }
+         ]
+      },
+      {  
+         "name":"Adding the Lock Screen"
+      },
+      {  
+         "name":"Displaying Information",
+         "navigation":[  
+            {  
+               "name":"Designing the User Interface"
+            },
+            {  
+               "name":"Text Images and Buttons"
+            },
+            {  
+               "name":"Menus"
+            },
+            {  
+               "name":"Alerts"
+            }
+         ]
+      },
+      {  
+         "name":"Uploading Files and Graphics"
+      },
+      {  
+         "name":"Getting Vehicle Data"
+      },
+      {  
+         "name":"Knowing the In-Car UI Status"
+      },
+      {  
+         "name":"Setting the Navigation Destination"
+      },
+      {  
+         "name":"Calling a Phone Number"
+      },
+      {  
+         "name":"Getting In-Car Audio"
+      },
+      {  
+         "name":"Mobile Navigation",
+         "navigation":[  
+            {  
+               "name":"Introduction"
+            },
+            {  
+               "name":"Video Streaming"
+            },
+            {  
+               "name":"Audio Streaming"
+            },
+            {  
+               "name":"Supporting Haptic Input"
+            }
+         ]
+      },
+      {  
+         "name":"Setting Security Level for Multiplexing"
+      },
+      {  
+         "name":"Handling Language Change"
+      },
+      {  
+         "name":"System Capability Manager"
+      },
+      {  
+         "name":"Permission Manager"
+      },
+      {  
+         "name":"Remote Control"
+      },
+      {  
+         "name":"Creating a Cloud App Store"
+      },
+      {  
+         "name":"Proguard Guidelines"
+      },
+      {  
+         "name":"Migrating to Newer SDL Android Versions",
+         "navigation":[  
+            {  
+               "name":"Updating to 4.4"
+            },
+            {  
+               "name":"Updating to 4.5"
+            },
+            {  
+               "name":"Updating to 4.6"
+            },
+            {  
+               "name":"Updating to 4.7"
+            }
+         ]
+      },
+      {  
+         "name":"Frequently Asked Questions",
+         "navigation":[  
+            {  
+               "name":"SDL Notifications"
+            },
+            {  
+               "name":"Trusted Router Service"
+            }
+         ]
+      },
+   ]
 }
