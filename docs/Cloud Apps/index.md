@@ -1,4 +1,4 @@
-## Cloud Apps
+## Creating a Cloud App Store
 A new feature of SDL 5.1 allows OEMs to offer an app store that lets users browse and install remote cloud apps. If the cloud app requires the user to login with their credentials, the app store can use an authentication token to automatically login the user after their first session.
 
 ### User Authentication
