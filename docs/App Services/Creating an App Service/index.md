@@ -74,11 +74,7 @@ publishServiceRequest.setAppServiceManifest(manifest);
 publishServiceRequest.setOnRPCResponseListener(new OnRPCResponseListener() {
 	@Override
 	public void onResponse(int correlationId, RPCResponse response) {
-		try {
-			<#Use the response#>
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+		<#Use the response#>
 	}
 
 	@Override
@@ -96,10 +92,10 @@ As noted in the introduction to this guide, one service for each type may become
 
 After the initial app record is passed to you in the `PublishAppServiceResponse`, you will need to be notified of changes in order to observe whether or not you have become the active service. To do so, you will have to observe the new `SystemCapabilityType.APP_SERVICES` using `GetSystemCapability` and `OnSystemCapabilityUpdated`.
 
-For more information, see the [Using App Services guide](Other SDL Features/Using App Services) and see the "Getting and Subscribing to Services" section.
+For more information, see the [Using App Services guide](App Services/Using App Services) and see the "Getting and Subscribing to Services" section.
 
 ### 3. Update Your Service's Data
-After your service is published, it's time to update your service data. First, you must send an `onAppServiceData` RPC notification with your updated service data. RPC notifications are different than RPC requests in that they will not receive a response from the connected head unit, and must use a different `SdlManager` method call to send.
+After your service is published, it's time to update your service data. First, you must send an `onAppServiceData` RPC notification with your updated service data. RPC notifications are different than RPC requests in that they will not receive a response from the connected head unit.
 
 !!! NOTE
 You should only update your service's data when you are the active service; service consumers will only be able to see your data when you are the active service.
@@ -139,7 +135,6 @@ sdlManager.sendRPC(onAppData);
 
 ##### Java
 ```java
-final Image image = new Image("turn", ImageType.DYNAMIC);
 final SdlArtwork navInstructionArt = new SdlArtwork("turn", FileType.GRAPHIC_PNG, R.drawable.turn, true);
         
 sdlManager.getFileManager().uploadFile(navInstructionArt, new CompletionListener() { // We have to send the image to the system before it's used in the app service.
@@ -152,7 +147,7 @@ sdlManager.getFileManager().uploadFile(navInstructionArt, new CompletionListener
             locationDetails.setCoordinate(coordinate);
 
             NavigationInstruction navigationInstruction = new NavigationInstruction(locationDetails, NavigationAction.TURN);
-            navigationInstruction.setImage(image);
+            navigationInstruction.setImage(navInstructionArt.getImageRPC());
 
             DateTime dateTime = new DateTime();
             dateTime.setHour(2);
@@ -180,7 +175,6 @@ sdlManager.getFileManager().uploadFile(navInstructionArt, new CompletionListener
 
 ##### Java
 ```java
-final Image image = new Image("sun", ImageType.DYNAMIC);
 final SdlArtwork weatherImage = new SdlArtwork("sun", FileType.GRAPHIC_PNG, R.drawable.sun, true);
 
 sdlManager.getFileManager().uploadFile(weatherImage, new CompletionListener() { // We have to send the image to the system before it's used in the app service.
@@ -189,7 +183,7 @@ sdlManager.getFileManager().uploadFile(weatherImage, new CompletionListener() { 
         if (success) {
 
             WeatherData weatherData = new WeatherData();
-            weatherData.setWeatherIcon(image);
+            weatherData.setWeatherIcon(weatherImage.getImageRPC());
 
             Coordinate coordinate = new Coordinate(42f, 43f);
 
@@ -217,8 +211,8 @@ If you choose to make your app service available to other apps, you will have to
 
 Handling app service subscribers is a two step process. First, you must register for notifications from the subscriber. Then, when you get a request, you will either have to send a response to the subscriber with the app service data or if you have no data to send, send a reponse with a relevant failure result code.
 
-#### Registering for Notifications
-First, you will need to register for the notification of a `GetAppServiceDataRequest` being received by your application.
+#### Listening for Requests
+First, you will need to register for updates for when a `GetAppServiceDataRequest` is received by your application.
 
 ##### Java
 ```java
@@ -232,7 +226,7 @@ sdlManager.addOnRPCRequestListener(FunctionID.GET_APP_SERVICE_DATA, new OnRPCReq
 ```
 
 #### Sending a Response to Subscribers
-Second, you need to respond to the notification when you receive it with your app service data. This means that you will need to store your current service data after your most recent update using `OnAppServiceData` (see the section Updating Your Service Data).
+Second, you need to respond to the request when you receive it with your app service data. This means that you will need to store your current service data after your most recent update using `OnAppServiceData` (see the section Updating Your Service Data).
 
 ##### Java
 ```java
@@ -269,7 +263,7 @@ Certain RPCs are related to certain services. The chart below shows the current 
 | ButtonPress (SHUFFLE) | | |
 | ButtonPress (REPEAT) | | |
 
-When you are the active service for your service's type (e.g. media), and you have declared that you support these RPCs in your manifest (see section 1. Creating an App Service Manifest), then these RPCs will be automatically routed to your app. You will have to set up notifications to be aware that they have arrived, and you will then need to respond to those requests.
+When you are the active service for your service's type (e.g. media), and you have declared that you support these RPCs in your manifest (see section 1. Creating an App Service Manifest), then these RPCs will be automatically routed to your app. You will have to set up listeners to be aware that they have arrived, and you will then need to respond to those requests.
 
 ##### Java
 ```java
