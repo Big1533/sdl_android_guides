@@ -13,25 +13,35 @@ Currently, there is no high-level API support for using an app service, so you w
 Once your app has connected to the head unit, you will first want to be notified of all available services and updates to the metadata of all services on the head unit. Second, you will narrow down your app to subscribe to an individual app service and subscribe to its data. Third, you may want to interact with that service through RPCs, or fourth, through service actions.
 
 ### 1. Getting and Subscribing to Available Services
-To get information on all services published on the system, as well as on changes to published services, you will use the `GetSystemCapability` request / response as well as the `OnSystemCapabilityUpdated` notification.
+To get information on all services published on the system, as well as on changes to published services, you will use the `SystemCapabilityManager` to get the information. Because this information is initially available asynchronosly, we have to attach an `OnSystemCapabilityListener` to the `getCapability` request.
 
 ##### Java
 ```java
-private void getSystemCapability(){
-    GetSystemCapability getSystemCapability = new GetSystemCapability(SystemCapabilityType.APP_SERVICES);
-    getSystemCapability.setSubscribe(true); // subscribe to updates
-    sdlManager.sendRPC(getSystemCapability);
-}
+// Grab the capability once
+sdlManager.getSystemCapabilityManager().getCapability(SystemCapabilityType.APP_SERVICES, new OnSystemCapabilityListener() {
+    @Override
+    public void onCapabilityRetrieved(Object capability) {
+        AppServicesCapabilities servicesCapabilities = (AppServicesCapabilities) capability;
+    }
+
+    @Override
+    public void onError(String info) {
+        <# Handle Error #>
+    }
+});
 
 ...
 
-// On System Capability Updated Notification Listener
-sdlManager.addOnRPCNotificationListener(FunctionID.ON_SYSTEM_CAPABILITY_UPDATED, new OnRPCNotificationListener() {
+// Subscribe to updates
+sdlManager.getSystemCapabilityManager().addOnSystemCapabilityListener(SystemCapabilityType.APP_SERVICES, new OnSystemCapabilityListener() {
     @Override
-    public void onNotified(RPCNotification notification) {
-        OnSystemCapabilityUpdated update = (OnSystemCapabilityUpdated) notification;
-        AppServicesCapabilities serviceCapabilities  = (AppServicesCapabilities) update.getSystemCapability().getCapabilityForType(SystemCapabilityType.APP_SERVICES);
-        <#Use the service Capabilities#>
+    public void onCapabilityRetrieved(Object capability) {
+        AppServicesCapabilities servicesCapabilities = (AppServicesCapabilities) capability;
+    }
+
+    @Override
+    public void onError(String info) {
+        <# Handle Error #>
     }
 });
 ```
