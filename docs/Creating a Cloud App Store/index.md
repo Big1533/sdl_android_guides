@@ -1,5 +1,8 @@
 ## Cloud Apps
-OEMs can create their own app stores to handle installing and uninstalling cloud apps. App stores can also handle user authentication for the installed cloud apps. For example, users can log in after installing a cloud app using the app store. After that, the app store will save an authentication token for the cloud app in the local policy table. Then, the cloud app can retrieve the authentication token from the local policy table and use it to match the websocket connection with a particular user.
+A new feature of SDL 5.1 allows OEMs to offer an app store that lets users browse and install remote cloud apps. If the cloud app requires the user to login with their credentials, the app store can use an authentication token to automatically login the user after their first session.
+
+### User Authentication
+App stores can handle user authentication for the installed cloud apps. For example, users can log in after installing a cloud app using the app store. After that, the app store will save an authentication token for the cloud app in the local policy table. Then, the cloud app can retrieve the authentication token from the local policy table and use it to match the websocket connection with a particular user. Additionally, `CloudAppVehicleID` can be used to identify the head unit.
 
 !!! note
 OEM app stores can be either mobile apps or cloud apps.
@@ -62,6 +65,11 @@ getCloudAppProperties.setOnRPCResponseListener(new OnRPCResponseListener() {
 });
 sdlManager.sendRPC(getCloudAppProperties);
 ```
+
+### Using CloudAppVehicleID (Optional)
+The CloudAppVehicleID is an optional parameter used by cloud apps to identify a head unit. This value could be used by a cloud app to identify an incoming connection from core. The content of `CloudAppVehicleID` is up to the OEM's implementation. Possible values could be the VIN or a hashed VIN. Also OEM's may choose to reset this value on a master reset of the head unit in case the vehicle changes owners.
+`CloudAppVehicleID` can be retrieved as part of the `GetVehicleData` RPC.  To find out more about how to retrieve `CloudAppVehicleID`, check out the  [Getting Vehicle Data](Getting Vehicle Data)
+
 
 ### Retrieving an Authentication Token
 A cloud app can retrieve its `authToken` from local policy table after starting the RPC service. The `authToken` can be used later by the app to authenticate websocket connection on app activation:
