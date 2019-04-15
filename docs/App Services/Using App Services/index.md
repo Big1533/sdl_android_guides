@@ -30,8 +30,8 @@ sdlManager.addOnRPCNotificationListener(FunctionID.ON_SYSTEM_CAPABILITY_UPDATED,
     @Override
     public void onNotified(RPCNotification notification) {
         OnSystemCapabilityUpdated update = (OnSystemCapabilityUpdated) notification;
-        AppServicesCapabilities serviceRecord  = (AppServicesCapabilities) update.getSystemCapability().getCapabilityForType(SystemCapabilityType.APP_SERVICES);
-        <#Use the service record#>
+        AppServicesCapabilities serviceCapabilities  = (AppServicesCapabilities) update.getSystemCapability().getCapabilityForType(SystemCapabilityType.APP_SERVICES);
+        <#Use the service Capabilities#>
     }
 });
 ```
