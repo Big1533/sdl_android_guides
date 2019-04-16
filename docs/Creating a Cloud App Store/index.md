@@ -26,7 +26,7 @@ Only trusted app stores are allowed to set or get `CloudAppProperties` for other
 !!!
 
 #### Getting Cloud App Properties
-App stores can set properties for a cloud app by sending a `SetCloudAppProperties` request to Core to store the them in the local policy table. For example, in this piece of code, the app store can set the `authToken` to associate a user with a cloud app after the user logs in to the app by using the app store:
+App stores can set properties for a cloud app by sending a `SetCloudAppProperties` request to Core to store them in the local policy table. For example, in this piece of code, the app store can set the `authToken` to associate a user with a cloud app after the user logs in to the app by using the app store:
 
 ```java
 CloudAppProperties cloudAppProperties = new CloudAppProperties("<appId>");
@@ -71,7 +71,7 @@ Cloud app developers don't need to add any code to download the app icon. The cl
 
 ### Getting the Authentication Token
 When users install cloud apps from an OEM's app store, they may be asked to login to that cloud app using the app store. After login in, app store can save the `authToken` in the local policy table to be used later by the cloud app for user authentication. 
-A cloud app can retrieve its `authToken` from local policy table after starting the RPC service. The `authToken` can be used later by the app to authenticate its websocket connection on app activation:
+A cloud app can retrieve its `authToken` from local policy table after starting the RPC service. The `authToken` can be used later by the app to authenticate the user:
 
 ```java
 String authToken = sdlManager.getAuthToken();
