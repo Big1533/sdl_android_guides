@@ -1,12 +1,12 @@
 ## Creating a Cloud App Store
 A new feature of SDL 5.1 allows OEMs to offer an app store that lets users browse and install remote cloud apps. If the cloud app requires users to login with their credentials, the app store can use an authentication token to automatically login users after their first session.
 
-### User Authentication
-App stores can handle user authentication for the installed cloud apps. For example, users can log in after installing a cloud app using the app store. After that, the app store will save an authentication token for the cloud app in the local policy table. Then, the cloud app can retrieve the authentication token from the local policy table and use it to authenticate a user with the application. Optionally, `CloudAppVehicleID` can be used to identify the head unit.
-
 !!! note
-OEM app stores can be either mobile apps or cloud apps.
+An OEM app store can be a mobile app or a cloud app.
 !!!
+
+### User Authentication
+App stores can handle user authentication for the installed cloud apps. For example, users can log in after installing a cloud app using the app store. After that, the app store will save an authentication token for the cloud app in the local policy table. Then, the cloud app can retrieve the authentication token from the local policy table and use it to authenticate a user with the application. If desired, an optional parameter, `CloudAppVehicleID`, can be used to identify the head unit.
 
 ### Setting and Getting Cloud App Properties 
 An OEM's app store can manage the properties of a specific cloud app by setting and getting its `CloudAppProperties`. This table summarizes the properties that are included in `CloudAppProperties`:
