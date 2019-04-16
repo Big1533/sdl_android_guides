@@ -25,7 +25,7 @@ An OEM's app store can manage the properties of a specific cloud app by setting 
 Only trusted app stores are allowed to set or get `CloudAppProperties` for other cloud apps.
 !!!
 
-#### Getting Cloud App Properties
+#### Setting Cloud App Properties
 App stores can set properties for a cloud app by sending a `SetCloudAppProperties` request to Core to store them in the local policy table. For example, in this piece of code, the app store can set the `authToken` to associate a user with a cloud app after the user logs in to the app by using the app store:
 
 ```java
@@ -45,7 +45,7 @@ setCloudAppProperties.setOnRPCResponseListener(new OnRPCResponseListener() {
 sdlManager.sendRPC(setCloudAppProperties);
 ```
 
-#### Setting Cloud App Properties
+#### Getting Cloud App Properties
 To retrieve cloud properties for a specific cloud app from local policy table, app stores can send `GetCloudAppProperties` and specify the `appId` for that cloud app as in this example:
 
 ```java
