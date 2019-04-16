@@ -16,7 +16,7 @@ An OEM's app store can manage the properties of a specific cloud app by setting 
 | appID | appID for the cloud app |
 | nicknames | List of possible names for the cloud app. The cloud app will not be allowed to connect if its name is not contained in this list |
 | enabled | If true, cloud app will be displayed on HMI |
-| authToken | Used to authenticate websocket connection on app activation |
+| authToken | Used to authenticate the user, if the app requires user authentication |
 | cloudTransportType | Specifies the connection type Core should use. Currently Core supports WS and WSS , but an OEM can implement their own transport adapter to handle different values |
 | hybridAppPreference | Specifies the user preference to use the cloud app version, mobile app version, or whichever connects first when both are available |
 | endpoint | Remote endpoint for websocket connections |
