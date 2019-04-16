@@ -177,6 +177,18 @@ The `onDestroy()` method from the `SdlManagerListener` is called whenever the ma
 The `sdlManager` must be shutdown properly in the `SdlService.onDestroy()` callback using the method `sdlManager.dispose()`.
 !!!
 
+### Determining SDL Support
+You have the ability to determine a minimum SDL protocol and a minimum SDL RPC version that your app supports. We recommend not setting these values until your app is ready for production. The OEMs you support will help you configure the correct `minimumProtocolVersion` and `minimumRPCVersion` during the application review process.
+
+If a head unit is blocked by protocol version, your app icon will never appear on the head unit's screen. If you configure your app to block by RPC version, it will appear and then quickly disappear. So while blocking with `minimumProtocolVersion` is preferable, `minimumRPCVersion` allows you more granular control over which RPCs will be present.
+
+
+```java
+builder.setMinimumProtocolVersion(new Version("3.0.0"));
+builder.setMinimumRPCVersion(new Version("4.0.0"));
+
+```
+
 ### Listening for RPC notifications and events
 
 We can listen for specific events using `SdlManager`'s `addOnRPCNotificationListener`. These listeners can be added either in the `onStart()` callback of the `SdlManagerListener` or after it has been triggered. The following example shows how to listen for HMI Status notifications. Additional listeners can be added for specific RPCs by using their corresponding `FunctionID` in place of the `ON_HMI_STATUS` in the following example and casting the `RPCNotification` object to the correct type. 
@@ -245,7 +257,7 @@ Once added, your `AndroidManifest.xml` should be defined like below:
             <intent-filter>
                 <action android:name="com.smartdevicelink.router.service"/>
             </intent-filter>
-            <meta-data android:name="@string/sdl_router_service_version_name"  android:value="@integer/sdl_router_service_version_value" />
+            <meta-data android:name="sdl_router_version"  android:value="@integer/sdl_router_service_version_value" />
         </service>
         
         <!-- Required to use the lock screen -->
@@ -261,13 +273,6 @@ Once added, your `AndroidManifest.xml` should be defined like below:
 The `SdlRouterService` must be placed in a separate process with the name `com.smartdevicelink.router`. If it is not in that process during it's start up it will stop itself.
 !!!
 
-!!! NOTE
-Setting `android:name` to `@string/sdl_router_service_version_name` for the router service metadata may cause issues with some app packaging and analyzing tools like aapt. You can avoid that by hardcoding the string value instead of using a string reference.
-!!!
-
-```xml
-<meta-data android:name="sdl_router_version"  android:value="@integer/sdl_router_service_version_value" />
-```
 
 ### Intent Filter
 
@@ -288,22 +293,22 @@ This `intent-filter` MUST be included.
 #### Router Service Version
 
 ```xml
-<meta-data android:name="@string/sdl_router_service_version_name"  android:value="@integer/sdl_router_service_version_value" />
+<meta-data android:name="sdl_router_version"  android:value="@integer/sdl_router_service_version_value" />
 ```
 
-Adding the `sdl_router_service_version` metadata allows the library to know the version of the router service that the app is using. This makes it simpler for the library to choose the newest router service when multiple router services are available.
+Adding the `sdl_router_version` metadata allows the library to know the version of the router service that the app is using. This makes it simpler for the library to choose the newest router service when multiple router services are available.
 
 #### Custom Router Service
 
 ```xml
-<meta-data android:name="@string/sdl_router_service_is_custom_name" android:value="false" />
+<meta-data android:name="sdl_custom_router" android:value="false" />
 ```
 
 !!! NOTE
 This is only for specific OEM applications, therefore normal developers do not need to worry about this.
 !!!
 
-Some OEMs choose to implement custom router services. Setting the `sdl_router_service_is_custom_name` metadata value to `true` means that the app is using something custom over the default router service that is included in the SDL Android library. Do not include this `meta-data` entry unless you know what you are doing. 
+Some OEMs choose to implement custom router services. Setting the `sdl_custom_router` metadata value to `true` means that the app is using something custom over the default router service that is included in the SDL Android library. Do not include this `meta-data` entry unless you know what you are doing. 
 
 
 ## SmartDeviceLink Broadcast Receiver
