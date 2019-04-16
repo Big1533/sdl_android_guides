@@ -51,41 +51,17 @@ Once you've retrieved the initial list of app service capabilities (in the `GetS
 
 ##### Java
 ```java
-
-// From GetSystemCapabilityResponse
-GetSystemCapabilityResponse response = <#From whereever you got it#>;
-AppServicesCapabilities appServicesCapabilities = (AppServicesCapabilities) response.getSystemCapability().getCapabilityForType(SystemCapabilityType.APP_SERVICES);
-
 // This array contains all currently available app services on the system
-List<AppServiceCapability> appServices = appServicesCapabilities.getAppServices();
+List<AppServiceCapability> appServices = servicesCapabilities.getAppServices();
 
-if (appServices.size() > 0) {
-    AppServiceCapability anAppServiceCapability = appServices.get(0);
+if (appServices!= null && appServices.size() > 0) {
+    for (AppServiceCapability anAppServiceCapability : appServices) {
+        // This will tell you why a service is in the list of updates
+        ServiceUpdateReason updateReason = anAppServiceCapability.getUpdateReason();
 
-    // this will be null since its the first update
-    ServiceUpdateReason updateReason = anAppServiceCapability.getUpdateReason();
-
-    // The app service record will give you access to a service's generated id, which can be used to address the service directly (see below), it's manifest, used to see what data it supports, whether or not the service is published (it always will be here), and whether or not the service is the active service for its service type (only one service can be active for each type)
-    AppServiceRecord serviceRecord = anAppServiceCapability.getUpdatedAppServiceRecord();
-}
-
-.....
-
-// From OnSystemCapabilityUpdated
-OnSystemCapabilityUpdated update = (OnSystemCapabilityUpdated) notification;
-AppServicesCapabilities capabilities  = (AppServicesCapabilities) update.getSystemCapability().getCapabilityForType(SystemCapabilityType.APP_SERVICES);
-
-// This array contains all recently updated services
-List<AppServiceCapability> appServices = capabilities.getAppServices();
-
-if (appServices.size() > 0) {
-    AppServiceCapability anAppServiceCapability = appServices.get(0);
-
-    // This won't be null. It will tell you why a service is in the list of updates
-    ServiceUpdateReason updateReason = anAppServiceCapability.getUpdateReason();
-
-    // The app service record will give you access to a service's generated id, which can be used to address the service directly (see below), it's manifest, used to see what data it supports, whether or not the service is published (it always will be here), and whether or not the service is the active service for its service type (only one service can be active for each type)
-    AppServiceRecord serviceRecord = anAppServiceCapability.getUpdatedAppServiceRecord();
+        // The app service record will give you access to a service's generated id, which can be used to address the service directly (see below), it's manifest, used to see what data it supports, whether or not the service is published (it always will be here), and whether or not the service is the active service for its service type (only one service can be active for each type)
+        AppServiceRecord serviceRecord = anAppServiceCapability.getUpdatedAppServiceRecord();
+    }
 }
 ```
 
