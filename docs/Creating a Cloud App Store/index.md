@@ -71,7 +71,7 @@ Cloud app developers don't need to add any code to download the app icon. The cl
 
 ### Getting the Authentication Token
 When users install cloud apps from an OEM's app store, they may be asked to login to that cloud app using the app store. After login in, app store can save the `authToken` in the local policy table to be used later by the cloud app for user authentication. 
-A cloud app can retrieve its `authToken` from local policy table after starting the RPC service. The `authToken` can be used later by the app to authenticate websocket connection on app activation:
+A cloud app can retrieve its `authToken` from local policy table after starting the RPC service. The `authToken` can be used later by the app to authenticate its websocket connection on app activation:
 
 ```java
 String authToken = sdlManager.getAuthToken();
