@@ -19,6 +19,7 @@ There are multiple capabilities that can be retrieved:
 | SOFTBUTTON |
 | SPEECH |
 | VOICE_RECOGNITION |
+| APP_SERVICES |
 
 ## Querying Capabilities
 
@@ -96,3 +97,4 @@ Some capabilities will be instantly available after the first `OnHMIStatus` noti
 | SOFTBUTTON | No |
 | SPEECH | No |
 | VOICE_RECOGNITION | No |
+| APP_SERVICES | Yes |
