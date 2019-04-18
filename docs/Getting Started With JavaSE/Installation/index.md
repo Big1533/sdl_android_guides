@@ -2,7 +2,7 @@
 
 ### Introduction
 
-Each [SDL Android](https://github.com/smartdevicelink/sdl_android) library release is published to JCenter. By adding a few lines in their app's gradle script, developers can compile with the latest SDL Android release.
+Each [SDL JavaSE](https://github.com/smartdevicelink/sdl_java_suite) library release is published to JCenter. By adding a few lines in their app's gradle script, developers can compile with the latest SDL JavaSE release.
 
 To gain access to the JCenter repository, make sure your app's `build.gradle` file includes the following:
 
@@ -14,15 +14,15 @@ repositories {
 
 ### Gradle Build
 
-To compile with the a release of SDL Android, include the following line in your app's `build.gradle` file,
+To compile with the a release of SDL JavaSE, include the following line in your app's `build.gradle` file,
 
 ```
 dependencies {
-    implementation 'com.smartdevicelink:sdl_android:{version}'
+    implementation 'com.smartdevicelink:sdl_java_se:{version}'
 }
 ```
 
-and replace `{version}` with the desired release version in format of `x.x.x`. The list of releases can be found [here](https://github.com/smartdevicelink/sdl_android/releases). 
+and replace `{version}` with the desired release version in format of `x.x.x`. The list of releases can be found [here](https://github.com/smartdevicelink/sdl_java_suite/releases). 
 
 ### Examples
 
@@ -30,7 +30,7 @@ To compile release 4.7.1, use the following line:
 
 ```
 dependencies {
-    implementation 'com.smartdevicelink:sdl_android:4.7.1'
+    implementation 'com.smartdevicelink:sdl_java_se:4.8.0'
 }
 ```
 
@@ -38,6 +38,6 @@ To compile the latest minor release of major version 4, use:
 
 ```
 dependencies {
-    implementation 'com.smartdevicelink:sdl_android:4.+'
+    implementation 'com.smartdevicelink:sdl_java_se:4.+'
 }
 ```
