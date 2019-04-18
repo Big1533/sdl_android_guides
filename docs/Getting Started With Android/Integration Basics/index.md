@@ -6,7 +6,7 @@
 In this guide, we exclusively use Android Studio. We are going to set-up a bare-bones application so you get started using SDL.
 
 !!! IMPORTANT
-The SDL Mobile library for supports [Android 2.2.x (API Level 8)](https://developer.android.com/about/versions/android-2.2.html) or higher.
+The SDL Mobile library supports [Android 2.2.x (API Level 8)](https://developer.android.com/about/versions/android-2.2.html) or higher.
 !!!
  
 ## Required System Permissions
@@ -232,46 +232,10 @@ Make sure this local class `SdlRouterService.java` is in the same package of `Sd
 
 If you created the service using the Android Studio template then the service should have been added to your `AndroidManifest.xml` otherwise the service needs to be added in the manifest. Because we want our service to be seen by other SDL enabled apps, we need to set `android:exported="true"`. The system may issue a lint warning because of this, so we can suppress that using `tools:ignore="ExportedService"`.  
 
-## Lock Screen Activity
-
-An Activity entry must also be added to the manifest for the SDL lock
-screen. For more information about lock screens, please see the [Adding the Lock Screen](https://smartdevicelink.com/en/guides/android/adding-the-lock-screen/) section.
-
-!!! NOTE
-When using `SdlManager`, the lock screen is enabled by default via the `LockScreenManager`. Please see the link above for more information
-!!!
-
-Once added, your `AndroidManifest.xml` should be defined like below:
-
-```xml
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.company.mySdlApplication">
-
-    <application>
-
-        <service
-        	android:name="com.company.mySdlApplication.SdlRouterService"
-        	android:exported="true" 
-        	android:process="com.smartdevicelink.router"
-            tools:ignore="ExportedService">
-            <intent-filter>
-                <action android:name="com.smartdevicelink.router.service"/>
-            </intent-filter>
-            <meta-data android:name="sdl_router_version"  android:value="@integer/sdl_router_service_version_value" />
-        </service>
-        
-        <!-- Required to use the lock screen -->
-        <activity android:name="com.smartdevicelink.managers.lockscreen.SDLLockScreenActivity"
-                  android:launchMode="singleTop"/>
-    
-    </application>
-
-</manifest>
-```
-
 !!! MUST
 The `SdlRouterService` must be placed in a separate process with the name `com.smartdevicelink.router`. If it is not in that process during it's start up it will stop itself.
 !!!
+
 
 
 ### Intent Filter
@@ -434,6 +398,44 @@ public class SdlReceiver extends SdlBroadcastReceiver {
 !!! IMPORTANT
 The `onSdlEnabled` method will be the main start point for our SDL connection session. We define exactly what we want to happen when we find out we are connected to SDL enabled hardware.
 !!!
+
+## Lock Screen Activity
+
+An Activity entry must also be added to the manifest for the SDL lock
+screen. For more information about lock screens, please see the [Adding the Lock Screen](https://smartdevicelink.com/en/guides/android/adding-the-lock-screen/) section.
+
+!!! NOTE
+When using `SdlManager`, the lock screen is enabled by default via the `LockScreenManager`. Please see the link above for more information
+!!!
+
+Once added, your `AndroidManifest.xml` should be defined like below:
+
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.company.mySdlApplication">
+
+    <application>
+
+        <service
+        	android:name="com.company.mySdlApplication.SdlRouterService"
+        	android:exported="true" 
+        	android:process="com.smartdevicelink.router"
+            tools:ignore="ExportedService">
+            <intent-filter>
+                <action android:name="com.smartdevicelink.router.service"/>
+            </intent-filter>
+            <meta-data android:name="sdl_router_version"  android:value="@integer/sdl_router_service_version_value" />
+        </service>
+        
+        <!-- Required to use the lock screen -->
+        <activity android:name="com.smartdevicelink.managers.lockscreen.SDLLockScreenActivity"
+                  android:launchMode="singleTop"/>
+    
+    </application>
+
+</manifest>
+```
+
 
 ### Main Activity
 
