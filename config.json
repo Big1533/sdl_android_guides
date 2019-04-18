@@ -59,6 +59,9 @@
             {  
                "name":"Integration Basics"
             },
+            {
+               "name":"Deploying to AWS"
+            },
             {  
                "name":"Hello Sdl JavaEE"
             }
