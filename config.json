@@ -10,8 +10,11 @@
       "en"
    ],
    "navigation":[  
+      {
+         "name":"Overview"
+      },
       {  
-         "name":"Getting Started",
+         "name":"Getting Started With Android",
          "navigation":[  
             {  
                "name":"Installation"
@@ -26,13 +29,42 @@
                "name":"Multiple Transports"
             },
             {  
-               "name":"Sending Multiple RPCs"
+               "name":"Setting Security Level for Multiplexing"
             },
             {  
                "name":"Hello Sdl Android"
             }
          ]
       },
+      {
+         "name":"Getting Started With JavaSE",
+         "navigation":[  
+            {  
+               "name":"Installation"
+            },
+            {  
+               "name":"Integration Basics"
+            },
+            {  
+               "name":"Hello Sdl JavaSE"
+            }
+         ]
+      },
+      {
+         "name":"Getting Started With JavaEE",
+         "navigation":[  
+            {  
+               "name":"Installation"
+            },
+            {  
+               "name":"Integration Basics"
+            },
+            {  
+               "name":"Hello Sdl JavaEE"
+            }
+         ]
+      },
+
       {  
          "name":"Adding the Lock Screen"
       },
@@ -89,9 +121,6 @@
          ]
       },
       {  
-         "name":"Setting Security Level for Multiplexing"
-      },
-      {  
          "name":"Handling Language Change"
       },
       {  
@@ -102,6 +131,9 @@
       },
       {  
          "name":"Remote Control"
+      },
+      {  
+         "name":"Sending Multiple RPCs"
       },
       {  
          "name":"Creating a Cloud App Store"
