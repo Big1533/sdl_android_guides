@@ -22,9 +22,9 @@ After getting the IP address, you will have to set App ID, App Websocket Endpoin
 
 !!! NOTE
 The App Websocket Endpoint contains the IP Address and port as the following:
-```
+`
 ws://<ip address>:<port>/
-```
+`
 !!!
 
 
@@ -37,6 +37,7 @@ If you are using Manticore, the app information can be easily set in the setting
 If you are using Sdl Core and Generic HMI, you will have to add a policy table entry as the following one to the existing entries:
 
 ```
+
 "8678309": {
      "keep_context": false,
      "steal_focus": false,
@@ -52,6 +53,7 @@ If you are using Sdl Core and Generic HMI, you will have to add a policy table e
      "cloud_transport_type": "WS",
      "nicknames": ["Hello Sdl"]
  }
+
  ```
 
  Fore more information about policy tables please visit [Plicy Tables Guides](https://smartdevicelink.com/en/guides/sdl-server/api-reference-documentation/policy-table/overview).
