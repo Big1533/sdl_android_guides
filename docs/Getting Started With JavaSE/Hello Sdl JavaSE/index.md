@@ -33,6 +33,23 @@ If you are using Manticore, the app information can be easily set in the setting
 #### Sdl Core and Generic HMI
 If you are using Sdl Core and Generic HMI, you will have to add a policy table entry as the following one to the existing entries:
 
+```
+"8678309": {
+     "keep_context": false,
+     "steal_focus": false,
+     "priority": "NONE",
+     "default_hmi": "NONE",
+     "groups": ["Base-4"],
+     "RequestType": [],
+     "RequestSubType": [],
+     "hybrid_app_preference": "CLOUD",
+     "endpoint": "ws://<ip address>:<port>",
+     "enabled": true,
+     "auth_token": "",
+     "cloud_transport_type": "WS",
+     "nicknames": ["Hello Sdl"]
+ }
+ ```
 
  Fore more information about policy tables please visit [Plicy Tables Guides](https://smartdevicelink.com/en/guides/sdl-server/api-reference-documentation/policy-table/overview).
 
