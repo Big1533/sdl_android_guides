@@ -61,11 +61,13 @@ if (sdlManager.getVideoStreamManager() != null) {
 ### Ending the Stream
 When the `HMIStatus` is back to `HMI_NONE` it is time to stop the stream. This is accomplished through a method `stopStreaming()`.
 
+
 ```java
-sdlManager.addOnRPCNotificationListener(FunctionID.ON_HMI_STATUS, new OnRPCNotificationListener() {
-	@Override
-	public void onNotified(RPCNotification notification) {
-		OnHMIStatus status = (OnHMIStatus) notification;
+Map<FunctionID, OnRPCNotificationListener> onRPCNotificationListenerMap = new HashMap<>();
+onRPCNotificationListenerMap.put(FunctionID.ON_HMI_STATUS, new OnRPCNotificationListener() {
+    @Override
+    public void onNotified(RPCNotification notification) {
+        OnHMIStatus status = (OnHMIStatus) notification;
 		if (status != null && status.getHmiLevel() == HMILevel.HMI_NONE) {
 			
 			//Stop the stream 
@@ -74,8 +76,7 @@ sdlManager.addOnRPCNotificationListener(FunctionID.ON_HMI_STATUS, new OnRPCNotif
 			}
 			
 		}
-	}
+    }
 });
-
-
+builder.setRPCNotificationListeners(onRPCNotificationListenerMap);
 ```

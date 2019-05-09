@@ -16,15 +16,17 @@ FULL        | Your app is currently in focus on the screen.
 Monitoring HMI Status is possible through an `OnHMIStatus` notification that you can subscribe to via the `SdlManager`'s `addOnRPCNotificationListener`.
 
 ```java
-sdlManager.addOnRPCNotificationListener(FunctionID.ON_HMI_STATUS, new OnRPCNotificationListener() {
-	@Override
-	public void onNotified(RPCNotification notification) {
-		OnHMIStatus status = (OnHMIStatus) notification;
-		if (status.getHmiLevel() == HMILevel.HMI_FULL && ((OnHMIStatus) notification).getFirstRun()) {
-			// first time in HMI Full
-		}
-	}
+Map<FunctionID, OnRPCNotificationListener> onRPCNotificationListenerMap = new HashMap<>();
+onRPCNotificationListenerMap.put(FunctionID.ON_HMI_STATUS, new OnRPCNotificationListener() {
+    @Override
+    public void onNotified(RPCNotification notification) {
+        OnHMIStatus onHMIStatus = (OnHMIStatus) notification;
+        if (onHMIStatus.getHmiLevel() == HMILevel.HMI_FULL && onHMIStatus.getFirstRun()){
+            // first time in HMI Full
+        }
+    }
 });
+builder.setRPCNotificationListeners(onRPCNotificationListenerMap);
 ```
 
 ### More Detailed HMI Information
