@@ -15,4 +15,4 @@ To integrate Sdl into your embedded Java app, please follow the steps in [Gettin
 To integrate Sdl into your cloud Java app, please follow the steps in [Getting Started With JavaEE](Getting Started With JavaEE/Installation) section.
 
 ### Using Other Sdl Features
-Features that are not under `Getting Started` sections are applicable to all platforms unless it noted otherwise. For example, the Android code that developers can use to display information on the head unit screen in [Displaying Information](Displaying Information) section, can be used also in embedded and cloud apps without any change needed.
+Features that are not under `Getting Started` sections are applicable to all platforms unless it noted otherwise. For example, the Android code that developers can use to display information on the head unit's screen in [Displaying Information](Displaying Information/Designing the User Interface) section, can be used also in embedded and cloud apps without any change needed.
