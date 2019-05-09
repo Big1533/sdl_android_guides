@@ -12,7 +12,7 @@ In order to use SDL's Mobile Navigation feature, the app must have a minimum req
 
 ### Connecting an app
 
-The basic connection is the similar for all apps. Please follow [Getting Started > Integration Basics](Getting Started/Integration Basics) for more information.
+The basic connection is the similar for all apps. Please follow [Getting Started](Overview) for more information.
 
 The first difference for a navigation app is the `appHMIType` of `NAVIGATION` that has to be set in the creation of the `SdlManager`. Navigation apps are also non-media apps.
 
