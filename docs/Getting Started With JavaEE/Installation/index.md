@@ -8,6 +8,7 @@ To gain access to the JCenter repository, make sure your app's `build.gradle` fi
 
 ```
 repositories {
+    google()
     jcenter()
 }
 ```
