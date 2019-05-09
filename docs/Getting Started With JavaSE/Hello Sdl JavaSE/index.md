@@ -21,7 +21,7 @@ To let Sdl Core connect to your app, first you will have to know the IP address 
 After getting the IP address, you will have to set App ID, App Websocket Endpoint, and App Nicknames in Sdl Core to let it know where your instance of Hello Sdl is running. 
 
 !!! NOTE
-The App Websocket Endpoint contains the IP Address and port as the following: `ws://<ip address>:<port>/`
+The App Websocket Endpoint contains the IP Address and port as the following: `ws://<ip address>:<port>/`.
 !!!
 
 
@@ -36,7 +36,7 @@ If you are using Sdl Core and Generic HMI, you will have to add a policy table e
 
  Fore more information about policy tables please visit [Plicy Tables Guides](https://smartdevicelink.com/en/guides/sdl-server/api-reference-documentation/policy-table/overview).
 
- !!! NOTE
+!!! NOTE
 Don't forget to replace `ws://<ip address>:<port>` with your own IP address and app port. The port that is used in Hello Sdl App is `5432`. It can be changed to a different port by modifying the number in `Main.java` class.
 !!!
 
