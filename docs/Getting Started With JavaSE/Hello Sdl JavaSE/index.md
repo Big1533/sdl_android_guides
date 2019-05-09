@@ -21,10 +21,7 @@ To let Sdl Core connect to your app, first you will have to know the IP address 
 After getting the IP address, you will have to set App ID, App Websocket Endpoint, and App Nicknames in Sdl Core to let it know where your instance of Hello Sdl is running. 
 
 !!! NOTE
-The App Websocket Endpoint contains the IP Address and port as the following:
-`
-ws://<ip address>:<port>/
-`
+The App Websocket Endpoint contains the IP Address and port as the following: `ws://<ip address>:<port>/`
 !!!
 
 
