@@ -402,7 +402,7 @@ The `onSdlEnabled` method will be the main start point for our SDL connection se
 ## Lock Screen Activity
 
 An Activity entry must also be added to the manifest for the SDL lock
-screen. For more information about lock screens, please see the [Adding the Lock Screen](https://smartdevicelink.com/en/guides/android/adding-the-lock-screen/) section.
+screen. For more information about lock screens, please see the [Adding the Lock Screen](Getting Started with Android/Adding The Lock Screen/) section.
 
 !!! NOTE
 When using `SdlManager`, the lock screen is enabled by default via the `LockScreenManager`. Please see the link above for more information
