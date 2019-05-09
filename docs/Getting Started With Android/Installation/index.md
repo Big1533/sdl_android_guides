@@ -30,7 +30,7 @@ To compile release 4.8.0, use the following line:
 
 ```
 dependencies {
-    implementation 'com.smartdevicelink:sdl_android:4.8.1'
+    implementation 'com.smartdevicelink:sdl_android:4.8.0'
 }
 ```
 
