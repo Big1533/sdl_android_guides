@@ -23,6 +23,9 @@
                "name":"Integration Basics"
             },
             {  
+               "name":"Adding the Lock Screen"
+            },
+            {  
                "name":"Using AOA Protocol"
             },
             {  
@@ -66,10 +69,6 @@
                "name":"Hello Sdl JavaEE"
             }
          ]
-      },
-
-      {  
-         "name":"Adding the Lock Screen"
       },
       {  
          "name":"Displaying Information",
