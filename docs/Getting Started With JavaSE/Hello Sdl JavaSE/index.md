@@ -35,6 +35,7 @@ If you are using Manticore, the app information can be easily set in the setting
 
 #### Sdl Core and Generic HMI
 If you are using Sdl Core and Generic HMI, you will have to add a policy table entry as the following one to the existing entries:
+
 ```
 "8678309": {
      "keep_context": false,
@@ -56,7 +57,7 @@ If you are using Sdl Core and Generic HMI, you will have to add a policy table e
  Fore more information about policy tables please visit [Plicy Tables Guides](https://smartdevicelink.com/en/guides/sdl-server/api-reference-documentation/policy-table/overview).
 
  !!! NOTE
-The port that is used in Hello Sdl App is `5432`. It can be changed to a different port by modifying the number in `Main.java` class.
+Don't forget to replace `ws://<ip address>:<port>` with your own IP address and app port. The port that is used in Hello Sdl App is `5432`. It can be changed to a different port by modifying the number in `Main.java` class.
 !!!
 
 Following this, you should see an application appears on HMI as in the following screenshot:
