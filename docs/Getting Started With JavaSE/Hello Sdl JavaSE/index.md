@@ -33,7 +33,7 @@ If you are using Manticore, the app information can be easily set in the setting
 #### Sdl Core and Generic HMI
 If you are using Sdl Core and Generic HMI, you will have to add a policy table entry as the following one to the existing entries:
 
-```
+```java
 "8678309": {
      "keep_context": false,
      "steal_focus": false,
