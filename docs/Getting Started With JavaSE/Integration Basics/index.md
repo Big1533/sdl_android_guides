@@ -14,7 +14,7 @@ The SDL Java library supports Java 7 and above.
 
 A SmartDeviceLink Java Service should be created to manage the lifecycle of the SDL session. The `SdlService` should build and start an instance of the `SdlManager` which will automatically connect with a headunit when available. This `SdlManager` will handle sending and receiving messages to and from SDL after connected.
 
-Create a new service and name it appropriately, for this guide we are going to call it `SdlService`. 
+Create a new class and name it appropriately, for this guide we are going to call it `SdlService`. 
  
 ```java
 public class SdlService {
@@ -40,24 +40,23 @@ public class SdlService {
     //...
 
     private void buildSdlManager(BaseTransportConfig transport) {
-        
+
         if (sdlManager == null) {
-           
+
             // The app type to be used
             Vector<AppHMIType> appType = new Vector<>();
             appType.add(AppHMIType.MEDIA);
 
             // The manager listener helps you know when certain events that pertain to the SDL Manager happen
             SdlManagerListener listener = new SdlManagerListener() {
-                
+
                 @Override
                 public void onStart() {
-                	// After this callback is triggered the SdlManager can be used to interact with the connected SDL session (updating the display, sending RPCs, etc)
+                    // After this callback is triggered the SdlManager can be used to interact with the connected SDL session (updating the display, sending RPCs, etc)
                 }
 
                 @Override
                 public void onDestroy() {
-                    SdlService.this.stopSelf();
                 }
 
                 @Override
@@ -66,7 +65,7 @@ public class SdlService {
             };
 
             // Create App Icon, this is set in the SdlManager builder
-            SdlArtwork appIcon = new SdlArtwork(ICON_FILENAME, FileType.GRAPHIC_PNG, R.mipmap.ic_launcher, true);
+            SdlArtwork appIcon = new SdlArtwork(ICON_FILENAME, FileType.GRAPHIC_PNG, ICON_PATH, true);
 
             // The manager builder sets options for your session
             SdlManager.Builder builder = new SdlManager.Builder(APP_ID, APP_NAME, listener);
@@ -77,10 +76,9 @@ public class SdlService {
             sdlManager.start();
         }
 
+    }
 }
 ```
-
-The `stopSelf()` method from the `SdlManagerListener` is called whenever the manager detects some disconnect in the connection, whether initiated by the app, by SDL, or by the device’s connection.
 
 !!! IMPORTANT
 The `sdlManager` must be shutdown properly if this class is shutting down in the respective method using the method `sdlManager.dispose()`.
@@ -100,7 +98,7 @@ builder.setMinimumRPCVersion(new Version("4.0.0"));
 
 ### Listening for RPC notifications and events
 
-We can listen for specific events using `SdlManager`'s `addOnRPCNotificationListener`. These listeners can be added either in the `onStart()` callback of the `SdlManagerListener` or after it has been triggered. The following example shows how to listen for HMI Status notifications. Additional listeners can be added for specific RPCs by using their corresponding `FunctionID` in place of the `ON_HMI_STATUS` in the following example and casting the `RPCNotification` object to the correct type. 
+We can listen for specific events using `SdlManager`'s builder `setRPCNotificationListeners`. The following example shows how to listen for HMI Status notifications. Additional listeners can be added for specific RPCs by using their corresponding `FunctionID` in place of the `ON_HMI_STATUS` in the following example and casting the `RPCNotification` object to the correct type. 
 
 ##### Example of a listener for HMI Status:
 
