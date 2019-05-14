@@ -62,12 +62,12 @@
             {  
                "name":"Integration Basics"
             },
+            {  
+               "name":"Hello Sdl JavaEE"
+            },
             {
                "name":"Deploying to AWS"
             },
-            {  
-               "name":"Hello Sdl JavaEE"
-            }
          ]
       },
       {  
