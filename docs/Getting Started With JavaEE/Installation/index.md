@@ -29,6 +29,8 @@ from within the JavaEE directory and a JAR should be generated in the build/libs
 * Go to artifacts. A problem may appear concerning the exploded war not having the library. 
   Add SDL Java to the war exploded artifact (IntelliJ has an auto fix for it).
   Apply and OK.
+* In the artifacts ->  choose ejb exploded -> in the "output layout" tab, click on the + -> Extracted directory ->  add the SDL Java JAR library
+* In the artifacts ->  choose war exploded -> in the "output layout" tab, click on the + -> Extracted directory ->  add the SDL Java JAR library
 * You can now start creating your SDL enabled application. If you already have source code to start with, you can copy it into the new project along with any jars and assets.
 
 !!! NOTE
