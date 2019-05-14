@@ -1,10 +1,10 @@
-## Hello SDL JavaSE
+## Hello SDL JavaEE
 
 ### Introduction
 
 In this guide we take you through the steps to get our sample project, Hello Sdl, running and connected to Sdl Core as well as showing up on the generic HMI.
 
-Make sure that you follow the steps in [Installation](Getting Started With JavaEE/Installation) and [Integration Basics](Getting Started With JavaEE/Integration Basics) sections to create a new JavaEE SDL project before starting this section.
+Make sure that you follow the steps in [Installation](Getting Started With JavaEE/Installation) and [Integration Basics](Getting Started With JavaEE/Integration Basics) sections to create a new JavaEE SDL project before continuing this section.
 
 !!! NOTE
 The [Hello Sdl JavaEE](https://github.com/smartdevicelink/sdl_java_suite/tree/master/hello_sdl_java_ee) project includes samples for `SdlService` and `Main` classes that can be copied to your project.
