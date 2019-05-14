@@ -137,9 +137,9 @@ public class SDLSessionBean {
 
 Unfortunately, [there's no way to get a client's IP address using the standard API](https://stackoverflow.com/a/23025059), so localhost is passed to the CustomTransport for now as the transport address (this is only used locally in the library so it is not necessary). 
 
-The `SDLSessionBean` class’s @OnOpen method is where you will start your app, and should call your entry of your application and invoke whatever is needed to start it. You need to pass the instantiated CustomTransport object to your application so that the connection can be passed into the SdlManager.
+The `SDLSessionBean` class’s @OnOpen method is where you will start your app, and should call your entry of your application and invoke whatever is needed to start it. You need to pass the instantiated `CustomTransport` object to your application so that the connection can be passed into the `SdlManager`.
 
-The SdlManager will need you to create a CustomTransportConfig, pass in the `CustomTransport` instance from the `SDLSessionBean` instance, then set the `SdlManager` Builder’s transport type to that config. This will set your transport type into CUSTOM mode and will use your `CustomTransport` instance to handle the read and write operations.
+The SdlManager will need you to create a `CustomTransportConfig`, pass in the `CustomTransport` instance from the `SDLSessionBean` instance, then set the `SdlManager` Builder’s transport type to that config. This will set your transport type into `CUSTOM` mode and will use your `CustomTransport` instance to handle the read and write operations.
 
 ```java
 // Set transport config. builder is a SdlManager.Builder
@@ -147,7 +147,7 @@ CustomTransportConfig transport = new CustomTransportConfig(websocket);
 builder.setTransportType(transport);
 ```
 
-##### Add a new artifact:
+##### Add a New Artifact:
 
 * Right-click project -> Open Module Settings -> Artifacts -> + ->
   Web Application: Archive -> for your war: exploded artifact which should already exist

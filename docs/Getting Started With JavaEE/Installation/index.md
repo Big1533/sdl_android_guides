@@ -2,7 +2,7 @@
 
 ### Introduction
 
-Each [SDL JavaEE](https://github.com/smartdevicelink/sdl_java_suite) library release is published to Github. By building a and importing the library JAR file to the project, developers can compile with the latest SDL JavaEE release. In this guide we exclusively use IntelliJ to compile and build the project.
+Each SDL JavaEE library release is published to [Github](https://github.com/smartdevicelink/sdl_java_suite). By building and importing the library JAR file to the project, developers can compile with the latest SDL JavaEE release. In this guide we exclusively use IntelliJ to compile and build the project.
 
 ### Building the JavaEE Library JAR    
 To build the library JAR from the source code, first clone the [SDL Java Suite](https://github.com/smartdevicelink/sdl_java_suite) repository then, simply call:
@@ -16,9 +16,9 @@ from within the JavaEE directory and a JAR should be generated in the build/libs
 ### Creating a New SDL Project
 * [Download Glassfish 5.0.0 Full Platform](https://javaee.github.io/glassfish/download)
 * Start a new IntelliJ Project (Menu -> New -> Project)
+* Select Java Enterprise as project type.
 * Ensure Java EE 8 is the version used.
 * Set Application Server to the directory of Glassfish 5.0.0 download.
-* Select Java Enterprise.
 * Check the following: (they should all be using the libraries from Glassfish)
     * Glassfish 5.0.0 - EJB
     * Glassfish 5.0.0 - WebSocket
