@@ -147,6 +147,10 @@ CustomTransportConfig transport = new CustomTransportConfig(websocket);
 builder.setTransportType(transport);
 ```
 
+!!! IMPORTANT
+The `SDLSessionBean` should be inside a Java package other than the default package in order for it to work properly.
+!!!
+
 ##### Add a New Artifact:
 
 * Right-click project -> Open Module Settings -> Artifacts -> + ->
