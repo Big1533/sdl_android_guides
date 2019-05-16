@@ -34,6 +34,10 @@ If you are using Manticore, the app information can be easily set in the setting
 
 ![Main Screen](assets/manticore1.png)
 
+!!! NOTE
+Manticore needs to access you machine's IP address to be able to start a websocket connection with your cloud app. If you are hosting the cloud app on your local machine, you may need to do extra setup to make your machine publicly accessible. The other solution is to setup Core and HMI on your machine instead of using Manticore so Core can access your local IP address.
+!!!
+
 #### Sdl Core and Generic HMI
 If you are using Sdl Core and Generic HMI, you will have to add a policy table entry as the following one to the existing entries:
 
