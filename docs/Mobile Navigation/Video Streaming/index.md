@@ -1,5 +1,9 @@
 ## Video Streaming
 
+!!! IMPORTANT
+This feature is only available on Android apps. Currently, JavaSE (embedded) and JavaEE (cloud) apps don't support that.
+!!!
+
 In order to stream video from an SDL app, we only need to manage a few things. For the most part, the library will handle the majority of logic needed to perform video streaming.
 
 

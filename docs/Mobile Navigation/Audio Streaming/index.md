@@ -1,5 +1,9 @@
 ## Audio Streaming
 
+!!! IMPORTANT
+This feature is only available on Android apps. Currently, JavaSE (embedded) and JavaEE (cloud) apps don't support that.
+!!!
+
 Navigation apps are allowed to stream raw audio to be played by the head unit. The audio received this way is played immediately, and the current audio source will be attenuated. The raw audio has to be played with the following parameters:
 
 * **Format**: PCM

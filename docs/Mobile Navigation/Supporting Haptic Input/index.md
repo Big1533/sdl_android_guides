@@ -1,5 +1,9 @@
 ## Supporting Haptic Input
 
+!!! IMPORTANT
+This feature is only available on Android apps. Currently, JavaSE (embedded) and JavaEE (cloud) apps don't support that.
+!!!
+
 SDL now supports "haptic" input, input from something other than a touch screen. This could include trackpads, click-wheels, etc. These kinds of inputs work by knowing which areas on the screen are touchable and focusing on those areas when the user moves the trackpad or click wheel. When the user selects a rect, the center of that area will be "touched".
 
 !!! Note

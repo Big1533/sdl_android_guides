@@ -1,5 +1,9 @@
 ## Mobile Navigation
 
+!!! IMPORTANT
+This feature is only available on Android apps. Currently, JavaSE (embedded) and JavaEE (cloud) apps don't support that.
+!!!
+
 Mobile Navigation allows map partners to bring their applications into the car and display their maps and turn by turn easily for the user. This feature has a different behavior on the head unit than normal applications. The main differences are:
 
 * Navigation Apps don't use base screen templates. Their main view is the video stream sent from the device
